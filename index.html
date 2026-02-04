@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Infinite Canvas Photos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="canvas-container">
+        <div id="canvas">
+            <!-- Images will be dynamically placed here -->
+        </div>
+    </div>
+
+    <div id="controls">
+        <div id="zoom-level">100%</div>
+        <button id="zoom-in" aria-label="Zoom in">+</button>
+        <button id="zoom-out" aria-label="Zoom out">−</button>
+        <button id="reset" aria-label="Reset view">⟲</button>
+    </div>
+
+    <div id="loading" class="hidden">
+        <div class="spinner"></div>
+        <p>Loading photos...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

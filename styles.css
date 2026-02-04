@@ -1,0 +1,199 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #0a0a0a;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+#canvas-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    cursor: grab;
+    position: relative;
+}
+
+#canvas-container:active {
+    cursor: grabbing;
+}
+
+#canvas {
+    position: absolute;
+    transform-origin: 0 0;
+    will-change: transform;
+}
+
+.photo-item {
+    position: absolute;
+    background: #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    transition: box-shadow 0.3s ease;
+}
+
+.photo-item:hover {
+    box-shadow: 0 15px 60px rgba(0, 0, 0, 0.7);
+}
+
+.photo-item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.photo-item img.loaded {
+    opacity: 1;
+}
+
+.photo-item .placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.photo-item .placeholder::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 3px solid #333;
+    border-top-color: #666;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Controls */
+#controls {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 100;
+}
+
+#controls button {
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#controls button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+#controls button:active {
+    transform: scale(0.95);
+}
+
+#zoom-level {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    text-align: center;
+    min-width: 60px;
+}
+
+/* Loading overlay */
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0a0a0a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    color: #fff;
+    gap: 16px;
+}
+
+#loading.hidden {
+    display: none;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid #333;
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Info hint */
+#hint {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #controls {
+        bottom: 16px;
+        right: 16px;
+    }
+
+    #controls button {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .photo-item {
+        border-radius: 6px;
+    }
+}
+
+/* Selection prevention during drag */
+.dragging {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.dragging * {
+    pointer-events: none;
+}
