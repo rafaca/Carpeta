@@ -159,39 +159,37 @@ async function main() {
   const existingByName = new Map(existing.map((s) => [s.name, s]));
 
   const created = [];
-  const skipped = [];
+  const updated = [];
   const failed = [];
 
   for (const spec of STYLES) {
-    if (existingByName.has(spec.name)) {
-      skipped.push(`${spec.name} (already exists)`);
-      continue;
-    }
     const resolved = await resolveFont(spec);
     if (!resolved.font) {
       failed.push(`${spec.name}: no loadable font for ${spec.family} ${spec.style}`);
       continue;
     }
-    const ts = figma.createTextStyle();
-    ts.name = spec.name;
+    const isNew = !existingByName.has(spec.name);
+    const ts = isNew ? figma.createTextStyle() : existingByName.get(spec.name);
+    if (isNew) ts.name = spec.name;
     ts.fontName = resolved.font;
     ts.fontSize = spec.size;
     ts.lineHeight = { value: spec.lineHeight, unit: 'PIXELS' };
     ts.letterSpacing = { value: spec.letterSpacing, unit: 'PIXELS' };
-    if (spec.textCase) ts.textCase = spec.textCase;
-    if (spec.textDecoration) ts.textDecoration = spec.textDecoration;
+    ts.textCase = spec.textCase || 'ORIGINAL';
+    ts.textDecoration = spec.textDecoration || 'NONE';
 
     const note = resolved.fellBack ? ' (fell back to original family)' : '';
-    created.push(`${spec.name} -> ${resolved.font.family} ${resolved.font.style}${note}`);
+    const line = `${spec.name} -> ${resolved.font.family} ${resolved.font.style}${note}`;
+    (isNew ? created : updated).push(line);
   }
 
   const lines = [];
   lines.push(`Created ${created.length}:`);
   created.forEach((l) => lines.push('  + ' + l));
-  if (skipped.length) {
+  if (updated.length) {
     lines.push('');
-    lines.push(`Skipped ${skipped.length}:`);
-    skipped.forEach((l) => lines.push('  = ' + l));
+    lines.push(`Updated ${updated.length}:`);
+    updated.forEach((l) => lines.push('  ~ ' + l));
   }
   if (failed.length) {
     lines.push('');
@@ -200,7 +198,7 @@ async function main() {
   }
   const summary = lines.join('\n');
   console.log(summary);
-  figma.closePlugin(`${created.length} styles created, ${skipped.length} skipped, ${failed.length} failed. See console for detail.`);
+  figma.closePlugin(`${created.length} created, ${updated.length} updated, ${failed.length} failed. See console for detail.`);
 }
 
 main().catch((e) => {
