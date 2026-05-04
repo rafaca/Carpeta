@@ -9,7 +9,140 @@ html, body {
     height: 100%;
     overflow: hidden;
     background: #0a0a0a;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Site header (top bar + brand) */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    pointer-events: none;
+}
+
+.site-header > * {
+    pointer-events: auto;
+}
+
+.top-bar {
+    background: #fef189;
+    height: 29px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 19.2px;
+    letter-spacing: 1.44px;
+    text-transform: uppercase;
+}
+
+.top-bar__issue {
+    color: #9a7b00;
+}
+
+.top-bar__links {
+    position: absolute;
+    right: 312px;
+    display: flex;
+    gap: 14px;
+}
+
+.top-bar__link {
+    color: #fc3b2c;
+    text-decoration: none;
+}
+
+.top-bar__link:hover {
+    text-decoration: underline;
+}
+
+.brand {
+    background: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 66px;
+    padding: 0 24px;
+}
+
+.brand__logo {
+    font-family: 'Pinyon Script', 'Snell Roundhand', cursive;
+    font-size: 64px;
+    line-height: 1;
+    color: #fc3b2c;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+}
+
+/* Bookmarks footer */
+.bookmarks {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #0a0a0a;
+    color: #fff;
+    padding: 60px 0 60px;
+    z-index: 50;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.bookmarks__heading {
+    max-width: 700px;
+    margin: 0 auto 56px;
+    padding: 0 24px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 22.4px;
+    letter-spacing: 1.12px;
+    text-transform: uppercase;
+    display: flex;
+    gap: 11px;
+}
+
+.bookmarks__num,
+.bookmarks__title {
+    color: #fff;
+}
+
+.bookmark {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.bookmark__source {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 28.4px;
+    letter-spacing: 1.12px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 6px;
+}
+
+.bookmark__title {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22.5px;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.bookmark__desc {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 24px;
+    color: rgba(255, 255, 255, 0.85);
 }
 
 #canvas-container {
@@ -85,7 +218,7 @@ html, body {
 /* Controls */
 #controls {
     position: fixed;
-    bottom: 24px;
+    top: 120px;
     right: 24px;
     display: flex;
     flex-direction: column;
@@ -173,7 +306,7 @@ html, body {
 /* Responsive adjustments */
 @media (max-width: 768px) {
     #controls {
-        bottom: 16px;
+        top: 110px;
         right: 16px;
     }
 
@@ -185,6 +318,35 @@ html, body {
 
     .photo-item {
         border-radius: 6px;
+    }
+
+    .top-bar {
+        justify-content: space-between;
+        padding: 0 16px;
+        font-size: 10px;
+        letter-spacing: 1px;
+    }
+
+    .top-bar__issue {
+        position: static;
+    }
+
+    .top-bar__links {
+        position: static;
+        right: auto;
+        gap: 10px;
+    }
+
+    .brand__logo {
+        font-size: 42px;
+    }
+
+    .bookmarks {
+        padding: 32px 0 32px;
+    }
+
+    .bookmarks__heading {
+        margin-bottom: 24px;
     }
 }
 
