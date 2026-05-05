@@ -170,6 +170,19 @@ html, body {
     transition: opacity 0.5s ease;
 }
 
+/* Pull-quote callout */
+.callout {
+    background: #e7f1ff;
+    color: #101733;
+    border-left: 3px solid #fc3b2c;
+    padding: 6.5px 24px;
+    font-size: 24px;
+    line-height: 30px;
+    letter-spacing: -0.24px;
+    max-width: 700px;
+    margin: 0;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     #controls {
