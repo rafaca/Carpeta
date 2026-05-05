@@ -3,10 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Infinite Canvas Photos</title>
+    <title>Frequencies — Infinite Canvas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=EB+Garamond:wght@400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <header class="site-header">
+        <div class="top-bar">
+            <span class="top-bar__issue">20260504 / Vol·20</span>
+            <div class="top-bar__links">
+                <a href="#subscribe" class="top-bar__link">SUBSCRIBE</a>
+                <a href="#rss" class="top-bar__link">RSS</a>
+            </div>
+        </div>
+        <div class="brand">
+            <a href="#" class="brand__logo">Frequencies</a>
+        </div>
+    </header>
+
     <div id="canvas-container">
         <div id="canvas">
             <!-- Images will be dynamically placed here -->
@@ -29,6 +45,18 @@
         <blockquote class="callout__quote">&ldquo;Generally AI companies distill other AI companies.&rdquo;</blockquote>
         <figcaption class="callout__attribution">Elon Musk, under oath</figcaption>
     </figure>
+
+    <footer class="bookmarks">
+        <div class="bookmarks__heading">
+            <span class="bookmarks__num">06</span>
+            <span class="bookmarks__title">Bookmarks</span>
+        </div>
+        <article class="bookmark">
+            <p class="bookmark__source">Washington Post</p>
+            <h3 class="bookmark__title">What Silicon Valley layoffs hide</h3>
+            <p class="bookmark__desc">The AI labor displacement the headline numbers aren't designed to show.</p>
+        </article>
+    </footer>
 
     <script src="script.js"></script>
 </body>
