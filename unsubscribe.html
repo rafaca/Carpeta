@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulk Unsubscribe — Triage</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #fafaf7;
+    --fg: #1a1a1a;
+    --muted: #666;
+    --border: #e5e5e0;
+    --accent: #c2410c;
+    --row-hover: #f0efea;
+    --pill-bg: #ececea;
+    --keep-bg: #eef6ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16161a;
+      --fg: #ececec;
+      --muted: #9a9a9a;
+      --border: #2a2a30;
+      --accent: #ff7a3d;
+      --row-hover: #1f1f25;
+      --pill-bg: #24242a;
+      --keep-bg: #1a261a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    margin: 0;
+    padding: 32px 16px 120px;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  p.lead { color: var(--muted); margin: 0 0 24px; }
+  h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin: 32px 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li {
+    display: grid;
+    grid-template-columns: 28px 36px 1fr auto;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  li:hover { background: var(--row-hover); }
+  li.checked { background: rgba(194, 65, 12, 0.06); }
+  @media (prefers-color-scheme: dark) {
+    li.checked { background: rgba(255, 122, 61, 0.08); }
+  }
+  input[type="checkbox"] {
+    width: 18px; height: 18px;
+    accent-color: var(--accent);
+    cursor: pointer;
+    margin: 0;
+  }
+  .num { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 13px; }
+  .email { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13.5px; word-break: break-all; }
+  .meta { color: var(--muted); font-size: 13px; text-align: right; white-space: nowrap; }
+  .count {
+    display: inline-block;
+    background: var(--pill-bg);
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 1px 8px;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    margin-left: 6px;
+  }
+  .keep {
+    background: var(--keep-bg);
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    color: var(--muted);
+    font-size: 13.5px;
+    margin-top: 8px;
+  }
+  .keep code { font-size: 12.5px; }
+  .extras {
+    margin-top: 24px;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .extras label { display: block; padding: 4px 0; cursor: pointer; }
+  footer {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 12px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  footer .status { color: var(--muted); font-size: 14px; margin-right: auto; }
+  button {
+    font: inherit;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--fg);
+    cursor: pointer;
+  }
+  button:hover { background: var(--row-hover); }
+  button.primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  button.primary:hover { filter: brightness(1.1); }
+  dialog {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    max-width: 640px;
+    width: 90%;
+  }
+  dialog::backdrop { background: rgba(0,0,0,0.5); }
+  dialog .dlg-body { padding: 20px; }
+  dialog h3 { margin: 0 0 12px; font-size: 16px; }
+  textarea {
+    width: 100%;
+    min-height: 280px;
+    font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: var(--row-hover);
+    color: var(--fg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px;
+    resize: vertical;
+  }
+  dialog .dlg-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Bulk unsubscribe — triage</h1>
+  <p class="lead">Check the senders to <strong>unsubscribe from</strong>. Sample: ~150 promo threads from the last ~40 days. Counts in parentheses.</p>
+
+  <div class="keep">
+    <strong>Won't touch</strong> (transactional / personal):
+    <code>auction@housingworks.org</code>,
+    <code>notifications@alerts.biltrewards.com</code>,
+    <code>notifications@reminder.creditkarma.com</code>,
+    your own <code>rafacastello@substack.com</code>,
+    real-people replies. Add them above if you want to include any anyway.
+  </div>
+
+  <h2>Top senders</h2>
+  <ul id="list-top"></ul>
+
+  <h2>Long-tail (1 each in sample)</h2>
+  <ul id="list-tail"></ul>
+
+  <div class="extras">
+    <label><input type="checkbox" id="scan-beyond"> Also scan beyond the Promotions tab (catch newsletters Gmail didn't categorize)</label>
+    <label><input type="checkbox" id="auto-trash"> Wherever possible, also draft a request to <em>delete all past emails</em> from these senders (note: I can only draft; you'll send)</label>
+  </div>
+</div>
+
+<footer>
+  <div class="status"><span id="count">0</span> selected</div>
+  <button id="all">Select all</button>
+  <button id="none">None</button>
+  <button id="top10">Top 10</button>
+  <button id="invert">Invert</button>
+  <button id="copy" class="primary">Copy selection</button>
+</footer>
+
+<dialog id="dlg">
+  <div class="dlg-body">
+    <h3>Paste this back to me</h3>
+    <textarea id="dlg-text" readonly></textarea>
+    <div class="dlg-actions">
+      <button id="dlg-copy" class="primary">Copy to clipboard</button>
+      <button id="dlg-close">Close</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+const TOP = [
+  ["kd@kochdavisjobs.com", 8, "job alerts"],
+  ["newsletter@halston.com", 6, "Halston fashion"],
+  ["mike@mccarthysearch.com", 5, "recruiter alerts"],
+  ["newsletter@core77.com", 5, "design newsletter"],
+  ["michaeljburry@substack.com", 4, "Substack"],
+  ["no-reply@thingtestingmail.com", 4, "Thingtesting"],
+  ["marketing@plans.eventbrite.com", 4, "Eventbrite \"for you\""],
+  ["info@bethdavidsonforcongress.com", 4, "political campaign"],
+  ["*@make.co (makerfaire/make/makers)", 4, "Maker Faire"],
+  ["hello@mail.apollo.io", 3, "Apollo.io"],
+  ["listings@listingsproject.com", 3, "weekly listings"],
+  ["info@iyengarnyc.org", 3, "yoga studio"],
+  ["hotforyounyc@164299134.mailchimpapp.com", 3, "party promoter"],
+  ["no-reply@communications.flylevel.com", 3, "Level airline"],
+  ["*@firecrawl.dev (eric/alex.nucci/updates)", 3, "Firecrawl"],
+  ["concierge@emails.bergamotte.com", 2, "Bergamotte flowers"],
+  ["info@qncc.org", 2, "QNCC"],
+  ["hello@weavy.ai", 2, "Weavy"],
+  ["manualdemoda@substack.com", 2, "Substack"],
+  ["creativeweapons@mail.beehiiv.com", 2, "Beehiiv"],
+  ["interactiondesign@sva.edu", 2, "SVA promo"],
+  ["hello@ayushchat.com", 2, "newsletter"],
+];
+
+const TAIL = [
+  ["contact@luxepack.com", "LUXE PACK NY"],
+  ["hello@uxdesign.cc", "UX Design newsletter"],
+  ["postculture@substack.com", "Substack"],
+  ["bpando@substack.com", "Substack (BP&O)"],
+  ["paulkrugman@substack.com", "Substack"],
+  ["theargument@substack.com", "Substack"],
+  ["peoplebrandsandthings+weekly-roundup@substack.com", "Substack"],
+  ["rickrubin@substack.com", "Substack"],
+  ["cabanamagazine@substack.com", "Substack"],
+  ["johnbrewton@substack.com", "Substack"],
+  ["managingeditor@substack.com", "Substack"],
+  ["adplist@substack.com", "Substack"],
+  ["theroseperiod@substack.com", "Substack"],
+  ["staringattheceiling@substack.com", "Substack"],
+  ["bigpants@substack.com", "Substack"],
+  ["thatbusinessofmeaning@substack.com", "Substack"],
+  ["MaisonCloseSouthampton@email.sevenrooms.com", "restaurant"],
+  ["marketing@email.benjaminmoore.com", "Benjamin Moore"],
+  ["noreply@eventtia.pernod-ricard.global", "Pernod Ricard event"],
+  ["brian.collins@wearecollins.com", "Collins studio"],
+  ["constance.tan@ahrefs.com", "Ahrefs onboarding"],
+  ["nyc@outintech.com", "Out in Tech NYC"],
+  ["newsletter@canneslions.com", "Cannes Lions"],
+  ["team@outclose.com", "Outclose"],
+  ["zander@memorisely.com", "Memorisely bootcamp"],
+  ["info@rooftopfilms.com", "Rooftop Films"],
+  ["plannedgiving@outreach.pratt.edu", "Pratt fundraising"],
+  ["emailteam@emails.hbr.org", "HBR"],
+  ["campanyes@jubertfigueras.org", "Jubert Figueras"],
+  ["info@nylovesyoga.com", "NY Loves Yoga"],
+  ["alex.munno@air.inc", "Air.inc"],
+  ["louise@m.air.inc", "Air.inc"],
+  ["launchmetrics.events@launchmetrics.com", "Launchmetrics"],
+  ["donotreply@usebraintrust.com", "Braintrust"],
+  ["event@email.eventbrite.com", "Eventbrite events"],
+  ["met@mail.metmuseum.org", "Met Museum"],
+  ["newsletter@email.gentlemonster.com", "Gentle Monster"],
+  ["Luma@email.lumalabs.ai", "Luma Labs"],
+  ["BrooklynParamount@eml.livenation.com", "Live Nation"],
+  ["feedback+customerio@warp.dev", "Warp"],
+  ["designerfriends@calendar.luma-mail.com", "Designer Friends events"],
+  ["info@fashionresearchlibrary.com", "Fashion Research Library"],
+  ["friends@clay.com", "Clay"],
+  ["weber@florafauna.ai", "FloraFauna"],
+  ["webmaster@majorowenscenter.com", "Major Owens Center"],
+  ["newsletter@zapptax.com", "Zapptax"],
+  ["felix@mail.adplist.org", "ADPList"],
+  ["matt@ihateironing.com", "ihateironing"],
+  ["alumni@unav.es", "UNAV alumni"],
+  ["marketing@angelikafilmcenter.com", "Angelika Film"],
+  ["awards@dandad.org", "D&AD"],
+  ["no-reply@teamsidebar.com", "Sidebar"],
+  ["support@trybrainspa.com", "Brainspa"],
+  ["hello@chfarmshare.org", "Farm share CSA"],
+  ["hello@render.com", "Render"],
+  ["steve@clerk.com", "Clerk"],
+  ["noreply@email.metalabel.com", "Metalabel"],
+  ["no-reply@indeed.com", "Indeed"],
+  ["newsletter@emails.n26.com", "N26"],
+  ["elpais@info.elpais.com", "El País app"],
+  ["sillymoney@mail.beehiiv.com", "Silly Money"],
+  ["vaan@mail.beehiiv.com", "Vaan"],
+  ["info@santeprev.klesia.fr", "Klesia (touristbar@ alias?)"],
+  ["aquent@mktg.aquent.com", "Aquent"],
+  ["notifications@alerts.biltrewards.com", "Bilt rewards (semi-transactional)"],
+  ["notifications@reminder.creditkarma.com", "Credit Karma"],
+];
+
+let idx = 0;
+function row(email, count, desc) {
+  idx++;
+  const li = document.createElement("li");
+  li.dataset.email = email;
+  li.dataset.idx = idx;
+  li.innerHTML = `
+    <input type="checkbox" id="cb${idx}">
+    <span class="num">${idx}.</span>
+    <span class="email">${email}</span>
+    <span class="meta">${desc}${count ? `<span class="count">${count}</span>` : ""}</span>
+  `;
+  const cb = li.querySelector("input");
+  li.addEventListener("click", e => {
+    if (e.target.tagName !== "INPUT") cb.checked = !cb.checked;
+    li.classList.toggle("checked", cb.checked);
+    update();
+  });
+  cb.addEventListener("change", () => {
+    li.classList.toggle("checked", cb.checked);
+    update();
+  });
+  return li;
+}
+
+const top = document.getElementById("list-top");
+TOP.forEach(([e, c, d]) => top.appendChild(row(e, c, d)));
+const tail = document.getElementById("list-tail");
+TAIL.forEach(([e, d]) => tail.appendChild(row(e, null, d)));
+
+const countEl = document.getElementById("count");
+function update() {
+  countEl.textContent = document.querySelectorAll("li.checked").length;
+}
+
+document.getElementById("all").onclick = () => {
+  document.querySelectorAll("li").forEach(li => {
+    li.classList.add("checked");
+    li.querySelector("input").checked = true;
+  });
+  update();
+};
+document.getElementById("none").onclick = () => {
+  document.querySelectorAll("li").forEach(li => {
+    li.classList.remove("checked");
+    li.querySelector("input").checked = false;
+  });
+  update();
+};
+document.getElementById("top10").onclick = () => {
+  document.querySelectorAll("li").forEach(li => {
+    li.classList.remove("checked");
+    li.querySelector("input").checked = false;
+  });
+  document.querySelectorAll("#list-top li").forEach((li, i) => {
+    if (i < 10) {
+      li.classList.add("checked");
+      li.querySelector("input").checked = true;
+    }
+  });
+  update();
+};
+document.getElementById("invert").onclick = () => {
+  document.querySelectorAll("li").forEach(li => {
+    const cb = li.querySelector("input");
+    cb.checked = !cb.checked;
+    li.classList.toggle("checked", cb.checked);
+  });
+  update();
+};
+
+const dlg = document.getElementById("dlg");
+const dlgText = document.getElementById("dlg-text");
+document.getElementById("copy").onclick = () => {
+  const picks = [...document.querySelectorAll("li.checked")].map(li => li.dataset.email);
+  const scan = document.getElementById("scan-beyond").checked;
+  const trash = document.getElementById("auto-trash").checked;
+  const lines = [
+    "KILL:",
+    ...picks.map(e => `- ${e}`),
+    "",
+    `scan_beyond_promotions: ${scan ? "yes" : "no"}`,
+    `also_draft_delete_request: ${trash ? "yes" : "no"}`,
+  ];
+  dlgText.value = lines.join("\n");
+  dlg.showModal();
+  dlgText.select();
+};
+document.getElementById("dlg-copy").onclick = async () => {
+  try {
+    await navigator.clipboard.writeText(dlgText.value);
+    const btn = document.getElementById("dlg-copy");
+    const orig = btn.textContent;
+    btn.textContent = "Copied ✓";
+    setTimeout(() => btn.textContent = orig, 1500);
+  } catch (e) {
+    dlgText.select();
+    document.execCommand("copy");
+  }
+};
+document.getElementById("dlg-close").onclick = () => dlg.close();
+</script>
+</body>
+</html>
