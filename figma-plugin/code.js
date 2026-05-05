@@ -5,12 +5,8 @@
  * Run via: Plugins -> Development -> Import plugin from manifest -> select manifest.json
  * Then: Plugins -> Development -> Build Typography Library
  *
- * Source of truth: text nodes in frame "Weekly Digest / April 29, 2026" (id 1:2).
- * Style values were extracted from those nodes via the Figma Plugin API.
- *
- * Set REMAP_PULPO_TO_FIRELLI = true to register Pulpo nodes under the
- * "Firelli Variable" family in the library (the script falls back to Pulpo
- * automatically if the target Firelli Variable weight is not installed).
+ * Source of truth: the deduplicated 7-style FREQZ system (Display H1-H3,
+ * Body Callout/Standfirst/Paragraph/Eyebrow). Mirrors styles.css tokens.
  *
  * Set TAG_NODES = true to also walk every page and link unstyled text nodes
  * to a matching style after creation. Matching is by font family + style +
@@ -18,124 +14,43 @@
  * with mixed properties or already linked to a style are skipped.
  */
 
-const REMAP_PULPO_TO_FIRELLI = true;
 const TAG_NODES = true;
-
-const PULPO_TO_FIRELLI_WEIGHT = {
-  'Light': 'Light',
-  'Regular': 'Regular',
-  'Medium': 'Medium',
-  'Bold': 'Bold',
-};
 
 const STYLES = [
   {
-    name: 'Display/Banner',
-    family: 'Giramisu VF', style: 'Straight Tight',
-    size: 78, lineHeight: 74.1, letterSpacing: -1.56,
-  },
-  {
     name: 'Display/H1',
-    family: 'Firelli Variable', style: 'Thin',
-    size: 59, lineHeight: 61.95, letterSpacing: -0.59,
-  },
-  {
-    name: 'Display/Section',
-    family: 'Pulpo', style: 'Medium',
-    size: 40, lineHeight: 44, letterSpacing: -0.4,
+    family: 'Firelli Variable', style: 'Regular',
+    size: 40, lineHeight: 50, letterSpacing: -0.59,
   },
   {
     name: 'Display/H2',
-    family: 'Firelli Variable', style: 'Light',
-    size: 37, lineHeight: 40.7, letterSpacing: -0.555,
+    family: 'Firelli Variable', style: 'Regular',
+    size: 25, lineHeight: 30, letterSpacing: -0.56,
   },
   {
     name: 'Display/H3',
-    family: 'Pulpo', style: 'Medium',
-    size: 28, lineHeight: 36, letterSpacing: -0.42,
+    family: 'Firelli Variable', style: 'Regular',
+    size: 22, lineHeight: 35.2, letterSpacing: -0.22,
   },
   {
-    name: 'Display/Pullquote',
-    family: 'Firelli Variable', style: 'Light Italic',
-    size: 23, lineHeight: 29.9, letterSpacing: 0,
+    name: 'Body/Callout',
+    family: 'Firelli Variable', style: 'SemiBold',
+    size: 18, lineHeight: 27, letterSpacing: -0.1,
   },
-  {
-    name: 'Display/H4',
-    family: 'Pulpo', style: 'Medium',
-    size: 18, lineHeight: 23.4, letterSpacing: 0,
-  },
-  {
-    name: 'Display/H4 Link',
-    family: 'Pulpo', style: 'Regular',
-    size: 18, lineHeight: 21.6, letterSpacing: 0,
-    textDecoration: 'UNDERLINE',
-  },
-  {
-    name: 'Display/Stat',
-    family: 'Pulpo', style: 'Regular',
-    size: 52, lineHeight: 52, letterSpacing: -1.04,
-  },
-
   {
     name: 'Body/Standfirst',
-    family: 'Shift', style: 'Medium',
+    family: 'Questa Sans', style: 'Medium',
     size: 17, lineHeight: 25.5, letterSpacing: 0,
   },
   {
-    name: 'Body/Lead',
-    family: 'Pulpo', style: 'Light',
-    size: 16, lineHeight: 24, letterSpacing: 0,
-  },
-  {
     name: 'Body/Paragraph',
-    family: 'Shift', style: 'Light',
+    family: 'Questa Sans', style: 'Regular',
     size: 15, lineHeight: 24, letterSpacing: 0,
   },
   {
-    name: 'Body/Paragraph Bold',
-    family: 'Shift', style: 'Bold',
-    size: 15, lineHeight: 24, letterSpacing: 0,
-  },
-  {
-    name: 'Body/Paragraph Link',
-    family: 'Shift', style: 'Light',
-    size: 15, lineHeight: 24, letterSpacing: 0,
-    textDecoration: 'UNDERLINE',
-  },
-  {
-    name: 'Body/Small',
-    family: 'Shift', style: 'Light',
-    size: 14, lineHeight: 20.3, letterSpacing: 0,
-  },
-
-  {
-    name: 'Caption/Eyebrow',
-    family: 'Panel', style: 'Medium',
-    size: 14, lineHeight: 22.4, letterSpacing: 1.12,
-    textCase: 'UPPER',
-  },
-  {
-    name: 'Caption/Eyebrow Bold',
+    name: 'Body/Eyebrow',
     family: 'Panel', style: 'Bold',
-    size: 14, lineHeight: 22.4, letterSpacing: 1.12,
-    textCase: 'UPPER',
-  },
-  {
-    name: 'Caption/Tag',
-    family: 'Panel', style: 'Medium',
-    size: 14, lineHeight: 18.2, letterSpacing: 1.12,
-    textCase: 'UPPER',
-  },
-  {
-    name: 'Caption/Number',
-    family: 'Pulpo', style: 'Bold',
-    size: 11, lineHeight: 17.6, letterSpacing: 0.88,
-    textCase: 'UPPER',
-  },
-  {
-    name: 'Caption/Small',
-    family: 'Panel', style: 'Medium',
-    size: 10, lineHeight: 16, letterSpacing: 0.8,
+    size: 11, lineHeight: 17.6, letterSpacing: 1.32,
     textCase: 'UPPER',
   },
 ];
@@ -150,13 +65,8 @@ async function tryLoad(font) {
 }
 
 async function resolveFont(spec) {
-  const original = { family: spec.family, style: spec.style };
-  if (REMAP_PULPO_TO_FIRELLI && spec.family === 'Pulpo') {
-    const remappedStyle = PULPO_TO_FIRELLI_WEIGHT[spec.style] || spec.style;
-    const remapped = { family: 'Firelli Variable', style: remappedStyle };
-    if (await tryLoad(remapped)) return { font: remapped, fellBack: false };
-  }
-  if (await tryLoad(original)) return { font: original, fellBack: REMAP_PULPO_TO_FIRELLI && spec.family === 'Pulpo' };
+  const font = { family: spec.family, style: spec.style };
+  if (await tryLoad(font)) return { font, fellBack: false };
   return { font: null, fellBack: false };
 }
 
