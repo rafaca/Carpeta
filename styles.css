@@ -303,6 +303,43 @@ html, body {
     transition: opacity 0.5s ease;
 }
 
+/* Pull-quote callout */
+.callout {
+    background: #e7f1ff;
+    color: #101733;
+    border-left: 2px solid #fc3b2c;
+    padding: 12px 24px 14px;
+    max-width: 700px;
+    margin: 0;
+}
+
+.callout__quote {
+    font-size: 24px;
+    line-height: 30px;
+    letter-spacing: -0.24px;
+    margin: 0;
+}
+
+.callout__attribution {
+    display: block;
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 19.2px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #101733;
+}
+
+::selection {
+    background: #fef189;
+    color: #101733;
+}
+
+::-moz-selection {
+    background: #fef189;
+    color: #101733;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     #controls {
