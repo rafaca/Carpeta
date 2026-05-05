@@ -5,12 +5,19 @@
  * Run via: Plugins -> Development -> Import plugin from manifest -> select manifest.json
  * Then: Plugins -> Development -> Build Typography Library
  *
- * Source of truth: text nodes in frame "Weekly Digest / April 29, 2026" (id 1:2).
- * Style values were extracted from those nodes via the Figma Plugin API.
+ * Source of truth: text nodes on the Apr-29-typography page (id 135:9281).
+ * Names match the local text styles already defined in the file (per the
+ * `These styles are contained in the design` trailers from get_design_context);
+ * new names follow the same Category/Variant convention.
  *
- * Set REMAP_PULPO_TO_FIRELLI = true to register Pulpo nodes under the
- * "Firelli Variable" family in the library (the script falls back to Pulpo
- * automatically if the target Firelli Variable weight is not installed).
+ * Pulpo and Shift have been retired. Pulpo nodes are absorbed by the Firelli
+ * Variable styles where the metrics line up (Caption/Number, Display/Section,
+ * Display/H3, Display/Stat). Shift nodes are absorbed by Inter (Body/*).
+ *
+ * Caption/Eyebrow Bold: the file's stored definition has lineHeight 28.4, but
+ * the dominant usage (24 nodes on Apr-29-typography) is lineHeight 22.4. We
+ * canonicalize to 22.4 — re-running the plugin will update the file's style
+ * to match, which auto-binds all 24 nodes.
  *
  * Set TAG_NODES = true to also walk every page and link unstyled text nodes
  * to a matching style after creation. Matching is by font family + style +
@@ -18,7 +25,7 @@
  * with mixed properties or already linked to a style are skipped.
  */
 
-const REMAP_PULPO_TO_FIRELLI = true;
+const REMAP_PULPO_TO_FIRELLI = false;
 const TAG_NODES = true;
 
 const PULPO_TO_FIRELLI_WEIGHT = {
@@ -29,85 +36,117 @@ const PULPO_TO_FIRELLI_WEIGHT = {
 };
 
 const STYLES = [
-  {
-    name: 'Display/Banner',
-    family: 'Giramisu VF', style: 'Straight Tight',
-    size: 78, lineHeight: 74.1, letterSpacing: -1.56,
-  },
+  // Display
   {
     name: 'Display/H1',
     family: 'Firelli Variable', style: 'Thin',
     size: 59, lineHeight: 61.95, letterSpacing: -0.59,
   },
   {
+    name: 'Display/H1 Title',
+    family: 'Firelli Variable', style: 'Regular',
+    size: 40, lineHeight: 62, letterSpacing: -0.59,
+  },
+  {
+    name: 'Display/H1 Mobile',
+    family: 'Firelli Variable', style: 'Thin',
+    size: 40, lineHeight: 42, letterSpacing: -0.4,
+  },
+  {
+    name: 'Display/Stat',
+    family: 'Firelli Variable', style: 'Regular',
+    size: 60, lineHeight: 60, letterSpacing: -1.2,
+  },
+  {
     name: 'Display/Section',
-    family: 'Pulpo', style: 'Medium',
-    size: 40, lineHeight: 44, letterSpacing: -0.4,
+    family: 'Firelli Variable', style: 'Regular',
+    size: 40, lineHeight: 40, letterSpacing: -0.8,
   },
   {
     name: 'Display/H2',
+    family: 'Firelli Variable', style: 'Regular',
+    size: 30, lineHeight: 35, letterSpacing: -0.55,
+  },
+  {
+    name: 'Display/H2 Page',
     family: 'Firelli Variable', style: 'Light',
     size: 37, lineHeight: 40.7, letterSpacing: -0.555,
   },
   {
+    name: 'Display/H2 Mobile',
+    family: 'Firelli Variable', style: 'Light',
+    size: 28, lineHeight: 30.8, letterSpacing: -0.42,
+  },
+  {
     name: 'Display/H3',
-    family: 'Pulpo', style: 'Medium',
-    size: 28, lineHeight: 36, letterSpacing: -0.42,
+    family: 'Firelli Variable', style: 'Regular',
+    size: 24, lineHeight: 30, letterSpacing: -0.24,
+  },
+  {
+    name: 'Display/H3 Mobile',
+    family: 'Firelli Variable', style: 'Regular',
+    size: 20, lineHeight: 24, letterSpacing: -0.2,
+  },
+  {
+    name: 'Display/H4',
+    family: 'Firelli Variable', style: 'Regular',
+    size: 22, lineHeight: 35.2, letterSpacing: -0.22,
   },
   {
     name: 'Display/Pullquote',
     family: 'Firelli Variable', style: 'Light Italic',
     size: 23, lineHeight: 29.9, letterSpacing: 0,
   },
-  {
-    name: 'Display/H4',
-    family: 'Pulpo', style: 'Medium',
-    size: 18, lineHeight: 23.4, letterSpacing: 0,
-  },
-  {
-    name: 'Display/H4 Link',
-    family: 'Pulpo', style: 'Regular',
-    size: 18, lineHeight: 21.6, letterSpacing: 0,
-    textDecoration: 'UNDERLINE',
-  },
-  {
-    name: 'Display/Stat',
-    family: 'Pulpo', style: 'Regular',
-    size: 52, lineHeight: 52, letterSpacing: -1.04,
-  },
 
+  // Body
   {
     name: 'Body/Standfirst',
-    family: 'Shift', style: 'Medium',
+    family: 'Inter', style: 'Medium',
+    size: 17, lineHeight: 25, letterSpacing: 0,
+  },
+  {
+    name: 'Body/Standfirst Alt',
+    family: 'Questa Sans', style: 'Medium',
     size: 17, lineHeight: 25.5, letterSpacing: 0,
   },
   {
     name: 'Body/Lead',
-    family: 'Pulpo', style: 'Light',
+    family: 'Inter', style: 'Light',
     size: 16, lineHeight: 24, letterSpacing: 0,
   },
   {
     name: 'Body/Paragraph',
-    family: 'Shift', style: 'Light',
+    family: 'Inter', style: 'Light',
     size: 15, lineHeight: 24, letterSpacing: 0,
   },
   {
     name: 'Body/Paragraph Bold',
-    family: 'Shift', style: 'Bold',
+    family: 'Inter', style: 'Regular',
+    size: 15, lineHeight: 24, letterSpacing: 0,
+  },
+  {
+    name: 'Body/Paragraph Alt',
+    family: 'Questa Sans', style: 'Regular',
     size: 15, lineHeight: 24, letterSpacing: 0,
   },
   {
     name: 'Body/Paragraph Link',
-    family: 'Shift', style: 'Light',
+    family: 'Inter', style: 'Light',
     size: 15, lineHeight: 24, letterSpacing: 0,
     textDecoration: 'UNDERLINE',
   },
   {
-    name: 'Body/Small',
-    family: 'Shift', style: 'Light',
-    size: 14, lineHeight: 20.3, letterSpacing: 0,
+    name: 'Body/Meta',
+    family: 'Questa Sans', style: 'Regular',
+    size: 14, lineHeight: 21, letterSpacing: 0,
+  },
+  {
+    name: 'Body/Caption',
+    family: 'Questa Sans', style: 'Regular',
+    size: 12, lineHeight: 19.2, letterSpacing: 0.48,
   },
 
+  // Caption / eyebrow / tag / label — all UPPERCASE
   {
     name: 'Caption/Eyebrow',
     family: 'Panel', style: 'Medium',
@@ -127,9 +166,39 @@ const STYLES = [
     textCase: 'UPPER',
   },
   {
+    name: 'Caption/Section',
+    family: 'Panel', style: 'Bold',
+    size: 11, lineHeight: 17.6, letterSpacing: 1.32,
+    textCase: 'UPPER',
+  },
+  {
+    name: 'Caption/Issue Tag',
+    family: 'Panel', style: 'Bold',
+    size: 11, lineHeight: 17.6, letterSpacing: 1.54,
+    textCase: 'UPPER',
+  },
+  {
     name: 'Caption/Number',
-    family: 'Pulpo', style: 'Bold',
+    family: 'Firelli Variable', style: 'Bold',
     size: 11, lineHeight: 17.6, letterSpacing: 0.88,
+    textCase: 'UPPER',
+  },
+  {
+    name: 'Caption/Metric Label',
+    family: 'Panel', style: 'Bold',
+    size: 12, lineHeight: 19.2, letterSpacing: 1.44,
+    textCase: 'UPPER',
+  },
+  {
+    name: 'Caption/Link Action',
+    family: 'Panel', style: 'Bold',
+    size: 12.75, lineHeight: 20.4, letterSpacing: 1.53,
+    textCase: 'UPPER',
+  },
+  {
+    name: 'Caption/Footer Nav',
+    family: 'Panel', style: 'Bold',
+    size: 12, lineHeight: 28.8, letterSpacing: 1.68,
     textCase: 'UPPER',
   },
   {
