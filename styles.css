@@ -303,6 +303,31 @@ html, body {
     transition: opacity 0.5s ease;
 }
 
+/* Page navigation link */
+#page-nav {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 100;
+}
+
+#page-nav a {
+    display: inline-block;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 12px;
+    text-decoration: none;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+}
+
+#page-nav a:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+}
+
 /* Pull-quote callout */
 .callout {
     background: #e7f1ff;

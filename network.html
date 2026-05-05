@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creator Network</title>
+    <link rel="stylesheet" href="network.css">
+</head>
+<body>
+    <aside id="sidebar">
+        <header>
+            <h1>Creator Network</h1>
+            <p class="subtitle">Instagram creators and how they connect</p>
+        </header>
+
+        <section class="panel">
+            <h2>Connections</h2>
+            <label class="check"><input type="checkbox" data-edge="category" checked><span>Shared category</span></label>
+            <label class="check"><input type="checkbox" data-edge="follow" checked><span>Mutual follows</span></label>
+            <label class="check"><input type="checkbox" data-edge="collab" checked><span>Collaborations</span></label>
+        </section>
+
+        <section class="panel">
+            <h2>Node size</h2>
+            <label class="radio"><input type="radio" name="size" value="connections" checked><span>By connections</span></label>
+            <label class="radio"><input type="radio" name="size" value="followers"><span>By followers</span></label>
+            <label class="radio"><input type="radio" name="size" value="uniform"><span>Uniform</span></label>
+        </section>
+
+        <section class="panel">
+            <h2>Layout</h2>
+            <label class="slider">
+                <span>Link distance</span>
+                <input type="range" id="linkDistance" min="30" max="220" value="90">
+            </label>
+            <label class="slider">
+                <span>Repulsion</span>
+                <input type="range" id="chargeStrength" min="-500" max="-20" value="-220">
+            </label>
+        </section>
+
+        <section class="panel">
+            <h2>Search</h2>
+            <input type="search" id="search" placeholder="Find a creator…" autocomplete="off">
+        </section>
+
+        <section class="panel" id="details-panel">
+            <h2>Details</h2>
+            <div id="details" class="details-empty">Hover or click a node to see details.</div>
+        </section>
+
+        <section class="panel" id="legend-panel">
+            <h2>Categories</h2>
+            <div id="legend"></div>
+        </section>
+
+        <nav class="backlink">
+            <a href="index.html">← Infinite photo canvas</a>
+        </nav>
+    </aside>
+
+    <main id="graph-container">
+        <svg id="graph" aria-label="Force-directed network of creators"></svg>
+        <div id="graph-controls">
+            <button id="zoom-in" aria-label="Zoom in">+</button>
+            <button id="zoom-out" aria-label="Zoom out">−</button>
+            <button id="zoom-reset" aria-label="Reset zoom">⟲</button>
+        </div>
+        <div id="graph-status" class="hidden"></div>
+    </main>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="network.js"></script>
+</body>
+</html>
