@@ -174,13 +174,37 @@ html, body {
 .callout {
     background: #e7f1ff;
     color: #101733;
-    border-left: 3px solid #fc3b2c;
-    padding: 6.5px 24px;
+    border-left: 2px solid #fc3b2c;
+    padding: 12px 24px 14px;
+    max-width: 700px;
+    margin: 0;
+}
+
+.callout__quote {
     font-size: 24px;
     line-height: 30px;
     letter-spacing: -0.24px;
-    max-width: 700px;
     margin: 0;
+}
+
+.callout__attribution {
+    display: block;
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 19.2px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #101733;
+}
+
+::selection {
+    background: #fef189;
+    color: #101733;
+}
+
+::-moz-selection {
+    background: #fef189;
+    color: #101733;
 }
 
 /* Responsive adjustments */
