@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulk Unfollow / Unfriend — Instagram, Facebook &amp; Threads</title>
+<link rel="stylesheet" href="bulk-unfollow.css">
+</head>
+<body>
+
+<header class="hdr">
+  <h1>Bulk Unfollow / Unfriend</h1>
+  <p class="sub">Browser-console scripts for cleaning out your Instagram, Facebook, and Threads social graph. Runs entirely in your own logged-in browser tab. No server, no credentials handled here.</p>
+</header>
+
+<section class="warn">
+  <strong>Read before using.</strong>
+  <ul>
+    <li>Bulk automation violates Meta's Terms of Service. Your account can be temporarily action-blocked or permanently disabled.</li>
+    <li>There is no public API for these actions. The scripts call the same internal endpoints / DOM elements your browser uses when you click buttons manually.</li>
+    <li>Use a conservative pace. The defaults run a few hundred actions per session with 3–8 s random delays. Increase only if you understand the risk.</li>
+    <li>Facebook changes its DOM frequently — those scripts may need selector tweaks if they stop finding buttons.</li>
+    <li>Operate only on accounts you own.</li>
+  </ul>
+</section>
+
+<section class="config">
+  <h2>Pace settings</h2>
+  <div class="row">
+    <label>Min delay between actions (ms)<input type="number" id="cfg-min" value="3000" min="500"></label>
+    <label>Max delay between actions (ms)<input type="number" id="cfg-max" value="8000" min="1000"></label>
+    <label>Max actions per session<input type="number" id="cfg-cap" value="150" min="1"></label>
+  </div>
+  <p class="note">These values are interpolated into each snippet below. After running, type <code>window.STOP_BULK = true</code> in the console to abort early.</p>
+</section>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="ig-unfollow">IG · Unfollow everyone</button>
+  <button class="tab" data-tab="ig-remove">IG · Remove followers</button>
+  <button class="tab" data-tab="fb-unfriend">FB · Unfriend everyone</button>
+  <button class="tab" data-tab="fb-unfollow">FB · Unfollow everyone</button>
+  <button class="tab" data-tab="th-unfollow">Threads · Unfollow everyone</button>
+  <button class="tab" data-tab="th-remove">Threads · Remove followers</button>
+</nav>
+
+<section class="panel active" id="ig-unfollow">
+  <h2>Instagram — unfollow everyone you follow</h2>
+  <ol class="steps">
+    <li>Open <a href="https://www.instagram.com/" target="_blank" rel="noopener">instagram.com</a> in this browser and make sure you're logged in.</li>
+    <li>Open DevTools (F12 or Cmd-Option-I) → <em>Console</em> tab.</li>
+    <li>Click <em>Copy</em>, paste in the console, press Enter.</li>
+    <li>Watch progress. To stop: <code>window.STOP_BULK = true</code>.</li>
+  </ol>
+  <div class="snippet">
+    <button class="copy" data-target="snip-ig-unfollow">Copy</button>
+    <pre><code id="snip-ig-unfollow"></code></pre>
+  </div>
+</section>
+
+<section class="panel" id="ig-remove">
+  <h2>Instagram — remove all your followers</h2>
+  <ol class="steps">
+    <li>On <a href="https://www.instagram.com/" target="_blank" rel="noopener">instagram.com</a>, logged in.</li>
+    <li>Open DevTools → Console.</li>
+    <li>Paste the snippet, press Enter.</li>
+    <li>Removed followers will need to re-request to follow you (private accounts) or re-tap follow (public).</li>
+  </ol>
+  <div class="snippet">
+    <button class="copy" data-target="snip-ig-remove">Copy</button>
+    <pre><code id="snip-ig-remove"></code></pre>
+  </div>
+</section>
+
+<section class="panel" id="fb-unfriend">
+  <h2>Facebook — unfriend everyone</h2>
+  <ol class="steps">
+    <li>Open <a href="https://www.facebook.com/friends/list" target="_blank" rel="noopener">facebook.com/friends/list</a> and let it load.</li>
+    <li>Open DevTools → Console.</li>
+    <li>Paste the snippet, press Enter. The script scrolls to load more friends, then clicks each "Friends" menu → "Unfriend" → confirm.</li>
+    <li>If FB has changed its markup and nothing happens, the selectors at the top of the script need updating.</li>
+  </ol>
+  <div class="snippet">
+    <button class="copy" data-target="snip-fb-unfriend">Copy</button>
+    <pre><code id="snip-fb-unfriend"></code></pre>
+  </div>
+</section>
+
+<section class="panel" id="fb-unfollow">
+  <h2>Facebook — unfollow everyone (people &amp; pages)</h2>
+  <ol class="steps">
+    <li>Open <a href="https://www.facebook.com/friends/following" target="_blank" rel="noopener">facebook.com/friends/following</a>.</li>
+    <li>Open DevTools → Console.</li>
+    <li>Paste the snippet, press Enter. Unfollowing keeps people as friends but removes them from your feed.</li>
+  </ol>
+  <div class="snippet">
+    <button class="copy" data-target="snip-fb-unfollow">Copy</button>
+    <pre><code id="snip-fb-unfollow"></code></pre>
+  </div>
+</section>
+
+<section class="panel" id="th-unfollow">
+  <h2>Threads — unfollow everyone</h2>
+  <ol class="steps">
+    <li>Open <a href="https://www.threads.com/" target="_blank" rel="noopener">threads.com</a> and log in. Navigate to your profile, then open the <em>Following</em> list (the count near your bio).</li>
+    <li>Open DevTools → Console.</li>
+    <li>Paste the snippet, press Enter. The script scrolls the list and clicks each "Following" pill, then confirms.</li>
+  </ol>
+  <div class="snippet">
+    <button class="copy" data-target="snip-th-unfollow">Copy</button>
+    <pre><code id="snip-th-unfollow"></code></pre>
+  </div>
+</section>
+
+<section class="panel" id="th-remove">
+  <h2>Threads — remove all your followers</h2>
+  <ol class="steps">
+    <li>On your Threads profile, open the <em>Followers</em> list.</li>
+    <li>Open DevTools → Console.</li>
+    <li>Paste the snippet. It opens each follower's row menu and clicks "Remove".</li>
+  </ol>
+  <div class="snippet">
+    <button class="copy" data-target="snip-th-remove">Copy</button>
+    <pre><code id="snip-th-remove"></code></pre>
+  </div>
+</section>
+
+<footer class="ftr">
+  <p>Self-contained. No data leaves this page. Source: <code>bulk-unfollow.html</code>, <code>bulk-unfollow.js</code>.</p>
+</footer>
+
+<script src="bulk-unfollow.js"></script>
+</body>
+</html>
