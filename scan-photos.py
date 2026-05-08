@@ -10,15 +10,16 @@ Options:
               Without this flag, absolute paths are used (requires proper CORS setup)
 """
 
-import os
-import sys
-import json
-import shutil
 import hashlib
+import json
+import os
+import shutil
+import sys
 from pathlib import Path
 
 # Supported image extensions
-IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.avif'}
+IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".avif"}
+
 
 def get_image_files(folder_path, recursive=True):
     """Find all image files in the specified folder."""
@@ -27,20 +28,22 @@ def get_image_files(folder_path, recursive=True):
 
     if recursive:
         for ext in IMAGE_EXTENSIONS:
-            images.extend(folder.rglob(f'*{ext}'))
-            images.extend(folder.rglob(f'*{ext.upper()}'))
+            images.extend(folder.rglob(f"*{ext}"))
+            images.extend(folder.rglob(f"*{ext.upper()}"))
     else:
         for ext in IMAGE_EXTENSIONS:
-            images.extend(folder.glob(f'*{ext}'))
-            images.extend(folder.glob(f'*{ext.upper()}'))
+            images.extend(folder.glob(f"*{ext}"))
+            images.extend(folder.glob(f"*{ext.upper()}"))
 
     # Remove duplicates and sort
     images = sorted(set(images))
     return images
 
+
 def generate_id(path):
     """Generate a unique ID for an image based on its path."""
     return hashlib.md5(str(path).encode()).hexdigest()[:12]
+
 
 def main():
     if len(sys.argv) < 2:
@@ -50,7 +53,7 @@ def main():
         sys.exit(1)
 
     source_folder = sys.argv[1]
-    copy_files = '--copy' in sys.argv
+    copy_files = "--copy" in sys.argv
 
     if not os.path.isdir(source_folder):
         print(f"Error: '{source_folder}' is not a valid directory")
@@ -67,7 +70,7 @@ def main():
 
     # Output directory (same as this script)
     script_dir = Path(__file__).parent.resolve()
-    photos_dir = script_dir / 'photos'
+    photos_dir = script_dir / "photos"
 
     photos_data = []
 
@@ -91,11 +94,9 @@ def main():
                     print(f"Warning: Could not copy {img_path}: {e}")
                     continue
 
-            photos_data.append({
-                'id': img_id,
-                'src': f'photos/{new_name}',
-                'original': str(img_path)
-            })
+            photos_data.append(
+                {"id": img_id, "src": f"photos/{new_name}", "original": str(img_path)}
+            )
 
             # Progress indicator
             if (i + 1) % 100 == 0:
@@ -108,20 +109,16 @@ def main():
 
         for img_path in images:
             img_id = generate_id(img_path)
-            photos_data.append({
-                'id': img_id,
-                'src': str(img_path.resolve()),
-                'original': str(img_path)
-            })
+            photos_data.append(
+                {"id": img_id, "src": str(img_path.resolve()), "original": str(img_path)}
+            )
 
     # Write photos.json
-    output_file = script_dir / 'photos.json'
-    with open(output_file, 'w') as f:
-        json.dump({
-            'source': source_folder,
-            'count': len(photos_data),
-            'photos': photos_data
-        }, f, indent=2)
+    output_file = script_dir / "photos.json"
+    with open(output_file, "w") as f:
+        json.dump(
+            {"source": source_folder, "count": len(photos_data), "photos": photos_data}, f, indent=2
+        )
 
     print(f"\nGenerated '{output_file}' with {len(photos_data)} photos")
 
@@ -132,5 +129,6 @@ def main():
     print("  1. Start a local server: python -m http.server 8000")
     print("  2. Open: http://localhost:8000")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

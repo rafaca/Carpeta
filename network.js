@@ -40,7 +40,8 @@ const rootGroup = svg.append('g');
 const linkGroup = rootGroup.append('g').attr('class', 'links');
 const nodeGroup = rootGroup.append('g').attr('class', 'nodes');
 
-const zoom = d3.zoom()
+const zoom = d3
+    .zoom()
     .scaleExtent([0.1, 8])
     .on('zoom', (event) => rootGroup.attr('transform', event.transform));
 svg.call(zoom);
@@ -50,20 +51,25 @@ let simulation;
 async function init() {
     const { creators, source } = await loadCreators();
     state.creators = creators;
-    state.nodes = creators.map(c => ({ ...c }));
+    state.nodes = creators.map((c) => ({ ...c }));
 
     state.categoriesAll = uniqueCategories();
-    state.colorScale = d3.scaleOrdinal()
+    state.colorScale = d3
+        .scaleOrdinal()
         .domain(state.categoriesAll)
         .range(d3.schemeTableau10.concat(d3.schemeSet3));
 
     if (state.nodes.length === 0) {
-        showStatus('No creator data found. Drop a <code>creators.json</code> file into the project root. See <code>creators.sample.json</code> for the expected schema.');
+        showStatus(
+            'No creator data found. Drop a <code>creators.json</code> file into the project root. See <code>creators.sample.json</code> for the expected schema.'
+        );
         return;
     }
 
     if (source === 'creators.sample.json') {
-        showStatus('Showing sample data from <code>creators.sample.json</code>. Export your Notion database and save it as <code>creators.json</code> to see your own creators.');
+        showStatus(
+            'Showing sample data from <code>creators.sample.json</code>. Export your Notion database and save it as <code>creators.json</code> to see your own creators.'
+        );
     }
 
     setupControls();
@@ -91,7 +97,7 @@ async function loadCreators() {
 function uniqueCategories() {
     const cats = new Set();
     for (const c of state.creators) {
-        (c.categories || []).forEach(x => cats.add(x));
+        (c.categories || []).forEach((x) => cats.add(x));
     }
     return [...cats].sort();
 }
@@ -118,7 +124,7 @@ function rebuildLinks() {
 
             if (activeEdgeTypes.has('category')) {
                 const aCats = new Set(a.categories || []);
-                const shared = (b.categories || []).filter(c => aCats.has(c));
+                const shared = (b.categories || []).filter((c) => aCats.has(c));
                 if (shared.length > 0) {
                     types.add('category');
                     weight += shared.length * EDGE_WEIGHTS.category;
@@ -186,14 +192,22 @@ function initSimulation() {
     const rect = container.getBoundingClientRect();
     svg.attr('width', rect.width).attr('height', rect.height);
 
-    simulation = d3.forceSimulation(state.nodes)
-        .force('link', d3.forceLink(state.links)
-            .id(d => d.id)
-            .distance(getLinkDistance())
-            .strength(l => Math.min(1, l.weight / 6)))
+    simulation = d3
+        .forceSimulation(state.nodes)
+        .force(
+            'link',
+            d3
+                .forceLink(state.links)
+                .id((d) => d.id)
+                .distance(getLinkDistance())
+                .strength((l) => Math.min(1, l.weight / 6))
+        )
         .force('charge', d3.forceManyBody().strength(getChargeStrength()))
         .force('center', d3.forceCenter(rect.width / 2, rect.height / 2))
-        .force('collide', d3.forceCollide().radius(d => nodeRadius(d) + 3))
+        .force(
+            'collide',
+            d3.forceCollide().radius((d) => nodeRadius(d) + 3)
+        )
         .on('tick', ticked);
 
     render();
@@ -209,44 +223,56 @@ function onResize() {
 
 function render() {
     // Links
-    linkGroup.selectAll('line')
-        .data(state.links, d => `${linkEndId(d.source)}|${linkEndId(d.target)}`)
+    linkGroup
+        .selectAll('line')
+        .data(state.links, (d) => `${linkEndId(d.source)}|${linkEndId(d.target)}`)
         .join(
-            enter => enter.append('line')
-                .attr('class', d => `link ${d.types.map(t => `type-${t}`).join(' ')}`)
-                .attr('stroke-width', d => Math.max(1, Math.sqrt(d.weight))),
-            update => update
-                .attr('class', d => `link ${d.types.map(t => `type-${t}`).join(' ')}`)
-                .attr('stroke-width', d => Math.max(1, Math.sqrt(d.weight))),
-            exit => exit.remove()
+            (enter) =>
+                enter
+                    .append('line')
+                    .attr('class', (d) => `link ${d.types.map((t) => `type-${t}`).join(' ')}`)
+                    .attr('stroke-width', (d) => Math.max(1, Math.sqrt(d.weight))),
+            (update) =>
+                update
+                    .attr('class', (d) => `link ${d.types.map((t) => `type-${t}`).join(' ')}`)
+                    .attr('stroke-width', (d) => Math.max(1, Math.sqrt(d.weight))),
+            (exit) => exit.remove()
         );
 
     // Nodes
-    const nodeSel = nodeGroup.selectAll('g.node')
-        .data(state.nodes, d => d.id)
+    const nodeSel = nodeGroup
+        .selectAll('g.node')
+        .data(state.nodes, (d) => d.id)
         .join(
-            enter => {
-                const g = enter.append('g')
+            (enter) => {
+                const g = enter
+                    .append('g')
                     .attr('class', 'node')
                     .call(drag(simulation))
-                    .on('click', (event, d) => { event.stopPropagation(); selectNode(d); })
-                    .on('mouseenter', (event, d) => { if (!state.selectedId) showDetails(d); })
-                    .on('mouseleave', () => { if (!state.selectedId) showDetails(null); });
+                    .on('click', (event, d) => {
+                        event.stopPropagation();
+                        selectNode(d);
+                    })
+                    .on('mouseenter', (event, d) => {
+                        if (!state.selectedId) showDetails(d);
+                    })
+                    .on('mouseleave', () => {
+                        if (!state.selectedId) showDetails(null);
+                    });
                 g.append('circle');
                 g.append('text').attr('class', 'label');
                 return g;
             },
-            update => update,
-            exit => exit.remove()
+            (update) => update,
+            (exit) => exit.remove()
         );
 
-    nodeSel.select('circle')
-        .attr('r', nodeRadius)
-        .attr('fill', nodeColor);
+    nodeSel.select('circle').attr('r', nodeRadius).attr('fill', nodeColor);
 
-    nodeSel.select('text.label')
-        .attr('dy', d => -(nodeRadius(d) + 4))
-        .text(d => d.name);
+    nodeSel
+        .select('text.label')
+        .attr('dy', (d) => -(nodeRadius(d) + 4))
+        .text((d) => d.name);
 
     applyHighlight();
 }
@@ -256,18 +282,19 @@ function linkEndId(end) {
 }
 
 function ticked() {
-    linkGroup.selectAll('line')
-        .attr('x1', d => d.source.x)
-        .attr('y1', d => d.source.y)
-        .attr('x2', d => d.target.x)
-        .attr('y2', d => d.target.y);
+    linkGroup
+        .selectAll('line')
+        .attr('x1', (d) => d.source.x)
+        .attr('y1', (d) => d.source.y)
+        .attr('x2', (d) => d.target.x)
+        .attr('y2', (d) => d.target.y);
 
-    nodeGroup.selectAll('g.node')
-        .attr('transform', d => `translate(${d.x},${d.y})`);
+    nodeGroup.selectAll('g.node').attr('transform', (d) => `translate(${d.x},${d.y})`);
 }
 
 function drag(sim) {
-    return d3.drag()
+    return d3
+        .drag()
         .on('start', (event, d) => {
             if (!event.active) sim.alphaTarget(0.3).restart();
             d.fx = d.x;
@@ -298,9 +325,11 @@ function applyHighlight() {
     if (sel) matched.add(sel);
     if (term) {
         for (const n of state.nodes) {
-            if (n.name.toLowerCase().includes(term) ||
+            if (
+                n.name.toLowerCase().includes(term) ||
                 (n.handle || '').toLowerCase().includes(term) ||
-                (n.categories || []).some(c => c.toLowerCase().includes(term))) {
+                (n.categories || []).some((c) => c.toLowerCase().includes(term))
+            ) {
                 matched.add(n.id);
             }
         }
@@ -318,18 +347,17 @@ function applyHighlight() {
         }
     }
 
-    nodeGroup.selectAll('g.node')
-        .classed('dim', d => highlightActive && !neighbors.has(d.id))
-        .classed('active', d => matched.has(d.id));
+    nodeGroup
+        .selectAll('g.node')
+        .classed('dim', (d) => highlightActive && !neighbors.has(d.id))
+        .classed('active', (d) => matched.has(d.id));
 
-    linkGroup.selectAll('line')
-        .classed('dim', d => {
-            if (!highlightActive) return false;
-            const sId = linkEndId(d.source);
-            const tId = linkEndId(d.target);
-            return !(matched.has(sId) && matched.has(tId)) &&
-                   !(matched.has(sId) || matched.has(tId));
-        });
+    linkGroup.selectAll('line').classed('dim', (d) => {
+        if (!highlightActive) return false;
+        const sId = linkEndId(d.source);
+        const tId = linkEndId(d.target);
+        return !(matched.has(sId) && matched.has(tId)) && !(matched.has(sId) || matched.has(tId));
+    });
 }
 
 function showDetails(d) {
@@ -341,7 +369,7 @@ function showDetails(d) {
     }
     el.className = '';
     const cats = (d.categories || [])
-        .map(c => `<span class="chip">${escapeHtml(c)}</span>`)
+        .map((c) => `<span class="chip">${escapeHtml(c)}</span>`)
         .join('');
     const followers = d.followers
         ? `<p><strong>${d.followers.toLocaleString()}</strong> followers</p>`
@@ -399,7 +427,7 @@ function reheat(alpha = 0.5) {
 }
 
 function setupControls() {
-    document.querySelectorAll('input[data-edge]').forEach(cb => {
+    document.querySelectorAll('input[data-edge]').forEach((cb) => {
         cb.addEventListener('change', () => {
             if (cb.checked) state.activeEdgeTypes.add(cb.dataset.edge);
             else state.activeEdgeTypes.delete(cb.dataset.edge);
@@ -411,12 +439,14 @@ function setupControls() {
         });
     });
 
-    document.querySelectorAll('input[name="size"]').forEach(rb => {
+    document.querySelectorAll('input[name="size"]').forEach((rb) => {
         rb.addEventListener('change', () => {
             state.sizeMode = rb.value;
             render();
-            simulation.force('collide',
-                d3.forceCollide().radius(d => nodeRadius(d) + 3));
+            simulation.force(
+                'collide',
+                d3.forceCollide().radius((d) => nodeRadius(d) + 3)
+            );
             reheat(0.4);
         });
     });
@@ -446,12 +476,20 @@ function setupControls() {
     });
 
     // Zoom buttons
-    document.getElementById('zoom-in').addEventListener('click',
-        () => svg.transition().duration(200).call(zoom.scaleBy, 1.3));
-    document.getElementById('zoom-out').addEventListener('click',
-        () => svg.transition().duration(200).call(zoom.scaleBy, 1 / 1.3));
-    document.getElementById('zoom-reset').addEventListener('click',
-        () => svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity));
+    document
+        .getElementById('zoom-in')
+        .addEventListener('click', () => svg.transition().duration(200).call(zoom.scaleBy, 1.3));
+    document.getElementById('zoom-out').addEventListener('click', () =>
+        svg
+            .transition()
+            .duration(200)
+            .call(zoom.scaleBy, 1 / 1.3)
+    );
+    document
+        .getElementById('zoom-reset')
+        .addEventListener('click', () =>
+            svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity)
+        );
 }
 
 function showStatus(html) {
