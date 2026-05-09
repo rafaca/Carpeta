@@ -33,6 +33,21 @@ jobs:
       - name: Build static site
         run: npm run build
 
+      - name: Write IP allowlist .htaccess
+        env:
+          STAGING_ALLOWED_IP: ${{ secrets.STAGING_ALLOWED_IP }}
+        run: |
+          if [ -n "$STAGING_ALLOWED_IP" ]; then
+            ips=$(echo "$STAGING_ALLOWED_IP" | tr ',' ' ')
+            cat > out/.htaccess <<EOF
+          # Staging IP allowlist — managed by .github/workflows/deploy-staging.yml
+          Require ip $ips
+          EOF
+            echo "Wrote out/.htaccess restricting access to: $ips"
+          else
+            echo "STAGING_ALLOWED_IP not set; deploying without IP restriction"
+          fi
+
       - name: Configure SSH
         env:
           DREAMHOST_SSH_KEY: ${{ secrets.DREAMHOST_SSH_KEY }}
