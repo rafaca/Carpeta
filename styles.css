@@ -309,6 +309,8 @@ html, body {
     top: 24px;
     right: 24px;
     z-index: 100;
+    display: flex;
+    gap: 8px;
 }
 
 #page-nav a {
