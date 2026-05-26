@@ -1,0 +1,86 @@
+name: Deploy to Dreamhost
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-dreamhost
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Stage site files
+        run: |
+          mkdir -p _site
+          rsync -av \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='figma-plugin' \
+            --exclude='notion-to-creators.py' \
+            --exclude='scan-photos.py' \
+            --exclude='_site' \
+            --exclude='CNAME' \
+            ./ _site/
+
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.DREAMHOST_SSH_KEY }}
+          DH_HOST: ${{ secrets.DREAMHOST_HOST }}
+        run: |
+          DH_HOST="$(printf '%s' "$DH_HOST" | tr -d '[:space:]')"
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          echo "--- key file head/tail ---"
+          head -1 ~/.ssh/id_deploy
+          tail -1 ~/.ssh/id_deploy
+          echo "--- key fingerprint (compare to your local key) ---"
+          ssh-keygen -lf ~/.ssh/id_deploy || { echo "KEY DOES NOT PARSE"; exit 1; }
+          echo "--- derived public key (must match line in Dreamhost ~/.ssh/authorized_keys) ---"
+          ssh-keygen -y -f ~/.ssh/id_deploy
+          ssh-keyscan -H "$DH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Probe SSH auth (verbose, batch mode)
+        env:
+          DH_USER: ${{ secrets.DREAMHOST_USER }}
+          DH_HOST: ${{ secrets.DREAMHOST_HOST }}
+        run: |
+          DH_USER="$(printf '%s' "$DH_USER" | tr -d '[:space:]')"
+          DH_HOST="$(printf '%s' "$DH_HOST" | tr -d '[:space:]')"
+          echo "--- non-sensitive metadata ---"
+          echo "DH_USER length: ${#DH_USER}"
+          echo "DH_USER first char: '${DH_USER:0:1}'"
+          echo "DH_USER last char:  '${DH_USER: -1}'"
+          echo "DH_HOST length: ${#DH_HOST}"
+          echo "DH_HOST suffix: '${DH_HOST: -14}'"
+          echo "--- DNS resolution of host ---"
+          getent hosts "$DH_HOST" || echo "(host did not resolve)"
+          echo "--- ssh -vv probe (BatchMode prevents password fallback) ---"
+          ssh -vv \
+            -i ~/.ssh/id_deploy \
+            -o IdentitiesOnly=yes \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
+            -o PreferredAuthentications=publickey \
+            "${DH_USER}@${DH_HOST}" 'echo CONNECTED_OK; whoami; pwd' || echo "(probe exited non-zero)"
+
+      - name: Deploy via rsync over SSH
+        env:
+          DH_USER: ${{ secrets.DREAMHOST_USER }}
+          DH_HOST: ${{ secrets.DREAMHOST_HOST }}
+          DH_PATH: ${{ secrets.DREAMHOST_PATH }}
+        run: |
+          DH_USER="$(printf '%s' "$DH_USER" | tr -d '[:space:]')"
+          DH_HOST="$(printf '%s' "$DH_HOST" | tr -d '[:space:]')"
+          DH_PATH="$(printf '%s' "$DH_PATH" | tr -d '[:space:]')"
+          echo "Deploying to ${DH_USER}@${DH_HOST}:${DH_PATH}"
+          rsync -avz \
+            -e "ssh -i ~/.ssh/id_deploy -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes" \
+            _site/ "${DH_USER}@${DH_HOST}:${DH_PATH}"
