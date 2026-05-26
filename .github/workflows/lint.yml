@@ -1,32 +1,32 @@
 name: Lint & Format
 
 on:
-    push:
-    pull_request:
-    schedule:
-        # Weekly, Mondays at 08:00 UTC.
-        - cron: '0 8 * * 1'
-    workflow_dispatch:
+  push:
+  pull_request:
+  schedule:
+    # Weekly, Mondays at 08:00 UTC.
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
 
 jobs:
-    prettier:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: '22'
-                  cache: npm
-            - run: npm ci
-            - run: npm run format:check
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
 
-    ruff:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-python@v5
-              with:
-                  python-version: '3.11'
-            - run: pip install ruff==0.15.8
-            - run: ruff check .
-            - run: ruff format --check .
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install ruff==0.15.8
+      - run: ruff check .
+      - run: ruff format --check .

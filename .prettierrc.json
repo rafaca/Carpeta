@@ -13,7 +13,7 @@
       }
     },
     {
-      "files": ["*.json", "*.md", ".prettierrc.json"],
+      "files": ["*.json", "*.md", ".prettierrc.json", "**/*.{yml,yaml}"],
       "options": {
         "tabWidth": 2
       }
