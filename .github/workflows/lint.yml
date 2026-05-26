@@ -4,8 +4,8 @@ on:
   push:
   pull_request:
   schedule:
-    # Weekly, Mondays at 08:00 UTC.
-    - cron: '0 8 * * 1'
+    # Weekly, Saturdays at 08:00 UTC.
+    - cron: '0 8 * * 6'
   workflow_dispatch:
 
 jobs:
