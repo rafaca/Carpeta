@@ -46,11 +46,11 @@ class InfiniteCanvas {
                 { width: 400, height: 300 },
                 { width: 200, height: 200 },
                 { width: 350, height: 250 },
-                { width: 280, height: 400 }
+                { width: 280, height: 400 },
             ],
             gridSpacing: 40,
             chunkSize: 2000,
-            viewPadding: 500
+            viewPadding: 500,
         };
 
         // Photos data
@@ -105,7 +105,7 @@ class InfiniteCanvas {
                 id: `demo-${i}`,
                 src: `https://picsum.photos/seed/${category}${i}/${width}/${height}`,
                 width,
-                height
+                height,
             });
         }
 
@@ -128,13 +128,21 @@ class InfiniteCanvas {
         this.container.addEventListener('wheel', this.onWheel.bind(this), { passive: false });
 
         // Touch events
-        this.container.addEventListener('touchstart', this.onTouchStart.bind(this), { passive: false });
-        this.container.addEventListener('touchmove', this.onTouchMove.bind(this), { passive: false });
+        this.container.addEventListener('touchstart', this.onTouchStart.bind(this), {
+            passive: false,
+        });
+        this.container.addEventListener('touchmove', this.onTouchMove.bind(this), {
+            passive: false,
+        });
         this.container.addEventListener('touchend', this.onTouchEnd.bind(this));
 
         // Control buttons
-        document.getElementById('zoom-in').addEventListener('click', () => this.zoomBy(this.config.zoomStep));
-        document.getElementById('zoom-out').addEventListener('click', () => this.zoomBy(-this.config.zoomStep));
+        document
+            .getElementById('zoom-in')
+            .addEventListener('click', () => this.zoomBy(this.config.zoomStep));
+        document
+            .getElementById('zoom-out')
+            .addEventListener('click', () => this.zoomBy(-this.config.zoomStep));
         document.getElementById('reset').addEventListener('click', () => this.resetView());
 
         // Window resize
@@ -167,8 +175,8 @@ class InfiniteCanvas {
         const dt = now - this.lastMoveTime;
 
         if (dt > 0) {
-            this.velocityX = (e.clientX - this.lastX) / dt * 16;
-            this.velocityY = (e.clientY - this.lastY) / dt * 16;
+            this.velocityX = ((e.clientX - this.lastX) / dt) * 16;
+            this.velocityY = ((e.clientY - this.lastY) / dt) * 16;
         }
 
         this.translateX = e.clientX - this.startX;
@@ -189,8 +197,10 @@ class InfiniteCanvas {
         this.container.classList.remove('dragging');
 
         // Start momentum animation if velocity is significant
-        if (Math.abs(this.velocityX) > this.config.minVelocity ||
-            Math.abs(this.velocityY) > this.config.minVelocity) {
+        if (
+            Math.abs(this.velocityX) > this.config.minVelocity ||
+            Math.abs(this.velocityY) > this.config.minVelocity
+        ) {
             this.startMomentum();
         }
     }
@@ -237,8 +247,8 @@ class InfiniteCanvas {
             const dt = now - this.lastMoveTime;
 
             if (dt > 0) {
-                this.velocityX = (touch.clientX - this.lastX) / dt * 16;
-                this.velocityY = (touch.clientY - this.lastY) / dt * 16;
+                this.velocityX = ((touch.clientX - this.lastX) / dt) * 16;
+                this.velocityY = ((touch.clientY - this.lastY) / dt) * 16;
             }
 
             this.translateX = touch.clientX - this.startX;
@@ -283,8 +293,10 @@ class InfiniteCanvas {
         if (e.touches.length === 0) {
             this.isDragging = false;
 
-            if (Math.abs(this.velocityX) > this.config.minVelocity ||
-                Math.abs(this.velocityY) > this.config.minVelocity) {
+            if (
+                Math.abs(this.velocityX) > this.config.minVelocity ||
+                Math.abs(this.velocityY) > this.config.minVelocity
+            ) {
                 this.startMomentum();
             }
         } else if (e.touches.length === 1) {
@@ -382,8 +394,10 @@ class InfiniteCanvas {
             this.velocityX *= this.config.friction;
             this.velocityY *= this.config.friction;
 
-            if (Math.abs(this.velocityX) < this.config.minVelocity &&
-                Math.abs(this.velocityY) < this.config.minVelocity) {
+            if (
+                Math.abs(this.velocityX) < this.config.minVelocity &&
+                Math.abs(this.velocityY) < this.config.minVelocity
+            ) {
                 return;
             }
 
@@ -472,7 +486,8 @@ class InfiniteCanvas {
         for (let i = 0; i < numPhotos; i++) {
             const photoIndex = Math.floor(random() * this.photos.length);
             const photo = this.photos[photoIndex];
-            const sizeConfig = this.config.photoSizes[Math.floor(random() * this.config.photoSizes.length)];
+            const sizeConfig =
+                this.config.photoSizes[Math.floor(random() * this.config.photoSizes.length)];
 
             const x = baseX + random() * (chunkSize - sizeConfig.width - this.config.gridSpacing);
             const y = baseY + random() * (chunkSize - sizeConfig.height - this.config.gridSpacing);
@@ -516,7 +531,8 @@ class InfiniteCanvas {
         };
 
         img.onerror = () => {
-            placeholder.innerHTML = '<span style="color: #666; font-size: 12px;">Failed to load</span>';
+            placeholder.innerHTML =
+                '<span style="color: #666; font-size: 12px;">Failed to load</span>';
         };
 
         img.src = photo.src;
@@ -531,7 +547,7 @@ class InfiniteCanvas {
         let hash = 0;
         for (let i = 0; i < str.length; i++) {
             const char = str.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
+            hash = (hash << 5) - hash + char;
             hash = hash & hash;
         }
         return Math.abs(hash);
@@ -539,7 +555,7 @@ class InfiniteCanvas {
 
     // Utility: seeded random number generator
     seededRandom(seed) {
-        return function() {
+        return function () {
             seed = (seed * 1103515245 + 12345) & 0x7fffffff;
             return seed / 0x7fffffff;
         };

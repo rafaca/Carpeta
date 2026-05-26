@@ -4,7 +4,8 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -59,7 +60,8 @@ body {
     margin-bottom: 2px;
 }
 
-.check, .radio {
+.check,
+.radio {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -69,7 +71,8 @@ body {
     color: rgba(255, 255, 255, 0.85);
 }
 
-.check input, .radio input {
+.check input,
+.radio input {
     accent-color: #fff;
     cursor: pointer;
 }
@@ -82,7 +85,7 @@ body {
     color: rgba(255, 255, 255, 0.55);
 }
 
-.slider input[type="range"] {
+.slider input[type='range'] {
     width: 100%;
     accent-color: #fff;
 }
@@ -245,7 +248,9 @@ body {
 .link {
     stroke: rgba(255, 255, 255, 0.18);
     stroke-linecap: round;
-    transition: stroke 0.2s ease, stroke-opacity 0.2s ease;
+    transition:
+        stroke 0.2s ease,
+        stroke-opacity 0.2s ease;
 }
 
 .link.type-collab {
@@ -268,7 +273,9 @@ body {
     stroke: #0a0a0a;
     stroke-width: 1.5;
     cursor: pointer;
-    transition: stroke 0.2s ease, stroke-width 0.2s ease;
+    transition:
+        stroke 0.2s ease,
+        stroke-width 0.2s ease;
 }
 
 .node:hover circle {

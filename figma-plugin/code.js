@@ -22,120 +22,180 @@ const REMAP_PULPO_TO_FIRELLI = true;
 const TAG_NODES = true;
 
 const PULPO_TO_FIRELLI_WEIGHT = {
-  'Light': 'Light',
-  'Regular': 'Regular',
-  'Medium': 'Medium',
-  'Bold': 'Bold',
+  Light: 'Light',
+  Regular: 'Regular',
+  Medium: 'Medium',
+  Bold: 'Bold',
 };
 
 const STYLES = [
   {
     name: 'Display/Banner',
-    family: 'Giramisu VF', style: 'Straight Tight',
-    size: 78, lineHeight: 74.1, letterSpacing: -1.56,
+    family: 'Giramisu VF',
+    style: 'Straight Tight',
+    size: 78,
+    lineHeight: 74.1,
+    letterSpacing: -1.56,
   },
   {
     name: 'Display/H1',
-    family: 'Firelli Variable', style: 'Thin',
-    size: 59, lineHeight: 61.95, letterSpacing: -0.59,
+    family: 'Firelli Variable',
+    style: 'Thin',
+    size: 59,
+    lineHeight: 61.95,
+    letterSpacing: -0.59,
   },
   {
     name: 'Display/Section',
-    family: 'Pulpo', style: 'Medium',
-    size: 40, lineHeight: 44, letterSpacing: -0.4,
+    family: 'Pulpo',
+    style: 'Medium',
+    size: 40,
+    lineHeight: 44,
+    letterSpacing: -0.4,
   },
   {
     name: 'Display/H2',
-    family: 'Firelli Variable', style: 'Light',
-    size: 37, lineHeight: 40.7, letterSpacing: -0.555,
+    family: 'Firelli Variable',
+    style: 'Light',
+    size: 37,
+    lineHeight: 40.7,
+    letterSpacing: -0.555,
   },
   {
     name: 'Display/H3',
-    family: 'Pulpo', style: 'Medium',
-    size: 28, lineHeight: 36, letterSpacing: -0.42,
+    family: 'Pulpo',
+    style: 'Medium',
+    size: 28,
+    lineHeight: 36,
+    letterSpacing: -0.42,
   },
   {
     name: 'Display/Pullquote',
-    family: 'Firelli Variable', style: 'Light Italic',
-    size: 23, lineHeight: 29.9, letterSpacing: 0,
+    family: 'Firelli Variable',
+    style: 'Light Italic',
+    size: 23,
+    lineHeight: 29.9,
+    letterSpacing: 0,
   },
   {
     name: 'Display/H4',
-    family: 'Pulpo', style: 'Medium',
-    size: 18, lineHeight: 23.4, letterSpacing: 0,
+    family: 'Pulpo',
+    style: 'Medium',
+    size: 18,
+    lineHeight: 23.4,
+    letterSpacing: 0,
   },
   {
     name: 'Display/H4 Link',
-    family: 'Pulpo', style: 'Regular',
-    size: 18, lineHeight: 21.6, letterSpacing: 0,
+    family: 'Pulpo',
+    style: 'Regular',
+    size: 18,
+    lineHeight: 21.6,
+    letterSpacing: 0,
     textDecoration: 'UNDERLINE',
   },
   {
     name: 'Display/Stat',
-    family: 'Pulpo', style: 'Regular',
-    size: 52, lineHeight: 52, letterSpacing: -1.04,
+    family: 'Pulpo',
+    style: 'Regular',
+    size: 52,
+    lineHeight: 52,
+    letterSpacing: -1.04,
   },
 
   {
     name: 'Body/Standfirst',
-    family: 'Shift', style: 'Medium',
-    size: 17, lineHeight: 25.5, letterSpacing: 0,
+    family: 'Shift',
+    style: 'Medium',
+    size: 17,
+    lineHeight: 25.5,
+    letterSpacing: 0,
   },
   {
     name: 'Body/Lead',
-    family: 'Pulpo', style: 'Light',
-    size: 16, lineHeight: 24, letterSpacing: 0,
+    family: 'Pulpo',
+    style: 'Light',
+    size: 16,
+    lineHeight: 24,
+    letterSpacing: 0,
   },
   {
     name: 'Body/Paragraph',
-    family: 'Shift', style: 'Light',
-    size: 15, lineHeight: 24, letterSpacing: 0,
+    family: 'Shift',
+    style: 'Light',
+    size: 15,
+    lineHeight: 24,
+    letterSpacing: 0,
   },
   {
     name: 'Body/Paragraph Bold',
-    family: 'Shift', style: 'Bold',
-    size: 15, lineHeight: 24, letterSpacing: 0,
+    family: 'Shift',
+    style: 'Bold',
+    size: 15,
+    lineHeight: 24,
+    letterSpacing: 0,
   },
   {
     name: 'Body/Paragraph Link',
-    family: 'Shift', style: 'Light',
-    size: 15, lineHeight: 24, letterSpacing: 0,
+    family: 'Shift',
+    style: 'Light',
+    size: 15,
+    lineHeight: 24,
+    letterSpacing: 0,
     textDecoration: 'UNDERLINE',
   },
   {
     name: 'Body/Small',
-    family: 'Shift', style: 'Light',
-    size: 14, lineHeight: 20.3, letterSpacing: 0,
+    family: 'Shift',
+    style: 'Light',
+    size: 14,
+    lineHeight: 20.3,
+    letterSpacing: 0,
   },
 
   {
     name: 'Caption/Eyebrow',
-    family: 'Panel', style: 'Medium',
-    size: 14, lineHeight: 22.4, letterSpacing: 1.12,
+    family: 'Panel',
+    style: 'Medium',
+    size: 14,
+    lineHeight: 22.4,
+    letterSpacing: 1.12,
     textCase: 'UPPER',
   },
   {
     name: 'Caption/Eyebrow Bold',
-    family: 'Panel', style: 'Bold',
-    size: 14, lineHeight: 22.4, letterSpacing: 1.12,
+    family: 'Panel',
+    style: 'Bold',
+    size: 14,
+    lineHeight: 22.4,
+    letterSpacing: 1.12,
     textCase: 'UPPER',
   },
   {
     name: 'Caption/Tag',
-    family: 'Panel', style: 'Medium',
-    size: 14, lineHeight: 18.2, letterSpacing: 1.12,
+    family: 'Panel',
+    style: 'Medium',
+    size: 14,
+    lineHeight: 18.2,
+    letterSpacing: 1.12,
     textCase: 'UPPER',
   },
   {
     name: 'Caption/Number',
-    family: 'Pulpo', style: 'Bold',
-    size: 11, lineHeight: 17.6, letterSpacing: 0.88,
+    family: 'Pulpo',
+    style: 'Bold',
+    size: 11,
+    lineHeight: 17.6,
+    letterSpacing: 0.88,
     textCase: 'UPPER',
   },
   {
     name: 'Caption/Small',
-    family: 'Panel', style: 'Medium',
-    size: 10, lineHeight: 16, letterSpacing: 0.8,
+    family: 'Panel',
+    style: 'Medium',
+    size: 10,
+    lineHeight: 16,
+    letterSpacing: 0.8,
     textCase: 'UPPER',
   },
 ];
@@ -156,7 +216,8 @@ async function resolveFont(spec) {
     const remapped = { family: 'Firelli Variable', style: remappedStyle };
     if (await tryLoad(remapped)) return { font: remapped, fellBack: false };
   }
-  if (await tryLoad(original)) return { font: original, fellBack: REMAP_PULPO_TO_FIRELLI && spec.family === 'Pulpo' };
+  if (await tryLoad(original))
+    return { font: original, fellBack: REMAP_PULPO_TO_FIRELLI && spec.family === 'Pulpo' };
   return { font: null, fellBack: false };
 }
 
@@ -230,12 +291,20 @@ async function tagNodes(specToStyleId, fontsForStyles) {
       }
       const key = nodeMatchKey(n);
       if (!key) {
-        skippedMixed.push({ id: n.id, sample: (n.characters || '').slice(0, 40), reason: 'mixed properties' });
+        skippedMixed.push({
+          id: n.id,
+          sample: (n.characters || '').slice(0, 40),
+          reason: 'mixed properties',
+        });
         continue;
       }
       const styleId = keyToStyleId.get(key);
       if (!styleId) {
-        const cur = unmatched.get(key) || { count: 0, sample: (n.characters || '').slice(0, 40), nodeId: n.id };
+        const cur = unmatched.get(key) || {
+          count: 0,
+          sample: (n.characters || '').slice(0, 40),
+          nodeId: n.id,
+        };
         cur.count += 1;
         unmatched.set(key, cur);
         continue;
@@ -244,7 +313,10 @@ async function tagNodes(specToStyleId, fontsForStyles) {
         await n.setTextStyleIdAsync(styleId);
         linked += 1;
       } catch (e) {
-        skippedMixed.push({ id: n.id, reason: 'setTextStyleIdAsync failed: ' + (e && e.message ? e.message : String(e)) });
+        skippedMixed.push({
+          id: n.id,
+          reason: 'setTextStyleIdAsync failed: ' + (e && e.message ? e.message : String(e)),
+        });
       }
     }
   }
@@ -318,7 +390,9 @@ async function main() {
   const summary = lines.join('\n');
   console.log(summary);
   const tagSummary = tagReport ? `, ${tagReport.linked} nodes tagged` : '';
-  figma.closePlugin(`${created.length} created, ${updated.length} updated, ${failed.length} failed${tagSummary}. See console.`);
+  figma.closePlugin(
+    `${created.length} created, ${updated.length} updated, ${failed.length} failed${tagSummary}. See console.`
+  );
 }
 
 main().catch((e) => {

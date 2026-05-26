@@ -1,0 +1,22 @@
+{
+  "tabWidth": 4,
+  "useTabs": false,
+  "singleQuote": true,
+  "semi": true,
+  "trailingComma": "es5",
+  "printWidth": 100,
+  "overrides": [
+    {
+      "files": "figma-plugin/**/*.{js,md}",
+      "options": {
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": ["*.json", "*.md", ".prettierrc.json", "**/*.{yml,yaml}"],
+      "options": {
+        "tabWidth": 2
+      }
+    }
+  ]
+}

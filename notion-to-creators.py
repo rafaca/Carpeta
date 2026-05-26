@@ -121,8 +121,7 @@ def main():
 
     if not cols["name"]:
         print(
-            "ERROR: Could not find a name/title column. "
-            f"Available columns: {header}",
+            f"ERROR: Could not find a name/title column. Available columns: {header}",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -174,9 +173,7 @@ def main():
 
     # Resolve relation values (follows / collaborations) to creator ids.
     name_to_id = {c["name"].strip().lower(): c["id"] for c in creators}
-    handle_to_id = {
-        c["handle"].strip().lower(): c["id"] for c in creators if c["handle"]
-    }
+    handle_to_id = {c["handle"].strip().lower(): c["id"] for c in creators if c["handle"]}
 
     def resolve(ref):
         key = ref.strip().lstrip("@").lower()
