@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROJECTS - CASTELLO</title>
+<link rel="stylesheet" href="https://use.typekit.net/fau0gcd.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background-color: #ffffff;
+    font-family: europa, Helvetica, Arial, sans-serif;
+    color: #000;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Header */
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    background: #fff;
+  }
+  .navbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 118px;
+    padding: 0 40px;
+  }
+  .logo svg {
+    width: 305px;
+    height: 38px;
+    fill: #0a0002;
+  }
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 0;
+  }
+  nav ul li a {
+    font-family: europa, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #000;
+    padding: 0 25px;
+    line-height: 118px;
+    transition: color 0.2s;
+  }
+  nav ul li a:hover {
+    color: #ff1919;
+  }
+  nav ul li.current a {
+    color: #6d001d;
+  }
+
+  /* Content */
+  .content-wrapper {
+    padding: 135px 20px 80px 295px;
+    max-width: 1100px;
+  }
+
+  /* Page title */
+  .page-title {
+    font-family: freight-display-pro, serif;
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1.35;
+    color: #000;
+    margin-bottom: 60px;
+  }
+
+  /* Project list */
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+  }
+  .project {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.25s;
+  }
+  .project:hover {
+    opacity: 0.7;
+  }
+  .project-image {
+    width: 100%;
+    max-width: 530px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .project-title {
+    font-family: europa, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #000;
+    margin-bottom: 2px;
+  }
+  .project-category {
+    font-family: europa, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.3;
+    color: #919191;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* Mobile nav toggle */
+  .nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+  }
+  .nav-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #000;
+    margin: 5px 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .content-wrapper {
+      padding: 135px 40px 80px 225px;
+    }
+  }
+  @media (max-width: 768px) {
+    .navbar-inner {
+      height: 80px;
+      padding: 0 20px;
+    }
+    .logo svg {
+      width: 200px;
+      height: 25px;
+    }
+    nav ul li a {
+      font-size: 12px;
+      padding: 0 12px;
+      line-height: 80px;
+    }
+    .content-wrapper {
+      padding: 100px 20px 60px 20px;
+    }
+    .project-image {
+      max-width: 100%;
+    }
+    .page-title {
+      font-size: 22px;
+      margin-bottom: 40px;
+    }
+  }
+  @media (max-width: 600px) {
+    nav.desktop-nav { display: none; }
+    .nav-toggle { display: block; }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      z-index: 200;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .mobile-menu.active { display: flex; }
+    .mobile-menu a {
+      font-family: europa, Helvetica, Arial, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: #000;
+      padding: 15px 0;
+    }
+    .mobile-menu .close-btn {
+      position: absolute;
+      top: 25px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #000;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="navbar-inner">
+    <a href="https://www.rafacastello.com" class="logo" title="CASTELLO">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 305 38">
+        <g>
+          <path d="M4.9,11.8H11c3.4,0,5.4,2,5.4,4.5c0,2-1.3,3.7-3.6,4.3l3.5,5.2h-2.7l-3.3-5H7.2v5H4.9V11.8z M11,18.6c2.1,0,3-0.9,3-2.3 S13.1,14,11,14H7.2v4.6H11z"/>
+          <path d="M27.6,11.8h5.7l3.7,14h-2.4l-1-3.6h-6.4l-0.9,3.6H24L27.6,11.8z M33.1,20l-1.6-6h-2.2l-1.5,6H33.1z"/>
+          <path d="M45.1,11.8h9.8V14h-7.5v4h5.9v2.2h-5.9v5.6h-2.3V11.8z"/>
+          <path d="M65,11.8h5.7l3.7,14H72l-1-3.6h-6.4l-0.9,3.6h-2.3L65,11.8z M70.5,20l-1.6-6h-2.2l-1.5,6H70.5z"/>
+          <path d="M112.8,11.4c2.9,0,4.7,1.3,5.7,2.6c0.6,0.7,1,1.6,1.3,2.5h-2.3c-0.2-0.5-0.6-1-1-1.4c-0.7-0.7-1.9-1.5-3.7-1.5 c-3,0-5.1,2.1-5.1,5.2s2.1,5.2,5.1,5.2c1.8,0,3-0.8,3.8-1.6c0.4-0.5,0.8-1,1-1.6h2.3c-0.3,1-0.8,1.9-1.5,2.7 c-1.1,1.4-2.9,2.7-5.6,2.7c-4.2,0-7.5-3.1-7.5-7.4S108.6,11.4,112.8,11.4z"/>
+          <path d="M130.5,11.8h5.7l3.7,14h-2.4l-1-3.6h-6.4l-0.9,3.6h-2.3L130.5,11.8z M136,20l-1.6-6h-2.2l-1.5,6H136z"/>
+          <path d="M149.7,21.6c0.1,0.5,0.3,0.9,0.6,1.3c0.5,0.6,1.3,1.2,2.9,1.2c2.2,0,3.1-0.9,3.1-2.1c0-1.1-1.2-1.6-2.7-2 c-2.5-0.6-5.7-1.3-5.7-4.4c0-2.2,2-4.2,5.2-4.2c2.4,0,3.8,1,4.6,2.1c0.4,0.6,0.7,1.3,0.9,2h-2.4c-0.1-0.4-0.3-0.7-0.5-1 c-0.4-0.5-1.2-1-2.6-1c-1.9,0-2.8,0.9-2.8,2c0,1.1,1.2,1.6,2.7,2c2.5,0.7,5.7,1.3,5.7,4.4c0,2.3-2,4.3-5.5,4.3 c-2.6,0-4.1-1.1-4.9-2.3c-0.5-0.7-0.8-1.4-1-2.3H149.7z"/>
+          <path d="M166.1,11.8h11.5V14H173v11.8h-2.3V14h-4.6V11.8z"/>
+          <path d="M185.6,11.8h10.1V14h-7.8v3.6h6.3v2.2h-6.3v3.8h7.8v2.2h-10.1V11.8z"/>
+          <path d="M204.2,11.8h2.3v11.8h7.1v2.2h-9.4V11.8z"/>
+          <path d="M221.4,11.8h2.3v11.8h7.1v2.2h-9.4V11.8z"/>
+          <path d="M245.5,11.4c4.3,0,7.5,3.2,7.5,7.4c0,4.2-3.2,7.4-7.5,7.4S238,23,238,18.8C238,14.6,241.2,11.4,245.5,11.4z M245.5,24 c3,0,5.1-2.1,5.1-5.2s-2.1-5.2-5.1-5.2c-3,0-5.1,2.1-5.1,5.2S242.5,24,245.5,24z M246.3,7.1h2.5v0l-2.3,2.9h-1.8L246.3,7.1z"/>
+        </g>
+      </svg>
+    </a>
+    <nav class="desktop-nav">
+      <ul>
+        <li><a href="https://www.rafacastello.com/">ABOUT</a></li>
+        <li class="current"><a href="https://www.rafacastello.com/work/">PROJECTS</a></li>
+        <li><a href="mailto:hello@rafacastello.com">CONTACT</a></li>
+        <li><a href="https://rafacastello.substack.com" target="_blank" rel="noopener">NEWSLETTER</a></li>
+      </ul>
+    </nav>
+    <button class="nav-toggle" onclick="document.querySelector('.mobile-menu').classList.add('active')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu">
+  <button class="close-btn" onclick="this.parentElement.classList.remove('active')">&times;</button>
+  <a href="https://www.rafacastello.com/">ABOUT</a>
+  <a href="https://www.rafacastello.com/work/">PROJECTS</a>
+  <a href="mailto:hello@rafacastello.com">CONTACT</a>
+  <a href="https://rafacastello.substack.com" target="_blank" rel="noopener">NEWSLETTER</a>
+</div>
+
+<div class="content-wrapper">
+  <h1 class="page-title">Selected Work</h1>
+
+  <div class="project-list">
+
+    <a class="project" href="https://www.rafacastello.com/work/toyota/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/2016/04/0004_5-Toyoya-2.jpg" alt="Toyota" loading="lazy">
+      <div class="project-title">Toyota</div>
+      <div class="project-category">Online Platform</div>
+    </a>
+
+    <a class="project" href="https://www.rafacastello.com/work/aesop/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/2017/01/THUM3.gif" alt="Aesop" loading="lazy">
+      <div class="project-title">Aesop</div>
+      <div class="project-category">Online Retail Platform</div>
+    </a>
+
+    <a class="project" href="https://www.rafacastello.com/work/ftprnt/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/Thumbnails-HSS-1.jpg" alt="FTPRNT" loading="lazy">
+      <div class="project-title">FTPRNT</div>
+      <div class="project-category">Web</div>
+    </a>
+
+    <a class="project" href="https://www.rafacastello.com/work/babylon/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/Thumbnails-babylon2.gif" alt="Babylon Health" loading="lazy">
+      <div class="project-title">Babylon Health</div>
+      <div class="project-category">Web</div>
+    </a>
+
+    <a class="project" href="https://www.rafacastello.com/work/focusonme/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/THUMB_0020_FOCUSONME.jpg" alt="Focus On Me" loading="lazy">
+      <div class="project-title">Focus On Me</div>
+      <div class="project-category">Web</div>
+    </a>
+
+    <a class="project" href="https://www.rafacastello.com/work/oral-b/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/Thumbnails-HSS.jpg" alt="Oral B" loading="lazy">
+      <div class="project-title">Oral B</div>
+      <div class="project-category">Web</div>
+    </a>
+
+    <a class="project" href="https://www.rafacastello.com/work/google-pixel/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/2017/10/RC_0017_google-1.png" alt="Google Pixel" loading="lazy">
+      <div class="project-title">Google Pixel</div>
+      <div class="project-category">Visual System for Social Media</div>
+    </a>
+
+    <a class="project" href="https://www.rafacastello.com/work/hss/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/2020/11/Thumbnails-HSS.jpg" alt="HSS" loading="lazy">
+      <div class="project-title">HSS</div>
+      <div class="project-category">Annual Report</div>
+    </a>
+
+    <a class="project" href="https://www.rafacastello.com/work/shny/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/Thumbnails-HSS-copy-2.jpg" alt="SHNY" loading="lazy">
+      <div class="project-title">SHNY</div>
+      <div class="project-category">Web</div>
+    </a>
+
+    <a class="project" href="https://www.rafacastello.com/work/toyota-csrc/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/2015/07/0017_CSRC-1.png" alt="Toyota CSRC" loading="lazy">
+      <div class="project-title">Toyota CSRC</div>
+      <div class="project-category">Online Platform</div>
+    </a>
+
+    <a class="project" href="https://www.rafacastello.com/work/mixitapp/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/2015/02/THERMOMIX_0019_Layer-Comp-2.jpg" alt="Thermomix App" loading="lazy">
+      <div class="project-title">Thermomix App</div>
+      <div class="project-category">Product Design</div>
+    </a>
+
+    <a class="project" href="https://www.rafacastello.com/work/beyonce-pepsi/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/2016/06/0015_Layer-Comp-3.png" alt="Pepsi" loading="lazy">
+      <div class="project-title">Pepsi</div>
+      <div class="project-category">Social Media Game</div>
+    </a>
+
+    <a class="project" href="https://www.rafacastello.com/work/icons/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/SLIDESMOBILE_0012_Layer-Comp-1.png" alt="Tylenol" loading="lazy">
+      <div class="project-title">Tylenol</div>
+      <div class="project-category">Online Retail Platform</div>
+    </a>
+
+    <a class="project" href="https://www.rafacastello.com/work/madlibs/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/2017/01/mad-libs-anim4.gif" alt="Mad Libs" loading="lazy">
+      <div class="project-title">Mad Libs</div>
+      <div class="project-category">iOS Game</div>
+    </a>
+
+    <a class="project" href="https://www.rafacastello.com/work/cocacola/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/2016/04/0000_1-CocaCola.jpg" alt="CocaCola" loading="lazy">
+      <div class="project-title">Coca-Cola</div>
+      <div class="project-category">Online Platform</div>
+    </a>
+
+    <a class="project" href="https://www.rafacastello.com/work/xom/">
+      <img class="project-image" src="https://www.rafacastello.com/wp-content/uploads/XOM_formfuntion_square_pt3_230216.gif" alt="Exxon" loading="lazy">
+      <div class="project-title">Exxon</div>
+      <div class="project-category">Web</div>
+    </a>
+
+  </div>
+</div>
+
+</body>
+</html>
