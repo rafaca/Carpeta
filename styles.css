@@ -306,7 +306,7 @@ html, body {
 /* Page navigation link */
 #page-nav {
     position: fixed;
-    top: 24px;
+    top: 105px;
     right: 24px;
     z-index: 100;
 }
@@ -330,12 +330,17 @@ html, body {
 
 /* Pull-quote callout */
 .callout {
+    position: fixed;
+    left: 24px;
+    bottom: 240px;
     background: #e7f1ff;
     color: #101733;
     border-left: 2px solid #fc3b2c;
     padding: 12px 24px 14px;
-    max-width: 700px;
+    max-width: 380px;
     margin: 0;
+    z-index: 50;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .callout__quote {
@@ -409,6 +414,19 @@ html, body {
 
     .bookmarks__heading {
         margin-bottom: 24px;
+    }
+
+    #page-nav {
+        top: 100px;
+        right: 16px;
+    }
+
+    .callout {
+        left: 16px;
+        right: 16px;
+        bottom: auto;
+        top: 110px;
+        max-width: none;
     }
 }
 
