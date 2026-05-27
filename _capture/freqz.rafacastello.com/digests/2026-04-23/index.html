@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Digest / April 23, 2026</title>
+<link rel="alternate" type="application/rss+xml" title="Rafa Castello — Newsletter Digest" href="https://newsletters.rafacastello.com/feed.xml">
+<link rel="stylesheet" href="https://use.typekit.net/fau0gcd.css">
+<style>
+  :root {
+    --bg: #f5f2ec;
+    --ink: #111111;
+    --ink-soft: #4a4a4a;
+    --accent: #d64218;
+    --rule: #dcd6cc;
+    --card: #ffffff;
+    --hl: #fff089;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "freight-text-pro", Georgia, serif;
+    font-size: 18px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 48px 32px 120px;
+  }
+
+  /* Masthead */
+  .masthead {
+    border-top: 4px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 24px 0 20px;
+    margin-bottom: 48px;
+  }
+
+  .masthead-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+  }
+
+  h1.title {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .standfirst {
+    font-family: "freight-text-pro", Georgia, serif;
+    font-size: 20px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 620px;
+    margin-top: 12px;
+  }
+
+  /* TOC */
+  .toc {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px 32px;
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 13px;
+    margin: 32px 0 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .toc a {
+    color: var(--ink);
+    text-decoration: none;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: color 0.15s ease;
+  }
+
+  .toc a:hover { color: var(--accent); }
+  .toc a .num {
+    color: var(--accent);
+    font-weight: 600;
+    margin-right: 12px;
+    width: 24px;
+    flex-shrink: 0;
+  }
+  .toc a .label { flex: 1; }
+
+  /* Sections */
+  section {
+    margin-bottom: 72px;
+    scroll-margin-top: 24px;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 8px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .section-num {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+  }
+
+  .section-kicker {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-soft);
+    margin-left: auto;
+  }
+
+  h2 {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 16px 0 32px;
+  }
+
+  h2 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  h3 {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: 22px;
+    margin: 32px 0 12px;
+    line-height: 1.3;
+  }
+
+  p {
+    margin-bottom: 18px;
+    max-width: 700px;
+  }
+
+  a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  a:hover { color: var(--accent); }
+
+  strong { font-weight: 700; }
+
+  .drop-cap::first-letter {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-size: 5em;
+    float: left;
+    line-height: 0.9;
+    margin: 6px 10px -4px 0;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  /* Pullquotes */
+  .pullquote {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-style: italic;
+    font-size: 26px;
+    line-height: 1.25;
+    color: var(--ink);
+    border-left: 3px solid var(--accent);
+    padding: 8px 0 8px 24px;
+    margin: 28px 0;
+    max-width: 680px;
+  }
+
+  .pullquote cite {
+    display: block;
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-style: normal;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 10px;
+  }
+
+  /* Cards */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin: 24px 0;
+  }
+
+  .card {
+    background: var(--card);
+    padding: 20px 22px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+  }
+
+  .card-label {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .card h4 {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .card p {
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    margin-bottom: 0;
+  }
+
+  .card .score {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-top: 10px;
+    display: block;
+  }
+
+  /* Number stats */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
+    margin: 32px 0;
+    padding: 24px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .stat-num {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-size: 52px;
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .stat-label {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  /* Link list */
+  .link-list {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+  }
+
+  .link-list li {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+  }
+
+  .link-list li:first-child { border-top: 1px solid var(--rule); }
+
+  .link-list .tag {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    flex-shrink: 0;
+    width: 90px;
+  }
+
+  .link-list .desc {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  /* Hl */
+  mark { background: var(--hl); padding: 0 3px; }
+
+  /* Footer */
+  footer {
+    margin-top: 96px;
+    padding-top: 24px;
+    border-top: 4px solid var(--ink);
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  footer span { text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* Mobile */
+  @media (max-width: 640px) {
+    .container { padding: 32px 20px 80px; }
+    .toc { grid-template-columns: 1fr; }
+    .pullquote { font-size: 20px; padding-left: 18px; }
+    .stat-num { font-size: 40px; }
+  }
+
+  /* Print */
+  @media print {
+    body { background: white; }
+    .toc { page-break-after: always; }
+    section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- MASTHEAD -->
+    <header class="masthead">
+      <div class="masthead-top">
+        <span>Vol. 17 / No. 3</span>
+        <span>April 23, 2026</span>
+        <span><a href="https://freqz.rafacastello.com/feed.xml" style="text-decoration:none;color:inherit;">RSS</a></span>
+      </div>
+      <h1 class="title">The Price<br>of <em>Everything</em></h1>
+      <p class="standfirst">
+        Tim Cook steps down for a hardware engineer. Meta dethrones Google
+        in digital ads. A leaked ChatGPT pitch deck prices the thinking stage.
+        Handmade puppet dogs outshine AI. And a sweeping essay argues prediction
+        markets are the surest sign our civilisation is in decay.
+      </p>
+    </header>
+
+    <!-- TOC -->
+    <nav class="toc" aria-label="Sections">
+      <a href="index.html#s1"><span class="num">01</span><span class="label">When AI Designs Back</span></a>
+      <a href="index.html#s2"><span class="num">02</span><span class="label">Pricing the Unpriceable</span></a>
+      <a href="index.html#s3"><span class="num">03</span><span class="label">The Crown Changes Hands</span></a>
+      <a href="index.html#s4"><span class="num">04</span><span class="label">Heritage as Moat</span></a>
+      <a href="index.html#s5"><span class="num">05</span><span class="label">Craft as Statement</span></a>
+      <a href="index.html#s6"><span class="num">06</span><span class="label">Brand Plays Worth Studying</span></a>
+      <a href="index.html#s7"><span class="num">07</span><span class="label">World &amp; Markets</span></a>
+      <a href="index.html#links"><span class="num">08</span><span class="label">Bookmarks</span></a>
+      <a href="index.html#sources"><span class="num">09</span><span class="label">Sources</span></a>
+    </nav>
+
+    <!-- SECTION 1 -->
+    <section id="s1">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 01</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Design &amp; AI</span>
+      </div>
+        <h2>When AI <em>Designs</em> Back</h2>
+      </header>
+
+      <p class="drop-cap">
+        Anthropic launched <strong>Claude Design</strong> this week, and the design
+        community is processing what it means. Describe what you need, Claude builds
+        a first version. Refine through conversation, inline comments, or direct edits.
+        If your team has a design system, Claude reads it and applies your tokens,
+        components, and brand automatically. The handoff to Claude Code is built in —
+        straight from design to production.
+      </p>
+
+      <p>
+        <a href="https://sidebar.io" target="_blank" rel="noopener"><strong>Sidebar</strong></a>
+        led yesterday with Sam Henri Gold's reaction, noting "the beast is hairy enough
+        that entire design roles now specialize in wrangling the system itself." Today's
+        edition surfaced a complementary provocation from Dave Rupert: <strong>"I don't want a
+        screenshot of your Claude conversation."</strong> The number of screenshots of Claude
+        conversations is going up in his life, he writes, and it's beginning to have an
+        impact on his general mood. The AI output is becoming a new form of social currency —
+        one that substitutes process for taste.
+      </p>
+
+      <p>
+        Also from today's Sidebar: Matt Webb at interconnected.org argues for
+        <strong>headless everything for personal AI</strong> — headless services are quicker
+        and more dependable for personal AIs than having them click around a GUI with a
+        bot-controlled mouse. The implication: the next wave of software might not have
+        an interface at all. And from tante.cc, a provocation titled <strong>"AI as a Fascist
+        Artifact"</strong> — arguing that our world is built around technological
+        infrastructures that define what we see, who we can talk to, and what information
+        gets presented to us.
+      </p>
+
+      <div class="pullquote">
+        AI attacks our identity in a way that most software doesn't. Unlike previous
+        technologies, AI creates existential anxiety about job replacement.
+        <cite>Ant Murphy, "The AI Chasm"</cite>
+      </div>
+
+      <p>
+        <a href="https://antmurphy.me/newsletter/the-ai-chasm" target="_blank" rel="noopener"><strong>Ant Murphy's</strong></a>
+        "The AI Chasm" punctured the adoption hype: McKinsey says <mark>88% of organizations
+        claim to use AI, but only about 1% have mature deployments delivering real value</mark>.
+        Most usage is free chat interfaces, not integrated solutions. His advice to product
+        leaders: reinvent yourself internally first — back-office efficiency before
+        customer-facing features — and expect the real adoption curve to take 5–10 years.
+      </p>
+
+      <p>
+        On the other side of the AI coin, Mozilla used Anthropic's Claude to identify
+        and fix <strong>271 Firefox bugs</strong> — a practical demonstration of AI as
+        security infrastructure rather than creative threat.
+      </p>
+
+      <div class="stat-row">
+        <div>
+          <div class="stat-num">88%</div>
+          <div class="stat-label">Orgs that "use AI" (McKinsey)</div>
+        </div>
+        <div>
+          <div class="stat-num">~1%</div>
+          <div class="stat-label">With mature deployments</div>
+        </div>
+        <div>
+          <div class="stat-num">271</div>
+          <div class="stat-label">Firefox bugs fixed by Claude</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section id="s2">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 02</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Culture &amp; Criticism</span>
+      </div>
+        <h2>Pricing the <em>Unpriceable</em></h2>
+      </header>
+
+      <p class="drop-cap">
+        <a href="https://www.joanwestenberg.com/why-prediction-markets-are-a-sure-sign-that-our-civilisation-is-in-decay/" target="_blank" rel="noopener"><strong>JA Westenberg</strong></a>
+        published a sweeping essay arguing that prediction markets are "the clearest single
+        sign our civilisation has entered a late and decadent stage." Not because they're new
+        or sinister — but because the case for them is so defensible while their long-term
+        effect is corrosive. The technology works. The outputs are useful. And the
+        civilizational cost is invisible until it isn't.
+      </p>
+
+      <p>
+        The historical arc is sharp: in 2003, DARPA's Policy Analysis Market — letting traders
+        bet on assassinations and coups — was killed within 24 hours and ended Admiral
+        Poindexter's career. By 2026, Polymarket lists contracts on the deaths of named
+        public figures, the outcomes of active military operations, and nobody holds a
+        press conference. We cite them in the <em>Financial Times</em>.
+      </p>
+
+      <div class="pullquote">
+        What a society chooses to price reveals what it actually gives a shit about,
+        in the same way that what a society chooses to memorialise reveals what it honours.
+        <cite>JA Westenberg</cite>
+      </div>
+
+      <p>
+        Westenberg threads the argument through Michael Sandel (<em>What Money Can't Buy</em>),
+        Alasdair MacIntyre (<em>After Virtue</em>), James Scott (<em>Seeing Like a State</em>),
+        and Joseph Tainter (<em>The Collapse of Complex Societies</em>). The through-line:
+        when a civilisation loses its ability to answer "what should we do," it retreats to
+        answering "what will happen?" Late Romans did it. Late medieval astrologers did it.
+        Social Darwinists did it. Prediction markets are the 21st-century version of that
+        surrender — converting questions of value into questions of fact, then trading the facts.
+      </p>
+
+      <h3>When ChatGPT prices the thinking stage</h3>
+
+      <p>
+        On the same day, <a href="https://www.adweek.com/media/exclusive-leaked-deck-reveals-stackadapts-playbook-for-chatgpt-ads/" target="_blank" rel="noopener"><strong>Adweek</strong></a>
+        published a leaked pitch deck revealing that StackAdapt has partnered with OpenAI
+        to sell ad placements inside ChatGPT. CPMs range from $15 to $60, driven by prompt
+        relevance rather than cookies or behavioral targeting. The minimum spend sits between
+        $100K and $200K. Ads appear only to free-tier users and won't influence answers.
+      </p>
+
+      <p>
+        Search advertising was built on intent — catching people right before they act.
+        ChatGPT ads target people earlier, at the <em>thinking</em> stage, when they're
+        still forming opinions. If Westenberg's prediction markets price the future itself,
+        ChatGPT ads price the moment just before a decision is made. The pattern is the same:
+        another thing that was embedded in deliberation gets a number attached to it.
+      </p>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section id="s3">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 03</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Power &amp; Business</span>
+      </div>
+        <h2>The Crown <em>Changes</em> Hands</h2>
+      </header>
+
+      <p class="drop-cap">
+        <a href="https://www.apple.com/newsroom/2026/04/tim-cook-to-become-apple-executive-chairman-john-ternus-to-become-apple-ceo/" target="_blank" rel="noopener"><strong>Apple</strong></a>
+        announced that Tim Cook will step down as CEO on September 1, becoming executive chairman.
+        His successor: <strong>John Ternus</strong>, currently SVP of Hardware Engineering.
+        Ternus is a 25-year Apple veteran who's been instrumental in defining the products —
+        from iPhone to AirPods — that made Apple a $4 trillion company. Under Cook's 15 years:
+        revenue up 303%, profits up 354%, market cap from $297B to over $4 trillion.
+      </p>
+
+      <p>
+        <a href="https://stratechery.com/2026/tim-cooks-impeccable-timing/" target="_blank" rel="noopener"><strong>Ben Thompson</strong></a>
+        argued that Cook's departure is prudent timing for both his legacy and the company's future.
+        But two shadows loom — China dependency ("the biggest violation of the Tim Cook doctrine")
+        and Apple's decision to white-label Google's Gemini for Siri, potentially ceding the AI
+        race for good. With Ternus being a hardware engineer at heart, the question is where
+        Apple's creative and commercial energy flows next — and whether the company that defined
+        consumer tech can also define the AI era.
+      </p>
+
+      <h3>Meta dethrones Google</h3>
+
+      <p>
+        For the first time in two decades, Google is losing its crown.
+        <a href="https://www.wsj.com/business/media/meta-expected-to-unseat-google-as-worlds-largest-digital-ad-player-83d3f522" target="_blank" rel="noopener"><strong>The Wall Street Journal</strong></a>
+        reports that Meta is projected to surpass Google as the world's largest digital
+        advertising business in 2026 — <mark>$243.46 billion vs. $239.54 billion</mark>.
+        Meta's growth rate: 24.1% year over year, fueled by Reels ad performance and
+        Advantage+ AI targeting. Google's 11.9% growth is weighed down by $20 billion
+        in annual payments to Apple just to stay the default search engine. Together with
+        Amazon, the three platforms now control 62.3% of all global digital ad spending.
+      </p>
+
+      <div class="stat-row">
+        <div>
+          <div class="stat-num">$243B</div>
+          <div class="stat-label">Meta ad revenue (projected 2026)</div>
+        </div>
+        <div>
+          <div class="stat-num">$240B</div>
+          <div class="stat-label">Google ad revenue (projected 2026)</div>
+        </div>
+        <div>
+          <div class="stat-num">62.3%</div>
+          <div class="stat-label">Global ad spend: Meta + Google + Amazon</div>
+        </div>
+      </div>
+
+      <h3>More power shifts</h3>
+
+      <p>
+        <a href="https://www.marketingdive.com/news/elf-promotes-longtime-cmo-kory-marchisotto-to-president/817931/" target="_blank" rel="noopener"><strong>e.l.f. Beauty</strong></a>
+        promoted CMO Kory Marchisotto to President of e.l.f. Brands — a signal that the
+        next phase of growth requires a marketer driving the brand portfolio while a
+        dedicated AI officer handles infrastructure. The brand has now seen
+        <mark>28 consecutive quarters of growth</mark>, with net sales projected at $1.61 billion.
+      </p>
+
+      <p>
+        <strong>Microsoft</strong> is restructuring Xbox under new CEO Asha Sharma, scrapping
+        the "Microsoft Gaming" umbrella and bringing Xbox back as its own entity — a bet
+        that the brand name still carries more weight than the corporate parent. And
+        <a href="https://www.anthropic.com/news/anthropic-amazon-compute" target="_blank" rel="noopener"><strong>Amazon committed another $5 billion to Anthropic</strong></a>
+        (total: $13 billion), with Anthropic pledging to spend $100 billion on AWS
+        over the next decade. Claude is now the only frontier AI model available across
+        all three major cloud platforms: AWS, Google Cloud, and Microsoft Azure.
+      </p>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section id="s4">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 04</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Branding &amp; Identity</span>
+      </div>
+        <h2>Heritage as <em>Moat</em></h2>
+      </header>
+
+      <p class="drop-cap">
+        <a href="https://www.underconsideration.com/brandnew/" target="_blank" rel="noopener"><strong>Brand New</strong></a>'s
+        weekly roundup was a masterclass in how heritage translates to visual language —
+        and where it doesn't. The crowd-pleaser was
+        <a href="https://www.underconsideration.com/brandnew/archives/new_logo_and_identity_for_coaltown_coffee_by_smorgasbord.php" target="_blank" rel="noopener"><strong>Coaltown Coffee</strong></a>
+        by Smörgåsbord: a "drop dead gorgeous" identity rooted in the coal-mining town where
+        the roaster is based. Industrial heritage expressed through a good slab serif, linocuts,
+        and typography that scored <mark>81.5% Great</mark>.
+      </p>
+
+      <div class="card-grid">
+        <div class="card">
+          <span class="card-label">Most Loved</span>
+          <h4><a href="https://www.underconsideration.com/brandnew/archives/new_logo_and_identity_for_drama_theatre_of_plovdiv_by_punkt_studio.php" target="_blank" rel="noopener">Drama Theatre of Plovdiv</a></h4>
+          <p>punkt.studio's griffin icon for a 145-year-old Bulgarian theatre. "That mark and type are beautiful."</p>
+          <span class="score">92% Great on icon</span>
+        </div>
+        <div class="card">
+          <span class="card-label">High-Profile</span>
+          <h4><a href="https://www.underconsideration.com/brandnew/archives/new_logo_and_identity_for_olympique_de_marseille.php" target="_blank" rel="noopener">Olympique de Marseille</a></h4>
+          <p>Groovy, contemporary new logo. "Clean and modern, yet respectful of the club's history." Football fans: divided.</p>
+          <span class="score">55% Great on wordmark</span>
+        </div>
+        <div class="card">
+          <span class="card-label">Debate Starter</span>
+          <h4><a href="https://www.underconsideration.com/brandnew/archives/new_logo_and_identity_for_huckberry_by_this_design.php" target="_blank" rel="noopener">Huckberry by This Design</a></h4>
+          <p>"Still reads as tree not pinecone to me but, who cares, it's f'n beautiful." — Scott M</p>
+          <span class="score">76% Great on icon</span>
+        </div>
+        <div class="card">
+          <span class="card-label">Pivot</span>
+          <h4><a href="https://www.underconsideration.com/brandnew/archives/to_mock_a_killing_bird.php" target="_blank" rel="noopener">Allbirds → NewBird AI</a></h4>
+          <p>From $4B shoe company to "GPU-as-a-Service provider." Armin Vit: "Having lived as a Golden Retriever and reincarnating as a window AC unit."</p>
+          <span class="score">$1.2B Grüns → Unilever</span>
+        </div>
+      </div>
+
+      <p>
+        <strong>Font of the week:</strong> <a href="https://thepytefoundry.net/typefaces/triptych/" target="_blank" rel="noopener">Triptych</a>
+        by The Pyte Foundry, deployed in the Olymel rebrand by LG2 — a "delicious logotype"
+        with a flared serif that earned 71.7% Great. And the design challenge of the moment:
+        Brand New floated the idea of a universal
+        <a href="https://www.underconsideration.com/brandnew/archives/can_there_be_an_ai_free_logo.php" target="_blank" rel="noopener">"no AI used" logo</a> —
+        but before the logo, you'd need the governing body, and that, Armin Vit acknowledges,
+        is "most likely not going to happen."
+      </p>
+    </section>
+
+    <!-- SECTION 5 -->
+    <section id="s5">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 05</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Design &amp; Making</span>
+      </div>
+        <h2>Craft as <em>Statement</em></h2>
+      </header>
+
+      <p class="drop-cap">
+        Publix and creative agency FIG launched <strong>"Best Friends,"</strong> a 360
+        campaign built around the idea that food can communicate what words can't. The
+        hero film follows a group of neighborhood dogs trying to make amends with their
+        beloved mailman, Bob — brought to life using fully customized, handmade puppets.
+        <mark>No AI was involved.</mark> At a moment when AI-generated content is everywhere,
+        choosing handmade puppetry says a lot about brand values. Craft and intentionality
+        can be differentiators in and of themselves.
+      </p>
+
+      <p>
+        <a href="https://www.core77.com/" target="_blank" rel="noopener"><strong>Core77</strong></a>'s
+        weekly roundup reinforced the argument for physical craft. The highlights: a
+        <a href="https://www.core77.com/posts/143805/Unusual-Furniture-Design-from-Thailand-A-Full-Length-Vertical-Jewelry-Cabinet-on-Wheels" target="_blank" rel="noopener">full-length vertical jewelry cabinet on wheels</a>
+        from Thailand — a furniture typology rarely seen in the West. A
+        <a href="https://www.core77.com/posts/143795/A-Concept-CD-Player-Designed-with-Teenage-Engineering-in-Mind" target="_blank" rel="noopener">concept CD player</a>
+        designed with Teenage Engineering in mind, by industrial designer Pierrick
+        Piechaureaux. And Thumbimpression's
+        <a href="https://www.core77.com/posts/143771/Thumbimpressions-Bamboo-Sangat-Chair" target="_blank" rel="noopener">Bamboo Sangat Chair</a>,
+        which expertly negotiates between material constraint and structural ambition.
+      </p>
+
+      <p>
+        <a href="https://www.core77.com/posts/143754/Video-Industrial-Design-Case-Study-Craighill-Spouts-Off-to-Fix-Cocktail-Shakers" target="_blank" rel="noopener"><strong>Craighill's cocktail shaker spout</strong></a>
+        was the week's best design case study — a good industrial designer asking the simplest
+        question: "Why is this thing designed like that? Shouldn't it work better?" Also:
+        Ralf Jacobs' incredible <a href="https://www.core77.com/posts/143793" target="_blank" rel="noopener">Harmonograph</a>,
+        furniture that can draw patterns. And the ICFF is coming to Javits Center, May 17–19.
+      </p>
+
+      <p>
+        <a href="https://offf.barcelona" target="_blank" rel="noopener"><strong>OFFF Barcelona 2026</strong></a>
+        wrapped its edition: <mark>5,500 daily attendees from 76 countries</mark>, plus 10,000
+        across three nights for The Screen mapping show. Still gives goosebumps.
+      </p>
+    </section>
+
+    <!-- SECTION 6 -->
+    <section id="s6">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 06</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Campaigns &amp; Culture</span>
+      </div>
+        <h2>Brand Plays <em>Worth Studying</em></h2>
+      </header>
+
+      <p class="drop-cap">
+        The LA Rams released a short film called <strong>"Thursday"</strong> as part of their
+        2026 NFL Draft rollout — a scene-for-scene parody of Ice Cube's 1995 cult classic
+        <em>Friday</em>. It stars <strong>O'Shea Jackson Jr.</strong> (Ice Cube's real-life son)
+        and <strong>Destin Tucker</strong> (Chris Tucker's son), stepping into the iconic roles
+        their fathers played. Terry Crews cameos as a Deebo stand-in riding a beach cruiser
+        flanked by Rams linebackers. Casting the actual sons made this campaign shareable
+        for reasons beyond what they're promoting — a strong example of a brand showing up to
+        a tentpole moment in a genuinely unique way.
+        (<a href="https://www.espn.com/nfl/story/_/id/48515102/los-angeles-rams-2026-nfl-draft-friday-thursday-ice-cube" target="_blank" rel="noopener">ESPN</a>)
+      </p>
+
+      <p>
+        <strong>OMO and Arsenal Women's Football Club</strong> launched "It Starts Outside,"
+        tackling the growing gender activity gap in children's outdoor play. Australian girls
+        aged 4–11 are significantly less likely to play freely outside than boys the same age.
+        This gap compounds over time and shows up directly in sport participation rates. The
+        creative features childhood photos of Arsenal's Australian stars. The specificity of
+        the message — pinning the conversation to a concrete behavior — helps it stand out
+        from broader statements about girls in sport.
+      </p>
+
+      <h3>The media landscape rearranges itself</h3>
+
+      <p>
+        <a href="https://variety.com/2026/digital/news/the-onion-deal-taking-over-alex-jones-infowars-1236726130/" target="_blank" rel="noopener"><strong>The Onion</strong></a>
+        closed a deal to turn Alex Jones' Infowars into a full comedy network — possibly the
+        most poetic brand transition of the year. Meanwhile,
+        <a href="https://www.bloomberg.com/news/articles/2026-04-20/qvc-bankruptcy-signals-dominance-of-amazon-prime-tiktok-shop" target="_blank" rel="noopener"><strong>QVC's bankruptcy</strong></a>
+        signals that TikTok Shop has eaten live shopping's original inventor alive.
+      </p>
+
+      <p>
+        And at <strong>Unwell</strong>, Alex Cooper's media company hired Pinterest veteran
+        Joanne Bradford as president — but the move comes alongside a
+        <a href="https://www.bloomberg.com/news/articles/2026-04-20/alix-earle-feud-isn-t-alex-cooper-s-only-problem-as-unwell-network-struggles" target="_blank" rel="noopener">Bloomberg investigation</a>
+        reporting high employee turnover, a struggling slate of shows outside <em>Call Her
+        Daddy</em>, and allegations of staff mistreatment on set. The Bradford hire reads less
+        like a strong step forward and more like a stabilization play.
+      </p>
+
+      <p>
+        <strong>Adobe</strong> unveiled
+        <a href="https://www.wsj.com/cio-journal/adobe-unveils-agents-for-businesses-amid-threat-of-ai-disruption-d3cf479c" target="_blank" rel="noopener"><strong>CX Enterprise</strong></a>
+        at its annual Summit — an agentic AI system that monitors signals, recommends next-best
+        actions, and manages cross-channel experiences automatically. Adobe is betting that the
+        answer to AI disruption isn't fighting AI-native tools but becoming the orchestration
+        layer between them. The stock, however, has shed roughly 30% of its value in 2026.
+      </p>
+    </section>
+
+    <!-- SECTION 7 -->
+    <section id="s7">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 07</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Geopolitics &amp; News</span>
+      </div>
+        <h2>World &amp; <em>Markets</em></h2>
+      </header>
+
+      <h3>United States</h3>
+      <p>
+        Ten people were shot at the <strong>Mall of Louisiana</strong> in Baton Rouge after
+        two groups opened fire inside the mall; two are in critical condition. Suspects fled.
+        Separately, the Senate advanced a <strong>$140 billion plan</strong> to fund ICE and
+        Border Patrol, clearing a go-it-alone path for immigration enforcement spending. And
+        the federal government is set to <strong>loosen marijuana rules</strong> in a major
+        shift for the $47 billion industry.
+      </p>
+
+      <h3>Strait of Hormuz</h3>
+      <p>
+        Trump threatened to shoot boats laying mines as tension escalates in the Strait of
+        Hormuz. Chinese spy satellites are reported to have been used by Iran to target US
+        bases in the region — a 2024 deal that involved Chinese satellite intelligence for
+        Iranian military targeting. Oil exporters are scrambling for alternative shipping
+        routes, but as CNBC reports, there are no easy options.
+      </p>
+
+      <h3>Europe &amp; Global</h3>
+      <p>
+        The <strong>EU approved a €90 billion loan</strong> for Ukraine after Hungary lifted
+        its veto. Russian oil flows through the Druzhba pipeline resumed to Slovakia.
+        The <strong>UK and France</strong> signed a £662 million deal on Channel crossings.
+        Tanzania reported at least 518 deaths from post-election violence.
+      </p>
+
+      <h3>Supply chain signals</h3>
+      <p>
+        <a href="https://www.theguardian.com/society/2026/apr/22/condom-prices-iran-war-cost-price-rise-karex" target="_blank" rel="noopener"><strong>Condom prices could rise 30%</strong></a>
+        due to the Iran war, says Karex, the world's top producer (5 billion condoms
+        annually, supplying Durex, Trojan, and the NHS). Meanwhile, the Washington Post reports
+        that <a href="https://www.washingtonpost.com/education/2026/04/19/accelerated-college-degree-hacking/" target="_blank" rel="noopener">students
+        are speeding through online degrees in weeks</a>, alarming educators about the
+        devaluation of credentials.
+      </p>
+    </section>
+
+    <!-- BOOKMARKS -->
+    <section id="links">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 08</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Bookmarks</span>
+      </div>
+        <h2>Quick <em>Links</em></h2>
+      </header>
+
+      <ul class="link-list">
+        <li>
+          <span class="tag">CSS</span>
+          <span class="desc"><strong>Six Levels of Dark Mode</strong> — from HTML-only to JS-infused, and all the CSS in between. (cssence.com via Sidebar)</span>
+        </li>
+        <li>
+          <span class="tag">AI</span>
+          <span class="desc"><strong>GPT Image Gen Prompting Guide</strong> — production prompting patterns and best practices for gpt-image-2. (developers.openai.com via Sidebar)</span>
+        </li>
+        <li>
+          <span class="tag">Design</span>
+          <span class="desc"><a href="https://wiretext.app" target="_blank" rel="noopener">Wiretext</a> — Spatial design tool rendering everything as Unicode box-drawing characters. Wireframes as ASCII art.</span>
+        </li>
+        <li>
+          <span class="tag">Design</span>
+          <span class="desc"><a href="https://uicolors.app" target="_blank" rel="noopener">Tailwind CSS Colors</a> — Generate, edit, save, and share Tailwind color shades from a hex code.</span>
+        </li>
+        <li>
+          <span class="tag">Apple</span>
+          <span class="desc"><a href="https://stratechery.com/2026/tim-cooks-impeccable-timing/" target="_blank" rel="noopener">Tim Cook's Impeccable Timing</a> — Stratechery: revenue up 303%, market cap up 1,251%, but China dependency and the AI shortfall loom.</span>
+        </li>
+        <li>
+          <span class="tag">Career</span>
+          <span class="desc"><strong>There Are Only Four Skills: Design, Technical, Management and Physical</strong> — What determines whether someone can quickly acquire expert-level performance? (LessWrong via Sidebar)</span>
+        </li>
+        <li>
+          <span class="tag">Making</span>
+          <span class="desc"><a href="https://solar.lowtechmagazine.com/2026/04/rediscovering-the-handcart/" target="_blank" rel="noopener">Rediscovering the Handcart</a> — A pleasure to drive. Low-tech Magazine on the advantages of slow, human-powered transportation.</span>
+        </li>
+        <li>
+          <span class="tag">Events</span>
+          <span class="desc"><a href="https://offf.barcelona" target="_blank" rel="noopener">OFFF Barcelona 2026</a> — 5,500 daily attendees from 76 countries. The Screen mapping show drew 10,000 over three nights.</span>
+        </li>
+        <li>
+          <span class="tag">Fashion</span>
+          <span class="desc"><a href="https://howlonggone.com/934-recho-omondi" target="_blank" rel="noopener">How Long Gone × Recho Omondi</a> — The Cutting Room Floor host on craftsmanship, the Devil Wears Prada 2 premiere, and being dragged by one's audience.</span>
+        </li>
+        <li>
+          <span class="tag">Health</span>
+          <span class="desc"><a href="https://asteriskmag.com/issues/14/the-mystery-in-the-medicine-cabinet" target="_blank" rel="noopener">The Mystery in the Medicine Cabinet</a> — Acetaminophen, ibuprofen, and what doctors probably want you to know.</span>
+        </li>
+        <li>
+          <span class="tag">Events</span>
+          <span class="desc"><strong>ICFF</strong> — International Contemporary Furniture Fair, May 17–19 at Javits Center. Register with code CORE100.</span>
+        </li>
+        <li>
+          <span class="tag">Humor</span>
+          <span class="desc"><strong>The AI Adoption Spiral</strong> — "The journey that people go on with any new tool." (Sidebar)</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- SOURCES -->
+    <section id="sources">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 09</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Sources</span>
+      </div>
+        <h2>Today's <em>Sources</em></h2>
+      </header>
+
+      <ul class="link-list">
+        <li>
+          <span class="tag">Daily</span>
+          <span class="desc"><a href="https://sidebar.io" target="_blank" rel="noopener">Sidebar / UX Collective</a> — Apr 22 &amp; 23 editions. Claude Design, headless AI, dark mode, Claude screenshot fatigue.</span>
+        </li>
+        <li>
+          <span class="tag">Marketing</span>
+          <span class="desc"><a href="https://www.beehiiv.casestudied.com/p/apr23" target="_blank" rel="noopener">Case Studied Brief</a> (Vendry) — Apr 23. Tim Cook, Meta/Google, ChatGPT ads, campaigns, Amazon–Anthropic.</span>
+        </li>
+        <li>
+          <span class="tag">Weekly</span>
+          <span class="desc"><a href="https://www.underconsideration.com/brandnew/" target="_blank" rel="noopener">Brand New × Weekly</a> — Apr 13–17 roundup. Rebrand reviews, font picks, linked news.</span>
+        </li>
+        <li>
+          <span class="tag">Design</span>
+          <span class="desc"><a href="https://www.core77.com/" target="_blank" rel="noopener">Core77 Weekly Update</a> — Furniture from Thailand, concept CD player, bamboo chair, Craighill case study.</span>
+        </li>
+        <li>
+          <span class="tag">Essay</span>
+          <span class="desc"><a href="https://www.joanwestenberg.com" target="_blank" rel="noopener">Westenberg</a> — "Why prediction markets are a sure sign that our civilisation is in decay."</span>
+        </li>
+        <li>
+          <span class="tag">Culture</span>
+          <span class="desc"><a href="https://publicannouncement.org" target="_blank" rel="noopener">Public Announcement</a> — Links: accelerated degrees, condom prices, handcarts.</span>
+        </li>
+        <li>
+          <span class="tag">Tech</span>
+          <span class="desc"><a href="https://stratechery.com" target="_blank" rel="noopener">Stratechery</a> — Tim Cook's Impeccable Timing.</span>
+        </li>
+        <li>
+          <span class="tag">Events</span>
+          <span class="desc"><a href="https://offf.barcelona" target="_blank" rel="noopener">OFFF Barcelona</a> — 2026 edition recap.</span>
+        </li>
+        <li>
+          <span class="tag">News</span>
+          <span class="desc"><a href="https://news.google.com" target="_blank" rel="noopener">Google News</a> — Mall of Louisiana, Hormuz, marijuana legalization, EU Ukraine loan, Chinese satellites.</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ARCHIVE:START -->
+    <!-- ARCHIVE -->
+    <section class="archive-dark" aria-label="Archive of past editions">
+      <div class="archive-inner">
+        <div class="archive-label">Archive<span class="archive-label-divider">&middot;</span><span class="archive-label-count">8 editions</span></div>
+        <h2 class="archive-title">References</h2>
+      <a class="archive-feature" href="https://freqz.rafacastello.com/2026-04-30.html">
+        <div class="archive-feature-meta">
+          <span class="archive-feature-tag">Latest</span>
+          <span class="archive-feature-date">April 30, 2026</span>
+        </div>
+        <h3 class="archive-feature-title">Weekly Digest / April 30, 2026</h3>
+        <p class="archive-feature-standfirst">Salone del Mobile 2026 drew 316,342 visitors from 167 countries, up 4.5% year-over-year. But the real story is who showed up to play: more than forty fashion houses staged Fuorisalone events, giving fashion 56% share-of-…</p>
+        <span class="archive-feature-cta">Read &rarr;</span>
+      </a>
+      <div class="archive-grid">
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-29.html">
+          <span class="archive-card-date">April 29, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 29, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-28.html">
+          <span class="archive-card-date">April 28, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 28, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-27.html">
+          <span class="archive-card-date">April 27, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 27, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-24.html">
+          <span class="archive-card-date">April 24, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 24, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-23.html">
+          <span class="archive-card-date">April 23, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 23, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-22.html">
+          <span class="archive-card-date">April 22, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 21–22, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-21.html">
+          <span class="archive-card-date">April 21, 2026</span>
+          <h4 class="archive-card-title">Newsletters / Weekly Digest — April 21, 2026</h4>
+        </a>
+      </div>
+      </div>
+    </section>
+      <style>
+        .archive-dark {
+          /* Full-bleed dark panel breaking out of the .container side padding */
+          margin: 96px calc(-50vw + 50%) 0;
+          padding: 96px calc(50vw - 50%) 120px;
+          background: #0a0a0a;
+          color: #ffffff;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .archive-inner {
+          max-width: 880px;
+          margin: 0 auto;
+        }
+        .archive-label {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 11px;
+          font-weight: 500;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: var(--accent);
+          margin-bottom: 16px;
+        }
+        .archive-label .archive-label-divider {
+          display: inline-block;
+          margin: 0 10px;
+          color: rgba(255,255,255,0.3);
+        }
+        .archive-label .archive-label-count {
+          color: rgba(255,255,255,0.45);
+          letter-spacing: 0.2em;
+        }
+        .archive-title {
+          font-family: "freight-display-pro", "Playfair Display", Georgia, serif;
+          font-size: clamp(44px, 7vw, 72px);
+          font-weight: 400;
+          font-style: italic;
+          line-height: 1;
+          letter-spacing: -0.02em;
+          color: #ffffff;
+          margin: 0 0 56px;
+        }
+        .archive-feature {
+          display: block;
+          padding: 36px 36px 32px;
+          background: #151515;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 4px;
+          text-decoration: none;
+          color: #ffffff;
+          margin-bottom: 48px;
+          transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+        }
+        .archive-feature:hover {
+          transform: translateY(-2px);
+          background: #1c1c1c;
+          border-color: rgba(255, 255, 255, 0.12);
+          color: #ffffff;
+        }
+        .archive-feature-meta {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 20px;
+        }
+        .archive-feature-tag {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--accent);
+          padding: 5px 11px;
+          border: 1px solid var(--accent);
+          border-radius: 2px;
+          line-height: 1;
+        }
+        .archive-feature-date {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.55);
+        }
+        .archive-feature-title {
+          font-family: "freight-display-pro", "Playfair Display", Georgia, serif;
+          font-size: clamp(28px, 4vw, 36px);
+          font-weight: 500;
+          line-height: 1.12;
+          letter-spacing: -0.015em;
+          margin: 0 0 16px;
+          color: #ffffff;
+        }
+        .archive-feature-standfirst {
+          font-family: "freight-text-pro", Georgia, serif;
+          font-size: 16px;
+          font-weight: 300;
+          line-height: 1.55;
+          color: rgba(255, 255, 255, 0.68);
+          margin: 0 0 22px;
+          max-width: 640px;
+        }
+        .archive-feature-cta {
+          display: inline-block;
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--accent);
+        }
+        .archive-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+          gap: 12px;
+        }
+        .archive-card {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          padding: 22px 24px;
+          background: #151515;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 4px;
+          text-decoration: none;
+          color: #ffffff;
+          transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+          min-height: 100px;
+        }
+        .archive-card:hover {
+          transform: translateY(-2px);
+          background: #1c1c1c;
+          border-color: rgba(255, 255, 255, 0.12);
+          color: #ffffff;
+        }
+        .archive-card-date {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.5);
+        }
+        .archive-card-title {
+          font-family: "freight-display-pro", "Playfair Display", Georgia, serif;
+          font-size: 18px;
+          font-weight: 500;
+          line-height: 1.3;
+          margin: 0;
+          color: #ffffff;
+        }
+        @media (max-width: 768px) {
+          .archive-dark {
+            padding: 72px calc(50vw - 50%) 96px;
+          }
+          .archive-title {
+            margin-bottom: 40px;
+          }
+          .archive-feature {
+            padding: 28px 24px 24px;
+          }
+          .archive-grid {
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          }
+        }
+        @media (max-width: 480px) {
+          .archive-dark {
+            padding: 56px calc(50vw - 50%) 80px;
+          }
+          .archive-grid {
+            grid-template-columns: 1fr;
+            gap: 8px;
+          }
+          .archive-feature-meta {
+            flex-wrap: wrap;
+            gap: 10px;
+          }
+        }
+      </style>
+    <!-- ARCHIVE:END -->
+
+    <!-- FOOTER -->
+    <footer>
+      <span>April 23, 2026</span>
+      <span>~12 min read</span>
+      <span><a href="https://freqz.rafacastello.com/feed.xml" style="color:inherit;">RSS feed</a></span>
+    </footer>
+
+  </div>
+<script src="../../wordmark.js%3Fv=20260506-29" defer></script>
+</body>
+</html>

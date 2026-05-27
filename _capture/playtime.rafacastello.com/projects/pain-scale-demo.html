@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pain Scale</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1e1e1e;
+    width: 100vw; height: 100vh;
+    overflow: hidden; user-select: none;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #svg { display: block; }
+  #indicator {
+    position: fixed; left: 50%; transform: translateX(-50%); text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    pointer-events: none;
+  }
+  #level-label {
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.9); font-size: 11px;
+    font-family: Helvetica, Arial, sans-serif; letter-spacing: 0.1em; transition: color 0.12s;
+  }
+  #level-desc {
+    color: rgba(255,255,255,0.28); font-size: 9px;
+    font-family: Helvetica, Arial, sans-serif; letter-spacing: 0.25em; text-transform: uppercase;
+  }
+  #pip-row { display: flex; gap: 5px; }
+  .pip { width: 6px; height: 6px; border-radius: 50%; background: #333; transition: background 0.1s, transform 0.1s; }
+  .pip.active { transform: scale(1.35); }
+  #hint {
+    position: fixed; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,0.14); font-size: 9px;
+    font-family: Helvetica, Arial, sans-serif; letter-spacing: 0.25em; text-transform: uppercase;
+    pointer-events: none; transition: opacity 0.6s;
+  }
+  #hint.gone { opacity: 0; }
+</style>
+</head>
+<body>
+<svg id="svg"></svg>
+<div id="indicator">
+  <div id="level-label">No Pain</div>
+  <div id="pip-row"></div>
+  
+</div>
+<div id="hint"><div>pull me!</div><div style="text-align:center">↓</div></div>
+
+<script>
+// ── Face colors per level (exact from dial.svg) ───────────────────────────────
+const COLORS = [
+  '#3C8C4D', // 1
+  '#5EA340', // 2 interpolated
+  '#8EBA3F', // 3
+  '#BABB34', // 4 interpolated
+  '#EAEB2E', // 5
+  '#E4AB1D', // 6
+  '#E68A14', // 7 interpolated
+  '#E6760E', // 8
+  '#D03D0C', // 9 interpolated
+  '#C91111', // 10
+];
+
+const LABELS = [
+  'No Pain','Minimal','Mild','Moderate','Noticeable',
+  'Distracting','Distressing','Severe','Intense','Unbearable'
+];
+
+// ── Exact face black paths (normalized to face center = 0,0, r=33.27) ─────────
+// Each path string draws all black features for that face level.
+// Paths are EXACT from dial.svg with circle center subtracted.
+
+const FACE_PATHS = {
+  1: // Happy: open-mouth smile + squint eye arches (tops hidden = happy squint)
+    "M0.00 16.27C-4.49 16.27 -8.13 12.62 -8.13 8.13H8.13C8.13 12.62 4.49 16.27 0.00 16.27Z" +
+    "M8.13 -4.44C8.13 -6.89 10.12 -8.87 12.57 -8.87C15.02 -8.87 17.00 -6.89 17.00 -4.44H8.13Z" +
+    "M-12.57 -8.87C-15.02 -8.87 -17.00 -6.89 -17.00 -4.44H-8.13C-8.13 -6.89 -10.12 -8.87 -12.57 -8.87Z",
+
+  3: // Smile: full circle eyes + open-bottom smile arc
+    "M8.13 8.13C8.13 12.62 4.49 16.27 0.00 16.27C-4.49 16.27 -8.13 12.62 -8.13 8.13H8.13Z" +
+    "M-12.57 -8.87C-10.12 -8.87 -8.13 -6.89 -8.13 -4.44C-8.13 -1.99 -10.12 0.00 -12.57 0.00C-15.02 0.00 -17.00 -1.99 -17.00 -4.44C-17.00 -6.89 -15.02 -8.87 -12.57 -8.87Z" +
+    "M12.57 -8.87C15.02 -8.87 17.01 -6.89 17.01 -4.44C17.01 -1.99 15.02 0.00 12.57 0.00C10.12 0.00 8.13 -1.99 8.13 -4.44C8.13 -6.89 10.12 -8.87 12.57 -8.87Z",
+
+  5: // Neutral: full circle eyes + straight mouth bar
+    "M7.39 14.05H-7.39V11.09H7.39V14.05Z" +
+    "M-12.57 -8.87C-10.12 -8.87 -8.13 -6.89 -8.13 -4.44C-8.13 -1.99 -10.12 0.00 -12.57 0.00C-15.02 0.00 -17.00 -1.99 -17.00 -4.44C-17.00 -6.89 -15.02 -8.87 -12.57 -8.87Z" +
+    "M12.57 -8.87C15.02 -8.87 17.01 -6.89 17.01 -4.44C17.01 -1.99 15.02 0.00 12.57 0.00C10.12 0.00 8.13 -1.99 8.13 -4.44C8.13 -6.89 10.12 -8.87 12.57 -8.87Z",
+
+  6: // Concerned: downward eye arches (sad brow shape) + straight mouth
+    "M8.13 -4.44C8.13 -6.89 10.12 -8.87 12.57 -8.87C15.02 -8.87 17.00 -6.89 17.00 -4.44H8.13Z" +
+    "M-17.00 -4.44C-17.00 -6.89 -15.02 -8.87 -12.57 -8.87C-10.12 -8.87 -8.13 -6.89 -8.13 -4.44H-17.00Z" +
+    "M7.39 14.05H-7.39V11.09H7.39V14.05Z",
+
+  8: // Sad: downward eye arches + frown mouth arc
+    "M0.00 8.13C4.49 8.13 8.13 11.77 8.13 16.27H-8.13C-8.13 11.77 -4.49 8.13 0.00 8.13Z" +
+    "M-8.13 -4.44C-8.13 -1.99 -10.12 0.00 -12.57 0.00C-15.02 0.00 -17.00 -1.99 -17.00 -4.44H-8.13Z" +
+    "M17.01 -4.44C17.01 -1.99 15.02 0.00 12.57 0.00C10.12 0.00 8.13 -1.99 8.13 -4.44H17.01Z",
+
+  10: // Dead: X eyes + stitch mouth
+    "M-3.70 11.09H-0.74V8.13H2.22V11.09H5.18V8.13H8.13V11.09H11.09V14.05H8.13V17.00H5.18V14.05H2.22V17.00H-0.74V14.05H-3.70V17.00H-6.65V14.05H-9.61V11.09H-6.65V8.13H-3.70V11.09Z" +
+    "M16.75 -6.53L14.66 -4.44L16.75 -2.34L14.66 -0.25L12.57 -2.34L10.48 -0.25L8.39 -2.34L10.48 -4.44L8.39 -6.53L10.48 -8.62L12.57 -6.53L14.66 -8.62L16.75 -6.53Z" +
+    "M-8.64 -6.78L-10.73 -4.69L-8.64 -2.60L-10.73 -0.51L-12.82 -2.60L-14.91 -0.51L-17.00 -2.60L-14.91 -4.69L-17.00 -6.78L-14.91 -8.87L-12.82 -6.78L-10.73 -8.87L-8.64 -6.78Z",
+};
+
+// Map levels to face keys (which template to use)
+// Levels 2,4,7,9 use nearest defined face
+const FACE_KEY = [1,1,3,3,5,6,6,8,8,10];
+
+// ── Dial SVG geometry (normalized: circle center = 0,0) ──────────────────────
+const CR     = 25.85;  // number circle radius
+const FACE_R = 33.27;  // face circle radius
+
+const RIM_Y0 = 66.06,  RIM_Y1 = 271.69;
+const BOT_Y0 = 100.62, BOT_Y1 = 330.31;
+const HW0    = 34.34,  HW1    = 58.25;
+const K_CP1Y = 0.548;
+const K_CP2X = 0.557;
+const K_CIRC = 0.5513;
+
+function lerp(a, b, t){ return a + (b-a)*t; }
+
+function makeBody(t) {
+  const rimY = lerp(RIM_Y0, RIM_Y1, t);
+  const botY = lerp(BOT_Y0, BOT_Y1, t);
+  const hw   = lerp(HW0, HW1, t);
+  const ellH = botY - rimY;
+  const cp1y = rimY + ellH * K_CP1Y;
+  const cp2x = hw * K_CP2X;
+  return [
+    `M ${-hw},${rimY}`,
+    `C ${-hw},${cp1y} ${-cp2x},${botY} 0,${botY}`,
+    `C ${cp2x},${botY} ${hw},${cp1y} ${hw},${rimY}`,
+    `L ${CR},0`,
+    `C ${CR},${-CR*K_CIRC} ${CR*K_CIRC},${-CR} 0,${-CR}`,
+    `C ${-CR*K_CIRC},${-CR} ${-CR},${-CR*K_CIRC} ${-CR},0`,
+    'Z'
+  ].join(' ');
+}
+
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, a={}, txt=null){
+  const e = document.createElementNS(NS, tag);
+  for(const [k,v] of Object.entries(a)) e.setAttribute(k,v);
+  if(txt !== null) e.textContent = txt;
+  return e;
+}
+
+function hexRGB(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];}
+function lerpColor(a,b,t){
+  const[r1,g1,b1]=hexRGB(a),[r2,g2,b2]=hexRGB(b);
+  return`rgb(${Math.round(r1+(r2-r1)*t)},${Math.round(g1+(g2-g1)*t)},${Math.round(b1+(b2-b1)*t)})`;
+}
+
+// ── App ───────────────────────────────────────────────────────────────────────
+const svg    = document.getElementById('svg');
+const hint   = document.getElementById('hint');
+const lblEl  = document.getElementById('level-label');
+const descEl = document.getElementById('level-desc');
+const pipRow = document.getElementById('pip-row');
+
+let VW, VH, S, cx, cy;
+let bodyEl, faceCircle, faceFeatures, faceGroup;
+let numCircle, numText, staticGroup;
+let stretchT = 0;
+let isDragging=false, isAnimating=false, animFrame=null;
+let dragStartY=0;
+let currentLevel=1, hasDragged=false;
+const pips=[];
+
+function setup(){
+  VW=window.innerWidth; VH=window.innerHeight;
+  svg.setAttribute('viewBox',`0 0 ${VW} ${VH}`);
+  svg.setAttribute('width',VW); svg.setAttribute('height',VH);
+
+  const totalH = CR + BOT_Y1;
+  const maxW   = HW1 * 2;
+  // Scale pendant to fill ~55% of viewport height
+  S = (VH * 0.55) / totalH;
+
+  cx = VW / 2;
+  const pendantH = (CR + BOT_Y1) * S;
+  cy = VH / 2 - pendantH / 2 + CR * S;
+  // Position indicator just above pendant
+  const indicatorTop = cy - CR * S - 44;
+  document.getElementById('indicator').style.top = Math.max(8, indicatorTop) + 'px';
+  document.getElementById('hint').style.top = (VH / 2 + pendantH / 2 + 8) + 'px';
+
+  stretchT = 0;
+  buildDOM(); buildPips(); updateVisuals(0);
+}
+
+function buildDOM(){
+  svg.innerHTML='';
+
+  staticGroup = el('g',{
+    transform:`translate(${cx},${cy}) scale(${S})`,
+    style:'cursor:grab'
+  });
+  svg.appendChild(staticGroup);
+
+  // Body
+  bodyEl = el('path',{fill:'#c6c6c6'});
+  staticGroup.appendChild(bodyEl);
+
+  // Face group (translated each frame)
+  faceGroup = el('g');
+  staticGroup.appendChild(faceGroup);
+
+  // Face circle background
+  faceCircle = el('circle',{cx:0, cy:0, r:FACE_R});
+  faceGroup.appendChild(faceCircle);
+
+  // Face black features
+  faceFeatures = el('path',{fill:'black'});
+  faceGroup.appendChild(faceFeatures);
+
+  // Number circle (fixed)
+  numCircle = el('circle',{cx:0, cy:0, r:CR*0.85, fill:'#d9d9d9', stroke:'#000','stroke-width':'0.8'});
+  staticGroup.appendChild(numCircle);
+
+  numText = el('text',{
+    x:0, y:0,
+    'text-anchor':'middle','dominant-baseline':'central',
+    fill:'#1a1a1a','font-size':`${CR*1.0}px`,
+    'font-family':'Helvetica,Arial,sans-serif','font-weight':'700','pointer-events':'none'
+  },'1');
+  staticGroup.appendChild(numText);
+
+  staticGroup.addEventListener('pointerdown', onDown);
+  window.addEventListener('pointermove', onMove);
+  window.addEventListener('pointerup', onUp);
+  draw();
+}
+
+function buildPips(){
+  pipRow.innerHTML=''; pips.length=0;
+  for(let i=0;i<10;i++){
+    const p=document.createElement('div');
+    p.className='pip'; pipRow.appendChild(p); pips.push(p);
+  }
+}
+
+function updateVisuals(t){
+  const raw   = 1 + t*9;
+  const level = Math.round(raw);
+  currentLevel = level;
+  const idx   = level - 1;
+
+  // Interpolate color between adjacent defined levels
+  const lo = Math.min(Math.floor(raw-1), 8);
+  const hi = Math.min(lo+1, 9);
+  const faceColor = lerpColor(COLORS[lo], COLORS[hi], raw-1-lo);
+
+  // Body
+  bodyEl.setAttribute('d', makeBody(t));
+  const bg = Math.round(189 - t*18);
+  bodyEl.setAttribute('fill', `rgb(${bg},${bg},${bg})`);
+
+  // Number circle
+  const [cr2,cg,cb] = hexRGB(COLORS[idx]);
+  const tint = t * 0.14;
+  numCircle.setAttribute('fill',`rgb(${Math.round(217*(1-tint)+cr2*tint)},${Math.round(217*(1-tint)+cg*tint)},${Math.round(217*(1-tint)+cb*tint)})`);
+  numText.textContent = level;
+
+  // Face position: tracks rim_y exactly
+  const rimY = lerp(RIM_Y0, RIM_Y1, t);
+  faceGroup.setAttribute('transform', `translate(0,${rimY})`);
+
+  // Face color and features
+  faceCircle.setAttribute('fill', faceColor);
+  const faceKey = FACE_KEY[idx];
+  faceFeatures.setAttribute('d', FACE_PATHS[faceKey]);
+
+  lblEl.textContent = LABELS[idx];
+  lblEl.style.color = faceColor;
+  pips.forEach((p,i)=>{
+    const on = i < level;
+    p.classList.toggle('active', on);
+    p.style.background = on ? COLORS[i] : '#333';
+  });
+}
+
+function draw(){ updateVisuals(stretchT); }
+
+function onDown(e){
+  e.preventDefault();
+  if(isAnimating){cancelAnimationFrame(animFrame);isAnimating=false;}
+  isDragging=true;
+  staticGroup.style.cursor='grabbing';
+  dragStartY = e.clientY - stretchT * (BOT_Y1-BOT_Y0) * S;
+  if(!hasDragged){hasDragged=true;hint.classList.add('gone');}
+}
+function onMove(e){
+  if(!isDragging)return;
+  e.preventDefault();
+  const dy  = Math.max(0, e.clientY - dragStartY);
+  // Clamp max drag so pendant stays within viewport
+  const maxDy = Math.min((BOT_Y1-BOT_Y0)*S, VH * 0.35);
+  const raw = Math.min(dy/maxDy, 1);
+  stretchT = raw;
+  draw();
+}
+function onUp(){
+  if(!isDragging)return; isDragging=false;
+  staticGroup.style.cursor='grab';
+  
+  spring();
+}
+function spring(){
+  isAnimating=true;
+  const s0=stretchT, t0=performance.now(), dur=1000;
+  const ease=t=>t===0||t===1?t:Math.pow(2,-9*t)*Math.sin((t*10-0.75)*(2*Math.PI/3.5))+1;
+  const tick=now=>{
+    const t=Math.min((now-t0)/dur,1);
+    stretchT=s0*(1-ease(t)); draw();
+    if(t<1){animFrame=requestAnimationFrame(tick);}
+    else{stretchT=0;draw();isAnimating=false;}
+  };
+  animFrame=requestAnimationFrame(tick);
+}
+
+setup();
+window.addEventListener('resize',()=>{clearTimeout(window._rt);window._rt=setTimeout(setup,150);});
+</script>
+</body>
+</html>

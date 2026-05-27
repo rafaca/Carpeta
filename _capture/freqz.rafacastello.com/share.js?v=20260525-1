@@ -1,0 +1,28 @@
+// Frequencies — Share button.
+// Mobile: opens the native share sheet via the Web Share API.
+// Desktop: copies the URL to clipboard and flashes "COPIED" on the button.
+// Anywhere else: falls back to a prompt() with the URL pre-selected.
+
+function freqzShare(btn) {
+  var url   = window.location.href;
+  var title = document.title;
+  var text  = 'Frequencies — daily digest at the intersection of brand, design, AI, fashion, and markets.';
+
+  if (navigator.share) {
+    navigator.share({ title: title, text: text, url: url }).catch(function () { /* user dismissed */ });
+    return;
+  }
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(function () {
+      if (!btn) return;
+      var orig = btn.textContent;
+      btn.textContent = 'COPIED';
+      btn.disabled = true;
+      setTimeout(function () { btn.textContent = orig; btn.disabled = false; }, 1800);
+    }).catch(function () { window.prompt('Copy this URL:', url); });
+    return;
+  }
+
+  window.prompt('Copy this URL:', url);
+}

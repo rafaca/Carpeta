@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Digest / April 21–22, 2026</title>
+<link rel="alternate" type="application/rss+xml" title="Rafa Castello — Newsletter Digest" href="https://newsletters.rafacastello.com/feed.xml">
+<link rel="stylesheet" href="https://use.typekit.net/fau0gcd.css">
+<style>
+  :root {
+    --bg: #f5f2ec;
+    --ink: #111111;
+    --ink-soft: #4a4a4a;
+    --accent: #d64218;
+    --rule: #dcd6cc;
+    --card: #ffffff;
+    --hl: #fff089;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "freight-text-pro", Georgia, serif;
+    font-size: 18px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 48px 32px 120px;
+  }
+
+  /* Masthead */
+  .masthead {
+    border-top: 4px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 24px 0 20px;
+    margin-bottom: 48px;
+  }
+
+  .masthead-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+  }
+
+  h1.title {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .standfirst {
+    font-family: "freight-text-pro", Georgia, serif;
+    font-size: 20px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 620px;
+    margin-top: 12px;
+  }
+
+  /* TOC */
+  .toc {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px 32px;
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 13px;
+    margin: 32px 0 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .toc a {
+    color: var(--ink);
+    text-decoration: none;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: color 0.15s ease;
+  }
+
+  .toc a:hover { color: var(--accent); }
+  .toc a .num {
+    color: var(--accent);
+    font-weight: 600;
+    margin-right: 12px;
+    width: 24px;
+    flex-shrink: 0;
+  }
+  .toc a .label { flex: 1; }
+
+  /* Sections */
+  section {
+    margin-bottom: 72px;
+    scroll-margin-top: 24px;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 8px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .section-num {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+  }
+
+  .section-kicker {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-soft);
+    margin-left: auto;
+  }
+
+  h2 {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 16px 0 32px;
+  }
+
+  h2 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  h3 {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: 22px;
+    margin: 32px 0 12px;
+    line-height: 1.3;
+  }
+
+  p {
+    margin-bottom: 18px;
+    max-width: 700px;
+  }
+
+  a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  a:hover { color: var(--accent); }
+
+  strong { font-weight: 700; }
+
+  .drop-cap::first-letter {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-size: 5em;
+    float: left;
+    line-height: 0.9;
+    margin: 6px 10px -4px 0;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  /* Pullquotes */
+  .pullquote {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-style: italic;
+    font-size: 26px;
+    line-height: 1.25;
+    color: var(--ink);
+    border-left: 3px solid var(--accent);
+    padding: 8px 0 8px 24px;
+    margin: 28px 0;
+    max-width: 680px;
+  }
+
+  .pullquote cite {
+    display: block;
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-style: normal;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 10px;
+  }
+
+  /* Cards */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin: 24px 0;
+  }
+
+  .card {
+    background: var(--card);
+    padding: 20px 22px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+  }
+
+  .card-label {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .card h4 {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .card p {
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    margin-bottom: 0;
+  }
+
+  .card .score {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-top: 10px;
+    display: block;
+  }
+
+  /* Number stats */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
+    margin: 32px 0;
+    padding: 24px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .stat-num {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-size: 52px;
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .stat-label {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  /* Link list */
+  .link-list {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+  }
+
+  .link-list li {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+  }
+
+  .link-list li:first-child { border-top: 1px solid var(--rule); }
+
+  .link-list .tag {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    flex-shrink: 0;
+    width: 90px;
+  }
+
+  .link-list .desc {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  /* Hl */
+  mark { background: var(--hl); padding: 0 3px; }
+
+  /* Footer */
+  footer {
+    margin-top: 96px;
+    padding-top: 24px;
+    border-top: 4px solid var(--ink);
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  footer span { text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* Mobile */
+  @media (max-width: 640px) {
+    .container { padding: 32px 20px 80px; }
+    .toc { grid-template-columns: 1fr; }
+    .pullquote { font-size: 20px; padding-left: 18px; }
+    .stat-num { font-size: 40px; }
+  }
+
+  /* Print */
+  @media print {
+    body { background: white; }
+    .toc { page-break-after: always; }
+    section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- MASTHEAD -->
+    <header class="masthead">
+      <div class="masthead-top">
+        <span>Vol. 16 / No. 2</span>
+        <span>April 21 – 22, 2026</span>
+        <span><a href="https://freqz.rafacastello.com/feed.xml" style="text-decoration:none;color:inherit;">RSS</a></span>
+      </div>
+      <h1 class="title">The <em>Subsidy</em><br>Cliff</h1>
+      <p class="standfirst">
+        The AI pricing party is ending. Apple gets a new CEO. Design shifts upstream.
+        A chocolate heist becomes a masterclass in crisis branding. And the pope
+        is apparently weak on crime.
+      </p>
+    </header>
+
+    <!-- TOC -->
+    <nav class="toc" aria-label="Sections">
+      <a href="index.html#s1"><span class="num">01</span><span class="label">The Subsidy Cliff</span></a>
+      <a href="index.html#s2"><span class="num">02</span><span class="label">Apple After Cook</span></a>
+      <a href="index.html#s3"><span class="num">03</span><span class="label">Design Shifts Left</span></a>
+      <a href="index.html#s4"><span class="num">04</span><span class="label">Crisis as Brand Play</span></a>
+      <a href="index.html#s5"><span class="num">05</span><span class="label">Deciding > Predicting</span></a>
+      <a href="index.html#s6"><span class="num">06</span><span class="label">The Papal Bull</span></a>
+      <a href="index.html#s7"><span class="num">07</span><span class="label">CPG: The Full-Lineup Bet</span></a>
+      <a href="index.html#s8"><span class="num">08</span><span class="label">World &amp; Markets</span></a>
+      <a href="index.html#s9"><span class="num">09</span><span class="label">New Substacks</span></a>
+      <a href="index.html#links"><span class="num">10</span><span class="label">Quick Links</span></a>
+      <a href="index.html#sources"><span class="num">11</span><span class="label">Sources</span></a>
+    </nav>
+
+    <!-- SECTION 1 -->
+    <section id="s1">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 01</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Infrastructure</span>
+      </div>
+        <h2>The Subsidy Cliff: AI's <em>Pricing Party</em> Is Over</h2>
+      </header>
+
+      <p class="drop-cap">
+        Three separate newsletters converged on the same story this week: the
+        economic foundations of AI services are cracking. The era of flat-rate
+        subscriptions that let users burn $8–$13 worth of compute for every $1
+        of subscription revenue is coming to an abrupt end.
+      </p>
+
+      <p>
+        <strong>Benedict Evans</strong> framed Anthropic's capacity problems through
+        the lens of mobile data in the late 2000s — when the iPhone's flat-rate
+        plan swamped AT&T's network. His prediction: "The natural end-state of all
+        these situations is a segmented range of flat-rate bundles." Anthropic, he
+        notes, has invested least in capacity of all the big labs, and now agentic
+        coding has found massive product-market fit, making that a real problem.
+      </p>
+
+      <div class="pullquote">
+        Anthropic should stop taking on new customers until it works out its capacity issues.
+        <cite>Ed Zitron, Where's Your Ed At</cite>
+      </div>
+
+      <p>
+        <strong>Ed Zitron</strong> went much further in his "Four Horsemen of the
+        AIpocalypse" edition, documenting Anthropic's Claude chatbot at
+        <mark>98.79% uptime</mark> — which translates to nearly four and a half
+        days of downtime per year. Enterprise clients are reportedly switching to
+        OpenAI. The newly launched Opus 4.7 is drawing complaints of worse performance
+        and higher token burn, with 2,300 upvotes on a Reddit post titled
+        "Claude Opus 4.7 is a serious regression, not an upgrade."
+      </p>
+
+      <div class="stat-row">
+        <div>
+          <div class="stat-num">98.79%</div>
+          <div class="stat-label">Claude chatbot uptime (90-day)</div>
+        </div>
+        <div>
+          <div class="stat-num">~10%</div>
+          <div class="stat-label">Headcount cost spent on AI tokens (some firms)</div>
+        </div>
+        <div>
+          <div class="stat-num">$11B</div>
+          <div class="stat-label">Anthropic's expected 2026 burn</div>
+        </div>
+      </div>
+
+      <p>
+        The real kicker: <strong>Microsoft is suspending new GitHub Copilot
+        signups</strong> and preparing to move customers to token-based billing.
+        Per Zitron's reporting, Copilot's week-over-week costs have nearly doubled
+        since January. Anthropic has already shifted enterprise customers to
+        API-rate pricing. A Goldman Sachs report reveals some companies are
+        spending <mark>10% of engineering headcount cost</mark> on AI tokens — and
+        the trajectory points to 100% within quarters.
+      </p>
+
+      <p>
+        Meanwhile, Uber blew through its entire annual AI budget a few months into
+        2026, with 11% of backend code updates now written by AI agents. The OP
+        Letter's links section corroborated the trend, citing reports on AI
+        compute scarcity and rising enterprise costs from multiple sources.
+      </p>
+
+      <p>
+        Zitron's call: by end of 2026, a majority of AI services will move to
+        token-based billing. The subsidy era is over; the question is whether
+        the demand survives the sticker shock.
+      </p>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section id="s2">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 02</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Leadership</span>
+      </div>
+        <h2>Apple After Cook: <em>The Ternus Era</em> Begins</h2>
+      </header>
+
+      <p class="drop-cap">
+        The biggest corporate succession story of the year dropped quietly on a
+        Sunday evening. Tim Cook will become Executive Chairman effective
+        September 1, 2026, with <strong>John Ternus</strong> — SVP of Hardware
+        Engineering — stepping in as Apple's eighth CEO.
+      </p>
+
+      <p>
+        <strong>Public Announcement</strong> linked to Gruber's Daring Fireball
+        analysis, which characterized the transition as "notably drama-free"
+        and reflective of Cook's management style: orderly, planned, methodical.
+        Ternus is approximately 50 — matching Cook's age when he took the role.
+        Johny Srouji was simultaneously named Chief Hardware Officer.
+      </p>
+
+      <div class="pullquote">
+        If the Steve Jobs era was defined by technological innovation, the Tim
+        Cook period was one of exceptional financial growth.
+        <cite>The New York Times</cite>
+      </div>
+
+      <p>
+        The signal: continuity over revolution. Ternus's hardware background
+        suggests emphasis on product design and engineering excellence — a
+        potential counterweight to the software-and-services narrative that
+        defined Cook's later years. Meanwhile, the Siri team is reportedly
+        being sent on AI "bootcamps," suggesting Apple knows it has catching
+        up to do.
+      </p>
+
+      <p>
+        What's interesting in context: Benedict Evans notes that Google has joined
+        Anthropic and OpenAI with a desktop Mac app. The shift from web to local
+        apps is "partly driven by the scope to interact with local apps and
+        files — using the operating system as an actual operating system." For
+        Apple, this means its hardware and OS integration could be a genuine AI
+        advantage — if the Ternus-era company can ship fast enough.
+      </p>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section id="s3">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 03</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Craft</span>
+      </div>
+        <h2>Design Isn't Dying. <em>It's Shifting Left.</em></h2>
+      </header>
+
+      <p class="drop-cap">
+        The headline from <strong>Sidebar / UX Collective</strong> this week
+        was from Microsoft Design: when the model is the new medium, shaping
+        how it behaves in humanistic ways <em>is</em> design. The core argument:
+        design isn't being replaced by AI — it's moving earlier in the
+        development process.
+      </p>
+
+      <p>
+        Traditionally in software engineering, "shifting left" means addressing
+        issues before they become expensive. For design, this means engaging with
+        technological constraints and real data as early as possible. The
+        Microsoft piece argues: "Design decisions aren't just happening on top
+        of the product — they're happening <em>inside</em> of it."
+      </p>
+
+      <div class="pullquote">
+        Design was never about pixels. It's always been about people.
+        <cite>Microsoft Design</cite>
+      </div>
+
+      <p>
+        Sidebar's other lead link, <em>"If You Thought the Speed of Writing Code
+        Was Your Problem, You Have a Problem,"</em> argues that AI coding tools
+        are optimizing the wrong thing. Speed of production isn't the bottleneck;
+        judgment and problem definition are.
+      </p>
+
+      <p>
+        <strong>Memorisely</strong> announced a Claude Design workshop —
+        Anthropic's new tool that takes you from design system to high-fidelity
+        prototype in one workflow. Structure your tokens and components, and
+        Claude generates testable product features without switching tools. It's
+        the practical manifestation of the "shifting left" thesis: design systems
+        as inputs, working prototypes as outputs.
+      </p>
+
+      <p>
+        The companion Sidebar link, <em>"The AI Adoption Spiral,"</em> captures
+        the emotional journey of working with these tools in a humor-tinged
+        diagram. Worth bookmarking for the next time a colleague says "I tried
+        ChatGPT once, it was bad."
+      </p>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section id="s4">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 04</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Branding</span>
+      </div>
+        <h2>Stolen Sweets: <em>Crisis</em> as Brand Play</h2>
+      </header>
+
+      <p class="drop-cap">
+        On March 26, a truck carrying 413,793 limited-edition F1-shaped KitKat
+        bars was intercepted between an Italian factory and its Polish
+        destination. Twelve metric tons of chocolate, gone. <strong>Vendry's
+        Case Studied</strong> dissected what happened next — and why it
+        worked.
+      </p>
+
+      <p>
+        KitKat's public response arrived three days later with the line:
+        "We've always encouraged people to have a break with KitKat — but it
+        seems thieves have taken the message too literally." They appreciated
+        the criminals' "exceptional taste." Memes spread. Ryanair and Domino's
+        jumped in. Then on April Fools' Day, KitKat launched a
+        <strong>"Stolen KitKat Tracker"</strong> — an online tool where
+        customers enter batch codes to check if their bar was part of the
+        stolen shipment.
+      </p>
+
+      <div class="stat-row">
+        <div>
+          <div class="stat-num">333K</div>
+          <div class="stat-label">Likes on X (initial statement)</div>
+        </div>
+        <div>
+          <div class="stat-num">340K</div>
+          <div class="stat-label">Likes on Instagram</div>
+        </div>
+        <div>
+          <div class="stat-num">12 t</div>
+          <div class="stat-label">Metric tons of chocolate stolen</div>
+        </div>
+      </div>
+
+      <p>
+        Case Studied's takeaways are worth internalizing: <strong>stay
+        on-brand even in crisis management</strong> (their statement sounded
+        like KitKat, not like a legal team); <strong>humor only works when
+        stakes are low</strong> (nobody was hurt, supply wasn't affected);
+        and <strong>have a crisis playbook ready before you need it</strong>.
+        The speed of KitKat's response suggests pre-existing processes — or,
+        as some skeptics note, pre-existing planning.
+      </p>
+
+      <p>
+        Whether the heist was real or staged barely matters for the branding
+        lesson: the best crisis responses lean <em>into</em> brand voice,
+        not away from it. KFC did this in 2018 with its "FCK" apology after
+        running out of chicken. KitKat's playbook rhymes.
+      </p>
+    </section>
+
+    <!-- SECTION 5 -->
+    <section id="s5">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 05</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Decision-Making</span>
+      </div>
+        <h2>Predicting Is Hard. <em>Deciding</em> Is the Job.</h2>
+      </header>
+
+      <p class="drop-cap">
+        The <strong>OP Letter</strong> delivered a deceptively simple essay
+        this week, using the post-mortem of Watches &amp; Wonders 2026
+        predictions as a lens for executive decision-making. Nine sources
+        predicted a Rolex Milgauss return. Seven predicted a Coke GMT. The
+        OP Letter's own contrarian call: a moonphase on the 1908.
+      </p>
+
+      <p>
+        Scorecard: Milgauss — no. Coke GMT — no. Explorer II — no. Moonphase —
+        no. Nobody called the Yacht-Master II return. The pros had patents,
+        dealer relationships, forum sources, CEO interview access.
+        <mark>They still called it mostly wrong.</mark>
+      </p>
+
+      <div class="pullquote">
+        The most common failure mode at senior levels isn't bad
+        decision-making. It's deferred decision-making.
+        <cite>Darren, OP Letter</cite>
+      </div>
+
+      <p>
+        The watch parallel maps perfectly to portfolio-company decision-making:
+        will this GTM motion work? Will agentic AI stall or compound? Will this
+        senior hire stick? The answer is always "you cannot know." Colin Powell's
+        rule: decide between 40% and 70% of the information. Below 40% is
+        gambling. Above 70% is late. Bezos's distinction between Type 1
+        (irreversible) and Type 2 (reversible) decisions completes the framework.
+      </p>
+
+      <p>
+        "I'll take a 60% call made now over a 95% call made six months from now,
+        every time."
+      </p>
+    </section>
+
+    <!-- SECTION 6 -->
+    <section id="s6">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 06</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Culture & Power</span>
+      </div>
+        <h2>Papal <em>Bull</em></h2>
+      </header>
+
+      <p class="drop-cap">
+        <strong>Today in Tabs</strong> handed the column to Liz Lopatto of
+        The Verge, who delivered a devastating and genuinely hilarious account
+        of the Trump administration's escalating feud with Pope Leo XIV. The
+        headline quote: "Pope Leo is WEAK on Crime." The pope's offense? Calling
+        for peace in general terms.
+      </p>
+
+      <p>
+        Lopatto traces the entire pipeline: Opus Dei's cultivation of Washington
+        power through "apostolic friendship," Leonard Leo's role on the Opus Dei
+        board while engineering three Supreme Court nominations, the wave of
+        conservative Catholic conversions as career networking, and now the
+        spectacle of JD Vance — a Thiel protégé — trying to
+        <em>Augustine-splain</em> at the pope while Leo was literally in Hippo,
+        the city of Augustine.
+      </p>
+
+      <div class="pullquote">
+        It remains to be seen if we're going to get a second, dumber
+        Reformation.
+        <cite>Today in Tabs</cite>
+      </div>
+
+      <p>
+        Meanwhile, the Vatican's main AI advisor published an essay asking
+        whether Peter Thiel should be <em>burned at the stake</em> for his
+        heretical views on the Antichrist. The pope has met with <em>Opus</em>
+        author Gareth Gore, suggesting he may order a full investigation into
+        Opus Dei's American wing. And Trump administration officials have
+        invoked the Avignon papacy — a series of popes installed by France
+        that led to a church schism.
+      </p>
+
+      <p>
+        Lopatto's kicker lands perfectly: Pope Leo is promoting
+        Catholic-Islamic friendship and his advisors appear to hate Silicon
+        Valley. "Apparently this is part of the plot of <em>Dune</em>, so we
+        may also have the Butlerian jihad to look forward to."
+      </p>
+    </section>
+
+    <!-- SECTION 7 -->
+    <section id="s7">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 07</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Consumer Brands</span>
+      </div>
+        <h2>The Full-Lineup Bet: <em>Launching With</em> a Point of View</h2>
+      </header>
+
+      <p class="drop-cap">
+        <strong>CPGD</strong> spotted a pattern in recent launches: new brands
+        arriving with a complete product lineup from day one, not one hero SKU
+        and a promise to figure out the rest. It's a different kind of launch
+        bet — "we already know what we're building."
+      </p>
+
+      <div class="card-grid">
+        <div class="card">
+          <span class="card-label">Oral Care</span>
+          <h4>Köppen</h4>
+          <p>Tongue scrapers, oil pulling, toothpaste, mouthwash, floss — all at
+          once. The whole routine, not just one SKU. "Your mouth is an ecosystem."</p>
+        </div>
+        <div class="card">
+          <span class="card-label">Pain Relief</span>
+          <h4>Trelli</h4>
+          <p>Naturally derived bioactives instead of conventional OTC. Named for
+          "trellis" — a structure that aids growth. Design-first, with two more
+          products already in the pipeline.</p>
+        </div>
+        <div class="card">
+          <span class="card-label">Bagels</span>
+          <h4>PopUp Bagel</h4>
+          <p>Tiger Global backs the buzzy bagel chain at a $300M valuation,
+          scaling to 100+ locations by end of 2027.</p>
+          <span class="score">$300M Valuation</span>
+        </div>
+        <div class="card">
+          <span class="card-label">Beauty / M&A</span>
+          <h4>Elemis Sale</h4>
+          <p>L'OCCITANE Group reportedly shopping the British skincare brand
+          for ~$1B. One of the year's biggest beauty deals.</p>
+          <span class="score">~$1B Expected</span>
+        </div>
+      </div>
+
+      <p>
+        The through-line: founders have watched the one-hero-SKU playbook and
+        made a different call. Fashionista noted the same instinct in beauty —
+        established brands refocusing on "clearer hero products and launches
+        that serve a distinct purpose." As Trelli's founder put it: "In a world
+        where it's never been easier to spin up a website or creative,
+        <mark>great original design has become more valuable.</mark>"
+      </p>
+    </section>
+
+    <!-- SECTION 8 — WORLD & MARKETS -->
+    <section id="s8">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 08</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Outside the Bubble</span>
+      </div>
+        <h2>World &amp; <em>Markets</em>: What's Happening Out There</h2>
+      </header>
+
+      <p class="drop-cap">
+        Tech newsletters live inside their own reality. A quick scan of Google
+        News this morning reframes the week — energy, geopolitics, and a few
+        tech stories the trade press missed.
+      </p>
+
+      <h3 style="margin-top:28px;font-family:'freight-display-pro',Georgia,serif;font-size:22px;">Strait of Hormuz &amp; the energy shock</h3>
+      <p>
+        Iran has seized two container ships attempting to leave the Gulf as a
+        <strong>U.S. blockade</strong> of the Strait of Hormuz continues. Thousands more
+        U.S. forces are deploying to the Middle East. The <em>Financial Times</em>
+        reports energy traders are "digging in for a long Iran war" — pricing in
+        prolonged regional instability rather than a quick de-escalation.
+        <em>(Reuters, NYT, NPR, CBS, FT)</em>
+      </p>
+
+      <h3 style="margin-top:24px;font-family:'freight-display-pro',Georgia,serif;font-size:22px;">Europe's €90B Ukraine loan unlocks — via a pipeline</h3>
+      <p>
+        The Druzhba oil pipeline restart let Hungary drop its veto, unblocking a
+        <strong>€90 billion EU assistance package for Ukraine</strong>. In the same breath,
+        Russia announced it will suspend Kazakh oil flowing through that same
+        pipeline to Germany. Europe is now examining supply-chain controls on
+        jet fuel as Iran-conflict shortages emerge.
+        <em>(BBC, CNN, DW, Politico, Al Jazeera)</em>
+      </p>
+
+      <h3 style="margin-top:24px;font-family:'freight-display-pro',Georgia,serif;font-size:22px;">Tech stories the trade press buried</h3>
+      <ul class="link-list" style="margin-top:12px;">
+        <li>
+          <span class="tag">AI Security</span>
+          <span class="desc"><a href="https://www.engadget.com/ai/anthropic-claude-mythos-firefox-bugs" target="_blank" rel="noopener"><strong>Anthropic's Mythos found 271 bugs in Firefox.</strong></a> Mozilla patched them. This is the first large-scale confirmation of the "cybersecurity as proof-of-work" thesis from last week's digest. <em>via Engadget</em></span>
+        </li>
+        <li>
+          <span class="tag">Consumer</span>
+          <span class="desc"><a href="https://www.bbc.com/news/technology" target="_blank" rel="noopener"><strong>Xbox Game Pass cuts subscription prices</strong></a> — but ends day-one Call of Duty access. The unbundling continues. <em>via BBC</em></span>
+        </li>
+        <li>
+          <span class="tag">Hardware</span>
+          <span class="desc"><a href="https://9to5mac.com/?s=framework+laptop+13+pro+panther+lake" target="_blank" rel="noopener"><strong>Framework Laptop 13 Pro</strong></a> ships with Intel Panther Lake chips — positioned as "the MacBook Pro for Linux users." <em>via 9to5Mac</em></span>
+        </li>
+        <li>
+          <span class="tag">Imaging</span>
+          <span class="desc"><a href="https://www.axios.com/?q=chatgpt+images+2" target="_blank" rel="noopener"><strong>OpenAI's ChatGPT Images 2.0</strong></a> — improved text rendering, better multilingual. Text-in-image is the last great barrier for generative imagery. <em>via Axios</em></span>
+        </li>
+        <li>
+          <span class="tag">Optics</span>
+          <span class="desc"><a href="https://9to5mac.com/?s=iphone+18+pro+variable+aperture" target="_blank" rel="noopener"><strong>iPhone 18 Pro may get variable aperture.</strong></a> Real aperture blades in a phone would be the most significant camera hardware change since the ultrawide. <em>via 9to5Mac</em></span>
+        </li>
+        <li>
+          <span class="tag">Domestic</span>
+          <span class="desc"><a href="https://apnews.com/hub/west-virginia" target="_blank" rel="noopener"><strong>Chemical leak at a West Virginia plant kills 2.</strong></a> Additional workers hospitalized. Industrial safety remains the story nobody reports until it's too late. <em>via AP</em></span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- SECTION 9 — NEW SUBSTACKS -->
+    <section id="s9">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 09</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Substacks</span>
+      </div>
+        <h2>Fresh <em>Subscriptions</em> on the Radar</h2>
+      </header>
+
+      <p>
+        You added several new Substacks to your rotation this past week. Here
+        they are, with a short read on what each one promises — worth watching
+        for which actually ship and which go dormant.
+      </p>
+
+      <ul class="link-list" style="margin-top:16px;">
+        <li>
+          <span class="tag">Branding</span>
+          <span class="desc"><a href="https://andjelicaaa.substack.com/" target="_blank" rel="noopener"><strong>The Sociology of Business</strong></a> — Ana Andjelic. This week: <a href="https://andjelicaaa.substack.com/p/the-cultural-flywheel" target="_blank" rel="noopener"><em>The Cultural Flywheel</em></a> — how brands build community through merch, collaborations, drops, capsules, and events, with content sequenced around each cultural product. <mark>Covered in §04 above.</mark></span>
+        </li>
+        <li>
+          <span class="tag">Marketing</span>
+          <span class="desc"><a href="https://becauseofmarketing.substack.com/" target="_blank" rel="noopener"><strong>Because of Marketing</strong></a> — a weekly roundup of campaigns, ideas, and cultural shifts redefining how brands build and communicate. Just subscribed — tag line: "Where The Industry Reads First."</span>
+        </li>
+        <li>
+          <span class="tag">Fashion</span>
+          <span class="desc"><a href="https://manualdemoda.substack.com/" target="_blank" rel="noopener"><strong>Manual de Moda</strong></a> — Spanish-language fashion writing. Still to see what their cadence and POV is.</span>
+        </li>
+        <li>
+          <span class="tag">Culture</span>
+          <span class="desc"><a href="https://taliacu.substack.com/" target="_blank" rel="noopener"><strong>Latin Zine by Talía Cu</strong></a> — recommended by María Vargas Aguilar. Latin American cultural writing.</span>
+        </li>
+        <li>
+          <span class="tag">Art</span>
+          <span class="desc"><a href="https://theroseperiod.substack.com/" target="_blank" rel="noopener"><strong>The Rose Period</strong></a> — "fun, unusual, and unexpected stories from the art world — without taking up too much space in your inbox."</span>
+        </li>
+        <li>
+          <span class="tag">Design</span>
+          <span class="desc"><a href="https://kelseykeith.substack.com/" target="_blank" rel="noopener"><strong>Ground Condition</strong></a> — Kelsey Keith. Design and built-environment writing.</span>
+        </li>
+        <li>
+          <span class="tag">Writing</span>
+          <span class="desc"><a href="https://staringattheceiling.substack.com/" target="_blank" rel="noopener"><strong>Staring at the Ceiling</strong></a> — first-person essays, judging by the "omg heyyyy!" welcome note.</span>
+        </li>
+        <li>
+          <span class="tag">Fashion</span>
+          <span class="desc"><a href="https://bigpants.substack.com/" target="_blank" rel="noopener"><strong>Big Pants Waste Precious Fabric</strong></a> — a fashion-adjacent Substack with a killer name. Free tier active.</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- QUICK LINKS -->
+    <section id="links">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 10</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Quick Links</span>
+      </div>
+        <h2>Bookmarks</h2>
+      </header>
+
+      <ul class="link-list">
+        <li>
+          <span class="tag">AI</span>
+          <span class="desc"><a href="https://sidebar.io/" target="_blank" rel="noopener"><strong>Expansion Artifacts</strong></a> — AI output gets inflated into blog posts, LinkedIn thoughtspam, and omnichannel campaigns. A term for our times. <em>via Sidebar</em></span>
+        </li>
+        <li>
+          <span class="tag">Tool</span>
+          <span class="desc"><a href="https://asc11.com/" target="_blank" rel="noopener"><strong>asc11.com</strong></a> — ASCII art generator for websites and marketing. Works from images, video, live cam, and templates. <em>via Sidebar</em></span>
+        </li>
+        <li>
+          <span class="tag">Tech</span>
+          <span class="desc"><a href="https://www.ben-evans.com/newsletter" target="_blank" rel="noopener"><strong>Allbirds pivots to AI data centers</strong></a> — the once-buzzy shoe company, now a cash shell, announced something "vague in AI data centres" and the stock went up 5x. Evans: "That's the kind of thing that happens in bubbles." <em>via Benedict Evans</em></span>
+        </li>
+        <li>
+          <span class="tag">Geopolitics</span>
+          <span class="desc"><a href="https://www.ben-evans.com/newsletter" target="_blank" rel="noopener"><strong>Meta acquires Manus</strong></a> — China's reaction is escalating; multiple ministries ordered to crack down. Moving co-founders to Singapore to skirt foreign acquisition rules may not have been as clever as it seemed. <em>via Benedict Evans</em></span>
+        </li>
+        <li>
+          <span class="tag">Robotics</span>
+          <span class="desc"><a href="https://www.ben-evans.com/newsletter" target="_blank" rel="noopener"><strong>Uber commits $10B to autonomous vehicles</strong></a> — back to robots with a portfolio model rather than building the whole thing itself. Backed by $10B of FCF last year. <em>via Benedict Evans</em></span>
+        </li>
+        <li>
+          <span class="tag">Digital</span>
+          <span class="desc"><a href="https://www.newyorker.com/search/q/digital%20life%20vanishes" target="_blank" rel="noopener"><strong>When Your Digital Life Vanishes</strong></a> — A broken phone or corrupted drive can mean losing the last traces of the dead. Data-recovery experts "summon lost files from the void." <em>via Public Announcement / New Yorker</em></span>
+        </li>
+        <li>
+          <span class="tag">Media</span>
+          <span class="desc"><a href="https://prospect.org/why-were-removing-our-programmatic-ads/" target="_blank" rel="noopener"><strong>Why We're Removing Our Programmatic Ads</strong></a> — Prospect.org exits programmatic entirely, providing a genuinely non-obvious POV on the industry's structural flaws. <em>via OP Letter</em></span>
+        </li>
+        <li>
+          <span class="tag">Culture</span>
+          <span class="desc"><a href="https://www.currentaffairs.org/news/the-banal-horror-of-jimmy-fallon" target="_blank" rel="noopener"><strong>The Banal Horror of Jimmy Fallon</strong></a> — "Under the sterile blue lights of his studio, Fallon laughs endlessly at the same pseudo-jokes, rubs elbows with Trump and Sam Altman, and ushers in the death of culture." <em>via Public Announcement / Current Affairs</em></span>
+        </li>
+        <li>
+          <span class="tag">Writing</span>
+          <span class="desc"><a href="https://www.telegraph.co.uk/search?searchTerm=Jay+McInerney+cocaine+brain+surgery" target="_blank" rel="noopener"><strong>Jay McInerney on cocaine, writing, and brain surgery</strong></a> — "There comes a moment when cocaine turns on you." The acclaimed novelist on wild nights in New York and how brain surgery cured his writer's block. <em>via Public Announcement / Telegraph</em></span>
+        </li>
+        <li>
+          <span class="tag">Luxury</span>
+          <span class="desc"><a href="https://www.hodinkee.com/articles/watches-and-wonders-2026-rolex-yacht-master-ii" target="_blank" rel="noopener"><strong>Yacht-Master II returns</strong></a> — Nobody predicted it. Rolex's most surprising W&W 2026 reveal: steel and yellow gold, new movement. <em>via OP Letter</em></span>
+        </li>
+        <li>
+          <span class="tag">Craft</span>
+          <span class="desc"><a href="https://www.craft.do/blog" target="_blank" rel="noopener"><strong>Craft adds Kanban View</strong></a> — One of the most-requested features. Plus performance improvements and a spring sale. <em>via Craft</em></span>
+        </li>
+        <li>
+          <span class="tag">Meditation</span>
+          <span class="desc"><a href="https://cargo.site/" target="_blank" rel="noopener"><strong>Cargo Newsletter 385</strong></a> — A dreamlike fiction piece about descending a staircase into velvet blackness, paired with an I Ching reading: "Do not ignore that many aspects of your life aren't ALREADY underway." <em>via Cargo</em></span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- SOURCES -->
+    <section id="sources">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">§ 11</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Sources</span>
+      </div>
+        <h2>This Week's Newsletters</h2>
+      </header>
+
+      <ul class="link-list">
+        <li>
+          <span class="tag">Design</span>
+          <span class="desc"><strong>Sidebar / UX Collective</strong> — "Design isn't dying. It's shifting left." (Apr 21)</span>
+        </li>
+        <li>
+          <span class="tag">Tech</span>
+          <span class="desc"><strong>Benedict's Newsletter No. 639</strong> — Anthropic's supply crunch, Meta Manus, AI TAM, Amazon buys Globalstar (Apr 21)</span>
+        </li>
+        <li>
+          <span class="tag">AI / Econ</span>
+          <span class="desc"><strong>Where's Your Ed At</strong> — "Four Horsemen of the AIpocalypse" — Anthropic capacity, GitHub Copilot billing, NVIDIA inventory (Apr 21)</span>
+        </li>
+        <li>
+          <span class="tag">Branding</span>
+          <span class="desc"><strong>Case Studied (Vendry)</strong> — "KitKat: Heist Intrigue" — crisis branding post-mortem (Apr 21)</span>
+        </li>
+        <li>
+          <span class="tag">Business</span>
+          <span class="desc"><strong>OP Letter #324</strong> — "Predicting Is Hard. Deciding Is the Job." — W&W 2026 + decision-making frameworks (Apr 21)</span>
+        </li>
+        <li>
+          <span class="tag">Culture</span>
+          <span class="desc"><strong>Today in Tabs</strong> — "Papal Bull" — Trump vs. Pope Leo XIV, Opus Dei, and the Butlerian jihad (Apr 21)</span>
+        </li>
+        <li>
+          <span class="tag">CPG</span>
+          <span class="desc"><strong>CPGD</strong> — "Launching With a Point of View" — full-lineup launches, PopUp Bagel $300M, Trelli Q&A (Apr 21)</span>
+        </li>
+        <li>
+          <span class="tag">Web</span>
+          <span class="desc"><strong>Cargo Newsletter 385</strong> — Fiction, portfolio curation, I Ching reading (Apr 21)</span>
+        </li>
+        <li>
+          <span class="tag">Design</span>
+          <span class="desc"><strong>Memorisely</strong> — Claude Design workshop announcement (Apr 22)</span>
+        </li>
+        <li>
+          <span class="tag">Culture</span>
+          <span class="desc"><strong>Public Announcement</strong> — Apple CEO transition, digital life vanishing, Fallon, McInerney (Apr 21)</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- FOOTER -->
+    <!-- ARCHIVE:START -->
+    <!-- ARCHIVE -->
+    <section class="archive-dark" aria-label="Archive of past editions">
+      <div class="archive-inner">
+        <div class="archive-label">Archive<span class="archive-label-divider">&middot;</span><span class="archive-label-count">8 editions</span></div>
+        <h2 class="archive-title">References</h2>
+      <a class="archive-feature" href="https://freqz.rafacastello.com/2026-04-30.html">
+        <div class="archive-feature-meta">
+          <span class="archive-feature-tag">Latest</span>
+          <span class="archive-feature-date">April 30, 2026</span>
+        </div>
+        <h3 class="archive-feature-title">Weekly Digest / April 30, 2026</h3>
+        <p class="archive-feature-standfirst">Salone del Mobile 2026 drew 316,342 visitors from 167 countries, up 4.5% year-over-year. But the real story is who showed up to play: more than forty fashion houses staged Fuorisalone events, giving fashion 56% share-of-…</p>
+        <span class="archive-feature-cta">Read &rarr;</span>
+      </a>
+      <div class="archive-grid">
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-29.html">
+          <span class="archive-card-date">April 29, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 29, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-28.html">
+          <span class="archive-card-date">April 28, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 28, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-27.html">
+          <span class="archive-card-date">April 27, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 27, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-24.html">
+          <span class="archive-card-date">April 24, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 24, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-23.html">
+          <span class="archive-card-date">April 23, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 23, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-22.html">
+          <span class="archive-card-date">April 22, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 21–22, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-21.html">
+          <span class="archive-card-date">April 21, 2026</span>
+          <h4 class="archive-card-title">Newsletters / Weekly Digest — April 21, 2026</h4>
+        </a>
+      </div>
+      </div>
+    </section>
+      <style>
+        .archive-dark {
+          /* Full-bleed dark panel breaking out of the .container side padding */
+          margin: 96px calc(-50vw + 50%) 0;
+          padding: 96px calc(50vw - 50%) 120px;
+          background: #0a0a0a;
+          color: #ffffff;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .archive-inner {
+          max-width: 880px;
+          margin: 0 auto;
+        }
+        .archive-label {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 11px;
+          font-weight: 500;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: var(--accent);
+          margin-bottom: 16px;
+        }
+        .archive-label .archive-label-divider {
+          display: inline-block;
+          margin: 0 10px;
+          color: rgba(255,255,255,0.3);
+        }
+        .archive-label .archive-label-count {
+          color: rgba(255,255,255,0.45);
+          letter-spacing: 0.2em;
+        }
+        .archive-title {
+          font-family: "freight-display-pro", "Playfair Display", Georgia, serif;
+          font-size: clamp(44px, 7vw, 72px);
+          font-weight: 400;
+          font-style: italic;
+          line-height: 1;
+          letter-spacing: -0.02em;
+          color: #ffffff;
+          margin: 0 0 56px;
+        }
+        .archive-feature {
+          display: block;
+          padding: 36px 36px 32px;
+          background: #151515;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 4px;
+          text-decoration: none;
+          color: #ffffff;
+          margin-bottom: 48px;
+          transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+        }
+        .archive-feature:hover {
+          transform: translateY(-2px);
+          background: #1c1c1c;
+          border-color: rgba(255, 255, 255, 0.12);
+          color: #ffffff;
+        }
+        .archive-feature-meta {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 20px;
+        }
+        .archive-feature-tag {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--accent);
+          padding: 5px 11px;
+          border: 1px solid var(--accent);
+          border-radius: 2px;
+          line-height: 1;
+        }
+        .archive-feature-date {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.55);
+        }
+        .archive-feature-title {
+          font-family: "freight-display-pro", "Playfair Display", Georgia, serif;
+          font-size: clamp(28px, 4vw, 36px);
+          font-weight: 500;
+          line-height: 1.12;
+          letter-spacing: -0.015em;
+          margin: 0 0 16px;
+          color: #ffffff;
+        }
+        .archive-feature-standfirst {
+          font-family: "freight-text-pro", Georgia, serif;
+          font-size: 16px;
+          font-weight: 300;
+          line-height: 1.55;
+          color: rgba(255, 255, 255, 0.68);
+          margin: 0 0 22px;
+          max-width: 640px;
+        }
+        .archive-feature-cta {
+          display: inline-block;
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--accent);
+        }
+        .archive-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+          gap: 12px;
+        }
+        .archive-card {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          padding: 22px 24px;
+          background: #151515;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 4px;
+          text-decoration: none;
+          color: #ffffff;
+          transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+          min-height: 100px;
+        }
+        .archive-card:hover {
+          transform: translateY(-2px);
+          background: #1c1c1c;
+          border-color: rgba(255, 255, 255, 0.12);
+          color: #ffffff;
+        }
+        .archive-card-date {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.5);
+        }
+        .archive-card-title {
+          font-family: "freight-display-pro", "Playfair Display", Georgia, serif;
+          font-size: 18px;
+          font-weight: 500;
+          line-height: 1.3;
+          margin: 0;
+          color: #ffffff;
+        }
+        @media (max-width: 768px) {
+          .archive-dark {
+            padding: 72px calc(50vw - 50%) 96px;
+          }
+          .archive-title {
+            margin-bottom: 40px;
+          }
+          .archive-feature {
+            padding: 28px 24px 24px;
+          }
+          .archive-grid {
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          }
+        }
+        @media (max-width: 480px) {
+          .archive-dark {
+            padding: 56px calc(50vw - 50%) 80px;
+          }
+          .archive-grid {
+            grid-template-columns: 1fr;
+            gap: 8px;
+          }
+          .archive-feature-meta {
+            flex-wrap: wrap;
+            gap: 10px;
+          }
+        }
+      </style>
+    <!-- ARCHIVE:END -->
+
+    <footer>
+      <span>April 22, 2026</span>
+      <span>~10 min read</span>
+      <span><a href="https://freqz.rafacastello.com/feed.xml">RSS feed</a></span>
+    </footer>
+
+  </div>
+<script src="../../wordmark.js%3Fv=20260506-29" defer></script>
+</body>
+</html>

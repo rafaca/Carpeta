@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<title>Newsletters / Weekly Digest — April 21, 2026</title>
+<meta name="description" content="A weekly briefing on design, branding, culture, and tech — synthesized from eight newsletters.">
+<link rel="alternate" type="application/rss+xml" title="Rafa Castello — Newsletter Digest" href="https://newsletters.rafacastello.com/feed.xml">
+<link rel="stylesheet" href="https://use.typekit.net/fau0gcd.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f5f2ec'/%3E%3Ctext x='50' y='68' font-family='Georgia,serif' font-size='60' font-style='italic' font-weight='500' fill='%23d64218' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #f5f2ec;
+    --ink: #111111;
+    --ink-soft: #4a4a4a;
+    --accent: #d64218;
+    --rule: #dcd6cc;
+    --card: #ffffff;
+    --hl: #fff089;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "freight-text-pro", Georgia, serif;
+    font-size: 18px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 32px 120px;
+  }
+
+  /* Top bar */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .topbar a { color: var(--ink-soft); text-decoration: none; }
+  .topbar a:hover { color: var(--accent); }
+  .topbar .brand { color: var(--ink); font-weight: 600; }
+
+  /* Masthead */
+  .masthead {
+    border-top: 4px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 28px 0 24px;
+    margin-bottom: 56px;
+  }
+
+  .masthead-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+  }
+
+  h1.title {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(52px, 9vw, 108px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .title em { font-style: italic; color: var(--accent); }
+
+  .standfirst {
+    font-family: "freight-text-pro", Georgia, serif;
+    font-size: 20px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 660px;
+    margin-top: 12px;
+  }
+
+  /* Source strip under masthead */
+  .source-strip {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    align-items: baseline;
+  }
+  .source-strip .label {
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    margin-right: 4px;
+  }
+  .source-strip .src {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .source-strip .src::after {
+    content: "·";
+    color: var(--rule);
+    margin-left: 14px;
+  }
+  .source-strip .src:last-of-type::after { content: ""; margin: 0; }
+  .source-strip .src strong { color: var(--ink); font-weight: 600; }
+
+  /* TOC */
+  .toc {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px 32px;
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 13px;
+    margin: 32px 0 72px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .toc a {
+    color: var(--ink);
+    text-decoration: none;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: color 0.15s ease;
+  }
+
+  .toc a:hover { color: var(--accent); }
+  .toc a .num {
+    color: var(--accent);
+    font-weight: 600;
+    margin-right: 12px;
+    width: 24px;
+    flex-shrink: 0;
+  }
+  .toc a .label { flex: 1; }
+
+  section {
+    margin-bottom: 84px;
+    scroll-margin-top: 24px;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 8px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .section-num {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+  }
+
+  .section-kicker {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-soft);
+    margin-left: auto;
+  }
+
+  h2 {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 16px 0 32px;
+  }
+
+  h2 em { font-style: italic; color: var(--accent); }
+
+  h3 {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: 22px;
+    margin: 32px 0 12px;
+    line-height: 1.3;
+  }
+
+  p { margin-bottom: 18px; max-width: 740px; }
+
+  a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  a:hover { color: var(--accent); }
+
+  strong { font-weight: 700; }
+
+  .drop-cap::first-letter {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-size: 5em;
+    float: left;
+    line-height: 0.9;
+    margin: 6px 10px -4px 0;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .pullquote {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-style: italic;
+    font-size: 26px;
+    line-height: 1.25;
+    color: var(--ink);
+    border-left: 3px solid var(--accent);
+    padding: 8px 0 8px 24px;
+    margin: 28px 0;
+    max-width: 720px;
+  }
+
+  .pullquote cite {
+    display: block;
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-style: normal;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 10px;
+  }
+
+  /* Image figure */
+  figure { margin: 32px 0; max-width: 100%; }
+  figure img {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: #eae5db;
+    border: 1px solid var(--rule);
+  }
+  figure figcaption {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    padding-top: 10px;
+    line-height: 1.4;
+  }
+  figure figcaption strong { color: var(--ink); }
+
+  /* Brand New rebrand gallery — images with metadata */
+  .brandnew-gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+    margin: 32px 0;
+  }
+  .bn-item {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .bn-item .bn-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+  }
+  .bn-item .bn-images img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+    background: #f0ece4;
+  }
+  .bn-item .bn-images.single { grid-template-columns: 1fr; }
+  .bn-item .bn-meta {
+    padding: 22px 26px 24px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: start;
+  }
+  .bn-item .bn-meta-left { min-width: 0; }
+  .bn-item .bn-label {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .bn-item h4 {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+  .bn-item p {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: 620px;
+  }
+  .bn-item .bn-score {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .bn-item .bn-score .pct {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: 32px;
+    display: block;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  @media (max-width: 640px) {
+    .bn-item .bn-meta { grid-template-columns: 1fr; }
+    .bn-item .bn-score { text-align: left; }
+    .bn-item .bn-score .pct { display: inline; font-size: 18px; margin-right: 8px; }
+  }
+
+  /* BP&O gallery */
+  .bpo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .bpo-item {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .bpo-item:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .bpo-item a { text-decoration: none; color: inherit; display: block; }
+  .bpo-item img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+    background: #f0ece4;
+  }
+  .bpo-item .meta { padding: 12px 14px 14px; }
+  .bpo-item h5 {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 3px;
+    line-height: 1.2;
+  }
+  .bpo-item .studio {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* Web grid (MaxiBestOf thumbnails) */
+  .web-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin: 32px 0;
+  }
+  .web-item {
+    border: 1px solid var(--rule);
+    background: var(--card);
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .web-item:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .web-item a { text-decoration: none; color: inherit; display: block; }
+  .web-item img {
+    width: 100%;
+    aspect-ratio: 16/10;
+    object-fit: cover;
+    display: block;
+    background: #eae5db;
+    border-bottom: 1px solid var(--rule);
+  }
+  .web-item .meta { padding: 14px 16px 16px; }
+  .web-item h5 {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: 17px;
+    margin-bottom: 4px;
+  }
+  .web-item .fonts {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* Are.na feature grid */
+  .arena-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .arena-item {
+    border: 1px solid var(--rule);
+    background: var(--card);
+    overflow: hidden;
+  }
+  .arena-item img {
+    width: 100%;
+    aspect-ratio: 3/2;
+    object-fit: cover;
+    display: block;
+    background: #f0ece4;
+    border-bottom: 1px solid var(--rule);
+  }
+  .arena-item .meta { padding: 12px 14px 14px; }
+  .arena-item h6 {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: 15px;
+    margin-bottom: 3px;
+    line-height: 1.2;
+  }
+  .arena-item .sub {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    line-height: 1.3;
+  }
+
+  /* Stat row */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
+    margin: 32px 0;
+    padding: 24px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .stat-num {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-size: 52px;
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .stat-label {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  /* Link list */
+  .link-list { list-style: none; padding: 0; margin: 16px 0; }
+  .link-list li {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+  }
+  .link-list li:first-child { border-top: 1px solid var(--rule); }
+  .link-list .tag {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    flex-shrink: 0;
+    width: 90px;
+  }
+  .link-list .desc { font-size: 15px; line-height: 1.45; }
+
+  mark { background: var(--hl); padding: 0 3px; }
+
+  footer {
+    margin-top: 96px;
+    padding-top: 24px;
+    border-top: 4px solid var(--ink);
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  footer span { text-transform: uppercase; letter-spacing: 0.1em; }
+  footer a { color: var(--ink-soft); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  @media (max-width: 640px) {
+    .container { padding: 32px 20px 80px; }
+    .toc { grid-template-columns: 1fr; }
+    .pullquote { font-size: 20px; padding-left: 18px; }
+    .stat-num { font-size: 40px; }
+    .bn-item .bn-images { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    body { background: white; }
+    .toc { page-break-after: always; }
+    section { page-break-inside: avoid; }
+    .topbar { display: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="topbar">
+      <span class="brand">Newsletters &mdash; Rafa Castello</span>
+      <span><a href="../../../rafacastello.com/index.html">rafacastello.com</a></span>
+    </div>
+
+    <header class="masthead">
+      <div class="masthead-top">
+        <span>Vol. 16 / No. 2</span>
+        <span>April 21, 2026</span>
+        <span><a href="https://freqz.rafacastello.com/feed.xml" style="text-decoration:none;color:inherit;">RSS</a></span>
+      </div>
+      <h1 class="title">The <em>Dissonance</em><br>Is Expanding</h1>
+      <p class="standfirst">
+        The person with seventeen browser tabs and a Claude Code subscription
+        and the person who considers human creativity indispensable &mdash;
+        they both feel like you. This week: the moral weight of participation,
+        ten rebrands in the wild, a gallery of packaging and identity, and
+        agents that don't need us to watch.
+      </p>
+      <div class="source-strip" aria-label="Newsletters summarized in this issue">
+        <span class="label">Summarized from</span>
+        <span class="src"><strong>Dense Discovery</strong> #385</span>
+        <span class="src"><strong>Garbage Day</strong></span>
+        <span class="src"><strong>Brand New</strong> Weekly</span>
+        <span class="src"><strong>BP&amp;O</strong> / bpando.org</span>
+        <span class="src"><strong>MaxiBestOf</strong> W16</span>
+        <span class="src"><strong>Sidebar</strong> / UX Collective</span>
+        <span class="src"><strong>Weekly Thing</strong> 344</span>
+        <span class="src"><strong>Are.na</strong> #27</span>
+        <span class="src"><strong>Cargo</strong> #384</span>
+        <span class="src"><strong>Stills</strong></span>
+        <span class="src"><strong>Goodtype</strong></span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="Sections">
+      <a href="index.html#s1"><span class="num">01</span><span class="label">The Dissonance Is Expanding</span></a>
+      <a href="index.html#s2"><span class="num">02</span><span class="label">When the Clip Bubble Pops</span></a>
+      <a href="index.html#s3"><span class="num">03</span><span class="label">Agent-Native Everything</span></a>
+      <a href="index.html#s4"><span class="num">04</span><span class="label">The Human Cost of Machine Speed</span></a>
+      <a href="index.html#s5"><span class="num">05</span><span class="label">Brand Identity: The Rebrands</span></a>
+      <a href="index.html#s6"><span class="num">06</span><span class="label">BP&amp;O Gallery</span></a>
+      <a href="index.html#s7"><span class="num">07</span><span class="label">Web Craft &amp; Typography</span></a>
+      <a href="index.html#s8"><span class="num">08</span><span class="label">Are.na Updates</span></a>
+      <a href="index.html#s9"><span class="num">09</span><span class="label">Other Briefings</span></a>
+      <a href="index.html#links"><span class="num">10</span><span class="label">Quick Links</span></a>
+      <a href="index.html#sources"><span class="num">11</span><span class="label">Sources</span></a>
+    </nav>
+
+    <!-- SECTION 1 -->
+    <section id="s1">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 01</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Theme of the Week</span>
+      </div>
+        <h2>The Dissonance Is Expanding: <em>Complicity, Creativity &amp; the Good Life</em></h2>
+      </header>
+
+      <p class="drop-cap">
+        Kai Brach's editorial in <strong>Dense Discovery #385</strong> is
+        the sharpest thing written about tech this week &mdash; and it has
+        nothing to do with products or funding rounds. It's about the
+        growing rift between what we value and how we actually live.
+      </p>
+
+      <figure>
+        <img src="https://www.densediscovery.com/img/screenshot/social-385.jpg" alt="Dense Discovery #385 cover artwork by Fran Pulido" loading="lazy">
+        <figcaption><strong>Dense Discovery #385</strong> &mdash; artwork by Fran Pulido. "The dissonance is expanding."</figcaption>
+      </figure>
+
+      <div class="pullquote">
+        The person with seventeen browser tabs and a Claude Code subscription
+        and the person who considers human creativity and the arts
+        indispensable &mdash; they both feel like me. I'm just not sure they
+        can fully coexist anymore.
+        <cite>&mdash; Kai Brach, Dense Discovery</cite>
+      </div>
+
+      <p>
+        Brach names three layers of discomfort: the <strong>moral</strong>
+        (using AI tools means underwriting a concentration of power you
+        didn't choose), the <strong>existential</strong> (the good life is
+        found in presence and slowness, yet that feels increasingly like
+        nostalgia), and the <strong>identity</strong> (technology shaped his
+        life, but the industry building the future feels anti-human).
+      </p>
+
+      <p>
+        He arrives with a Camilo Moreno-Salamanca line that stays with you:
+        <em>"I'm not sure if humans are designed to operate in this mode."</em>
+        The essay doesn't pretend to have answers. Instead it argues that
+        the discomfort itself is the answer &mdash; the signal that the gap
+        between what capitalism asks us to accept and what we actually value
+        <mark>keeps expanding</mark>.
+      </p>
+
+      <p>
+        This connects directly to <strong>Sidebar's</strong> lead piece,
+        <em>"Good Taste the Only Real Moat Left"</em> &mdash; arguing that
+        when AI can execute anything, the real edge is judgment paired with
+        context, stakes, and the willingness to build.
+      </p>
+
+      <p>
+        Dense Discovery also surfaced a companion essay on
+        <em>algorithmic horizons</em>: "The algorithm doesn't show us the
+        mountains blocking our view. It shows us the valley and suggests
+        this is the whole world." Information literacy is shifting from
+        <em>"Is this true?"</em> to <em>"What am I not seeing?"</em>
+      </p>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section id="s2">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 02</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Culture &amp; Media</span>
+      </div>
+        <h2>When the Clip Bubble <em>Pops</em></h2>
+      </header>
+
+      <p class="drop-cap">
+        <strong>Garbage Day's</strong> Ryan Broderick wrote the definitive
+        history of how we got here &mdash; from New Year's Eve 2012,
+        live-GIF'ing the ball drop for Tumblr, to 2026, where every social
+        platform is a video platform and every video is a snippet of
+        something else from somewhere else.
+      </p>
+
+      <p>
+        The trajectory: <strong>animated GIFs</strong> (disposable,
+        hard to make) &rarr; <strong>Vine</strong> (six-second sentences,
+        attached to identity) &rarr; <strong>TikTok</strong> (algorithmic
+        distribution at scale) &rarr; <strong>clips</strong> (the atomic
+        unit of 2020s content &mdash; snippets of long-form content that
+        have become the main product).
+      </p>
+
+      <div class="pullquote">
+        Congrats, Silicon Valley &mdash; you built an infinite Jerry Springer
+        machine and no one wants to use it anymore because it makes them
+        look like Jerry Springer.
+        <cite>&mdash; Ryan Broderick, Garbage Day</cite>
+      </div>
+
+      <p>
+        The breaking points are piling up: Coachella canceling influencer
+        deals, the Geese astroturfing panic, Hollywood studios hiring
+        clippers instead of marketers, Disney+ launching a TikTok-style
+        "Verts" feed. And the cherry on top: Andreessen Horowitz just
+        launched <strong>MTS ("Monitoring The Situation")</strong> &mdash;
+        an all-day livestream on X that is both a TBPN ripoff and a
+        glorified clip farm for reactionary Silicon Valley CEOs.
+      </p>
+
+      <p>
+        Broderick's core argument: <mark>once something online has a
+        name, it's already over</mark>. The fact that we now call this
+        practice "clipping" &mdash; and that it has its own freelance
+        services &mdash; means the endgame is near.
+      </p>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section id="s3">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 03</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Tooling Shift</span>
+      </div>
+        <h2>Agent-Native <em>Everything:</em> Building for Machines, Not People</h2>
+      </header>
+
+      <p>
+        <strong>Weekly Thing 344</strong> was consumed by a single
+        observation: <em>agents are becoming the primary customer of our
+        software.</em> Not a metaphor &mdash; the literal primary user.
+      </p>
+
+      <p>
+        <strong>Cloudflare</strong> built a cloud-hosted browser
+        specifically for AI agents (Browser Run) and then rebuilt their
+        entire CLI with agents as the target user. Their blog post opens
+        bluntly: "Increasingly, agents are the primary customer of our
+        APIs." If your service is hard for agents, they'll route around
+        you entirely.
+      </p>
+
+      <p>
+        <strong>OpenAI's Codex</strong> added computer use, automations,
+        and a built-in browser in a single "Superapp" update &mdash; and
+        crucially, it works in the <em>background</em>, not stealing focus
+        from whatever you're doing.
+      </p>
+
+      <p>
+        The methodology shift is just as significant. <em>"Evals Are
+        the New PRD"</em> argues that traditional product requirements are
+        being replaced by structured tests. And <em>"Saying Goodbye to
+        Agile"</em> notes the irony: LLMs demand proper specifications,
+        inverting the Agile manifesto.
+        <mark>"Comprehensive documentation creates working software."</mark>
+      </p>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section id="s4">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 04</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Creative Practice</span>
+      </div>
+        <h2>The Human Cost of <em>Machine Speed</em></h2>
+      </header>
+
+      <p>
+        Two pieces converge on the same warning: the humans inside the
+        loop are burning out. Bill de H&oacute;ra's <em>"Working with
+        Agents Doesn't Feel Like Flow"</em> names the cognitive difference
+        precisely &mdash; agent collaboration feels less like deep work
+        and more like playing a strategy game.
+      </p>
+
+      <div class="pullquote">
+        After deep work, you feel the tiredness of sustained concentration.
+        After agent work, it's more like the aftermath of sustained play
+        &mdash; lots of small judgments, many state updates, constant
+        low-level vigilance.
+        <cite>&mdash; Bill de H&oacute;ra</cite>
+      </div>
+
+      <p>
+        Then Denis Stetskov's <em>"The Human Cost of 10x AI
+        Productivity"</em> delivers the numbers:
+      </p>
+
+      <div class="stat-row">
+        <div>
+          <div class="stat-num">88%</div>
+          <div class="stat-label">Burnout rate among "most productive" AI users</div>
+        </div>
+        <div>
+          <div class="stat-num">1.7&times;</div>
+          <div class="stat-label">More bugs per AI-generated PR</div>
+        </div>
+        <div>
+          <div class="stat-num">10 bits/s</div>
+          <div class="stat-label">Human conscious analytical throughput</div>
+        </div>
+      </div>
+
+      <p>
+        The fundamental problem: <strong>senior engineers absorb the
+        cognitive costs that juniors offload entirely</strong>. The real
+        solution isn't more human oversight &mdash; it's making systems
+        safer so you need less of it.
+      </p>
+    </section>
+
+    <!-- SECTION 5: BRAND NEW REBRAND GALLERY -->
+    <section id="s5">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 05</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Brand New / Under Consideration</span>
+      </div>
+        <h2>Brand Identity in the Wild: <em>This Week's Ten Rebrands</em></h2>
+      </header>
+
+      <p>
+        <strong>Brand New &times; Weekly</strong> reviewed ten rebrands
+        this week. Crowd favorites: <strong>Coaltown Coffee</strong> (slab
+        serif, Welsh coal-mining heritage) and the <strong>Drama Theatre
+        of Plovdiv</strong> griffin (92% Great). Hot takes below &mdash;
+        click through for the full reviews.
+      </p>
+
+      <div class="brandnew-gallery">
+
+        <article class="bn-item">
+          <div class="bn-images">
+            <img src="https://www.underconsideration.com/brandnew/wp/wp-content/uploads/2026/04/Coaltown_Logo_before_after.png" alt="Coaltown Coffee logo before and after by Smörgåsbord" loading="lazy">
+            <img src="https://www.underconsideration.com/brandnew/archives/Coaltown_package_in-situ4.jpg" alt="Coaltown Coffee packaging in situ" loading="lazy">
+          </div>
+          <div class="bn-meta">
+            <div class="bn-meta-left">
+              <span class="bn-label">Coffee &middot; Wales &middot; by Sm&ouml;rg&aring;sbord</span>
+              <h4><a href="https://www.underconsideration.com/brandnew/archives/new_logo_and_identity_for_coaltown_coffee_by_smorgasbord.php">Coaltown Coffee</a></h4>
+              <p>"Drop dead gorgeous. One of my favourites of the year so far. Oozes cool while remaining steeped in heritage." &mdash; Lewis Copland</p>
+            </div>
+            <div class="bn-score"><span class="pct">87%</span>Great / On Packaging</div>
+          </div>
+        </article>
+
+        <article class="bn-item">
+          <div class="bn-images">
+            <img src="https://www.underconsideration.com/brandnew/wp/wp-content/uploads/2026/04/drama_theatre_plovdiv_logo_before_after.png" alt="Drama Theatre of Plovdiv logo before and after by punkt.studio" loading="lazy">
+            <img src="https://www.underconsideration.com/brandnew/archives/drama_theatre_plovdiv_posters.jpg" alt="Drama Theatre of Plovdiv posters" loading="lazy">
+          </div>
+          <div class="bn-meta">
+            <div class="bn-meta-left">
+              <span class="bn-label">Theatre &middot; Bulgaria &middot; by punkt.studio</span>
+              <h4><a href="https://www.underconsideration.com/brandnew/archives/new_logo_and_identity_for_drama_theatre_of_plovdiv_by_punkt_studio.php">Drama Theatre of Plovdiv</a></h4>
+              <p>"That mark and type are beautiful." Restrained elegance for a 145-year-old cultural institution. The crowd's highest-rated icon of the week.</p>
+            </div>
+            <div class="bn-score"><span class="pct">92%</span>Great / On Icon</div>
+          </div>
+        </article>
+
+        <article class="bn-item">
+          <div class="bn-images single">
+            <img src="https://www.underconsideration.com/brandnew/wp/wp-content/uploads/2026/04/huckberry_2026_logo_before_after.png" alt="Huckberry logo before and after by This Design" loading="lazy">
+          </div>
+          <div class="bn-meta">
+            <div class="bn-meta-left">
+              <span class="bn-label">Menswear &middot; USA &middot; by This Design</span>
+              <h4><a href="https://www.underconsideration.com/brandnew/archives/new_logo_and_identity_for_huckberry_by_this_design.php">Huckberry</a></h4>
+              <p>Pine cone or tree? The commentariat can't agree. "Nice evolution which strengthens the brand and elevates it to a new level of achievable sophistication." &mdash; J.C. Estrada</p>
+            </div>
+            <div class="bn-score"><span class="pct">76%</span>Great / On Icon</div>
+          </div>
+        </article>
+
+        <article class="bn-item">
+          <div class="bn-images">
+            <img src="https://www.underconsideration.com/brandnew/wp/wp-content/uploads/2026/04/olympique_de_marseille_logo_before_after.png" alt="Olympique de Marseille logo before and after" loading="lazy">
+            <img src="https://www.underconsideration.com/brandnew/archives/olympique_de_marseille_advertising.jpg" alt="Olympique de Marseille advertising" loading="lazy">
+          </div>
+          <div class="bn-meta">
+            <div class="bn-meta-left">
+              <span class="bn-label">Football &middot; France</span>
+              <h4><a href="https://www.underconsideration.com/brandnew/archives/new_logo_and_identity_for_olympique_de_marseille.php">Olympique de Marseille</a></h4>
+              <p>"I love how clean and modern it is, and yet it's respectful of the club's history." Purists disagree &mdash; "OM is one of the few teams that doesn't need this brutal simplification."</p>
+            </div>
+            <div class="bn-score"><span class="pct">48%</span>Great / On Monogram</div>
+          </div>
+        </article>
+
+        <article class="bn-item">
+          <div class="bn-images">
+            <img src="https://www.underconsideration.com/brandnew/wp/wp-content/uploads/2026/04/olymel_logo_before_after.png" alt="Olymel logo before and after by LG2" loading="lazy">
+            <img src="https://www.underconsideration.com/brandnew/archives/olymel_packaging_before_after.jpg" alt="Olymel packaging before and after" loading="lazy">
+          </div>
+          <div class="bn-meta">
+            <div class="bn-meta-left">
+              <span class="bn-label">Meats &middot; Qu&eacute;bec &middot; by LG2</span>
+              <h4><a href="https://www.underconsideration.com/brandnew/archives/new_logo_and_packaging_for_olymel_by_lg2.php">Olymel</a></h4>
+              <p>"Another flared serif FTW! Beautifully restrained, curated work." Font of the week pick: Triptych by The Pyte Foundry.</p>
+            </div>
+            <div class="bn-score"><span class="pct">75%</span>Great / On Packaging</div>
+          </div>
+        </article>
+
+        <article class="bn-item">
+          <div class="bn-images">
+            <img src="https://www.underconsideration.com/brandnew/wp/wp-content/uploads/2026/04/navy_yard_logo_before_after.png" alt="Navy Yard logo before and after by Planthouse Studio" loading="lazy">
+            <img src="https://www.underconsideration.com/brandnew/archives/navy_yard_advertising.jpg" alt="Navy Yard advertising" loading="lazy">
+          </div>
+          <div class="bn-meta">
+            <div class="bn-meta-left">
+              <span class="bn-label">Neighborhood &middot; DC &middot; by Planthouse Studio</span>
+              <h4><a href="https://www.underconsideration.com/brandnew/archives/new_logo_and_identity_for_navy_yard_by_planthouse_studio.php">Navy Yard</a></h4>
+              <p>"Rooted in the past and playing along with the current trends." The Interstate font choice divides opinions.</p>
+            </div>
+            <div class="bn-score"><span class="pct">57%</span>Great / On Logo</div>
+          </div>
+        </article>
+
+        <article class="bn-item">
+          <div class="bn-images">
+            <img src="https://www.underconsideration.com/brandnew/wp/wp-content/uploads/2026/04/Funfields_before_after.jpg" alt="Funfields logo before and after by Self-titled" loading="lazy">
+            <img src="https://www.underconsideration.com/brandnew/archives/Funfields_social_02.jpg" alt="Funfields social media" loading="lazy">
+          </div>
+          <div class="bn-meta">
+            <div class="bn-meta-left">
+              <span class="bn-label">Theme Park &middot; Australia &middot; by Self&mdash;titled</span>
+              <h4><a href="https://www.underconsideration.com/brandnew/archives/new_logo_and_identity_for_funfields_by_self_titled.php">Funfields</a></h4>
+              <p>"The designer urge to reduce everything to a flat single color vector&hellip;" The monochrome kills the fun that could be had.</p>
+            </div>
+            <div class="bn-score"><span class="pct">50%</span>Great / On Logo</div>
+          </div>
+        </article>
+
+        <article class="bn-item">
+          <div class="bn-images">
+            <img src="https://www.underconsideration.com/brandnew/wp/wp-content/uploads/2026/04/kale_logo_before_after.png" alt="Kale logo before and after by The Working Assembly" loading="lazy">
+            <img src="https://www.underconsideration.com/brandnew/archives/kale_advertising.jpg" alt="Kale advertising" loading="lazy">
+          </div>
+          <div class="bn-meta">
+            <div class="bn-meta-left">
+              <span class="bn-label">Rewards App &middot; by The Working Assembly</span>
+              <h4><a href="https://www.underconsideration.com/brandnew/archives/new_logo_and_identity_for_kale_by_the_working_assembly.php">Kale</a></h4>
+              <p>"I assumed this was a produce brand. 'Kale' is a play on money being called lettuce. But the wordplay is lost when you go literal with the icon."</p>
+            </div>
+            <div class="bn-score"><span class="pct">37%</span>Great / On Icon</div>
+          </div>
+        </article>
+
+        <article class="bn-item">
+          <div class="bn-images">
+            <img src="https://www.underconsideration.com/brandnew/wp/wp-content/uploads/2026/04/X42026_01_W_BeforeAfter.jpg" alt="X4 FIT logo before and after by Matey" loading="lazy">
+            <img src="https://www.underconsideration.com/brandnew/archives/X42026_15_W_Sign.jpg" alt="X4 FIT signage" loading="lazy">
+          </div>
+          <div class="bn-meta">
+            <div class="bn-meta-left">
+              <span class="bn-label">Fitness &middot; by Matey</span>
+              <h4><a href="https://www.underconsideration.com/brandnew/archives/new_logo_and_identity_for_x4_fit_by_matey.php">X4 FIT</a></h4>
+              <p>"Just another derivative, serious, edgy fitness aesthetic." Most-disliked icon of the week &mdash; tried to carve a 4 out of the negative space of the X.</p>
+            </div>
+            <div class="bn-score"><span class="pct">39%</span>Great / On X4</div>
+          </div>
+        </article>
+
+        <article class="bn-item">
+          <div class="bn-images single">
+            <img src="https://www.underconsideration.com/brandnew/wp/wp-content/uploads/2026/04/friday_likes_571.jpg" alt="Friday Likes 571 — Sooki, I AM ITALIANO, Orthofer" loading="lazy">
+          </div>
+          <div class="bn-meta">
+            <div class="bn-meta-left">
+              <span class="bn-label">Friday Likes &middot; 571</span>
+              <h4><a href="https://www.underconsideration.com/brandnew/archives/friday_likes_571.php">Sooki &middot; I AM ITALIANO &middot; Orthofer</a></h4>
+              <p>"I AM ITALIANO is genius ideation and art direction. I'd buy the bars just to collect all the variations." &mdash; Kev. Packaging by Happycentro.</p>
+            </div>
+            <div class="bn-score"><span class="pct">82%</span>Great / I AM ITALIANO</div>
+          </div>
+        </article>
+
+      </div>
+
+      <h3>Acquisitions, pivots &amp; legal drama</h3>
+
+      <div class="stat-row">
+        <div>
+          <div class="stat-num">$1.2B</div>
+          <div class="stat-label">Unilever buys Gr&uuml;ns &mdash; 3 years old</div>
+        </div>
+        <div>
+          <div class="stat-num">$45B</div>
+          <div class="stat-label">US data center spend &mdash; surpasses offices</div>
+        </div>
+        <div>
+          <div class="stat-num">150+</div>
+          <div class="stat-label">Humanoid robot companies in China</div>
+        </div>
+      </div>
+
+      <p>
+        <strong>Brand New</strong> tracked the Gr&uuml;ns acquisition, cementing
+        $1.2B as the going rate for brand-driven CPGs. Meanwhile
+        <strong>Allbirds</strong> sold its shoe brand and renamed itself
+        <em>NewBird AI</em> to become a GPU-as-a-Service provider. Armin
+        Vit's verdict: <em>"This is having lived as a Golden Retriever in
+        one life and reincarnating as a window AC unit in a shitty New
+        York apartment in the next."</em>
+      </p>
+
+      <p>
+        Trademark drama: Nike's <strong>"b9" logo</strong> for Bronny James
+        was denied by the USPTO. And Chilean pisco brand <strong>Pedro
+        Piscal</strong> is being sued by <strong>Pedro Pascal</strong>.
+      </p>
+    </section>
+
+    <!-- SECTION 6: BP&O GALLERY -->
+    <section id="s6">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 06</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">BP&amp;O / bpando.org</span>
+      </div>
+        <h2>Packaging &amp; Opinion: <em>This Month on BP&amp;O</em></h2>
+      </header>
+
+      <p>
+        Richard Baird's <strong>BP&amp;O</strong> (Branding, Packaging and
+        Opinion) is the complementary lens to Brand New &mdash; less voting,
+        more craft detail. Here are a dozen recent identity and packaging
+        projects currently featured on <a href="https://bpando.org/" target="_blank" rel="noopener">bpando.org</a>.
+      </p>
+
+      <div class="bpo-grid">
+        <div class="bpo-item">
+          <a href="https://bpando.org/" target="_blank" rel="noopener">
+            <img src="https://bpando.org/wp-content/uploads/01-Talor-J%C3%B8rgen-Coffee-Branding-Packaging-Bielke-Yang-Illustration-Janne-Livonen-Norway-BPO.jpg" alt="Talor Jørgen coffee branding by Bielke+Yang" loading="lazy">
+            <div class="meta">
+              <h5>Talor J&oslash;rgen</h5>
+              <span class="studio">Bielke+Yang &middot; Norway</span>
+            </div>
+          </a>
+        </div>
+        <div class="bpo-item">
+          <a href="https://bpando.org/" target="_blank" rel="noopener">
+            <img src="https://bpando.org/wp-content/uploads/1-finn-packaging-branding-gander-BPO.jpg" alt="Finn packaging by Gander" loading="lazy">
+            <div class="meta">
+              <h5>Finn</h5>
+              <span class="studio">Gander</span>
+            </div>
+          </a>
+        </div>
+        <div class="bpo-item">
+          <a href="https://bpando.org/" target="_blank" rel="noopener">
+            <img src="https://bpando.org/wp-content/uploads/4-Gustini-Logotype-Koto-London-UK-BPO-Review.jpg" alt="Gustini logotype by Koto London" loading="lazy">
+            <div class="meta">
+              <h5>Gustini</h5>
+              <span class="studio">Koto &middot; London</span>
+            </div>
+          </a>
+        </div>
+        <div class="bpo-item">
+          <a href="https://bpando.org/" target="_blank" rel="noopener">
+            <img src="https://bpando.org/wp-content/uploads/6-Loot-Coffee-Branding-Loyalty-Card-Seachange-Studio-New-Zealand.jpg" alt="Loot Coffee branding by Seachange Studio" loading="lazy">
+            <div class="meta">
+              <h5>Loot Coffee</h5>
+              <span class="studio">Seachange &middot; NZ</span>
+            </div>
+          </a>
+        </div>
+        <div class="bpo-item">
+          <a href="https://bpando.org/" target="_blank" rel="noopener">
+            <img src="https://bpando.org/wp-content/uploads/7-Metamorphose-Logo-Design-Branding-Print-Stationery-Folder-A-Practice-For-Everyday-Life-BPO-1024x768.jpg" alt="Metamorphose identity by A Practice For Everyday Life" loading="lazy">
+            <div class="meta">
+              <h5>Metamorphose</h5>
+              <span class="studio">A Practice For Everyday Life</span>
+            </div>
+          </a>
+        </div>
+        <div class="bpo-item">
+          <a href="https://bpando.org/" target="_blank" rel="noopener">
+            <img src="https://bpando.org/wp-content/uploads/Blurr-Bureau-Yes-Apples-branding-identity-bpo-review-packaging-wordmark-logo-clear-pack-trio-1024x571.jpeg" alt="Yes Apples packaging by Blurr Bureau" loading="lazy">
+            <div class="meta">
+              <h5>Yes Apples</h5>
+              <span class="studio">Blurr Bureau</span>
+            </div>
+          </a>
+        </div>
+        <div class="bpo-item">
+          <a href="https://bpando.org/" target="_blank" rel="noopener">
+            <img src="https://bpando.org/wp-content/uploads/CaffeNazionale-Studio-Mut-branding-identity-logo-wordmark-BPO-review-print-cups-merch-bags-1024x974.jpg" alt="Caffè Nazionale identity by Studio Mut" loading="lazy">
+            <div class="meta">
+              <h5>Caff&egrave; Nazionale</h5>
+              <span class="studio">Studio Mut</span>
+            </div>
+          </a>
+        </div>
+        <div class="bpo-item">
+          <a href="https://bpando.org/" target="_blank" rel="noopener">
+            <img src="https://bpando.org/wp-content/uploads/DArbequina_SMLXL-branding-identity-logo-wordmark-packaging-bpo-review-bottle-labels-deer-1024x576.jpg" alt="D'Arbequina bottle labels by SMLXL" loading="lazy">
+            <div class="meta">
+              <h5>D'Arbequina</h5>
+              <span class="studio">SMLXL</span>
+            </div>
+          </a>
+        </div>
+        <div class="bpo-item">
+          <a href="https://bpando.org/" target="_blank" rel="noopener">
+            <img src="https://bpando.org/wp-content/uploads/Koto-Yazio-branding-identity-logo-digitial-bpo-review-wordmark-1024x576.png" alt="Yazio identity by Koto" loading="lazy">
+            <div class="meta">
+              <h5>Yazio</h5>
+              <span class="studio">Koto</span>
+            </div>
+          </a>
+        </div>
+        <div class="bpo-item">
+          <a href="https://bpando.org/" target="_blank" rel="noopener">
+            <img src="https://bpando.org/wp-content/uploads/nice-drinks-earthling-studio-branding-identity-wordmark-bpo-review-logo-box-packaging-1024x576.jpeg" alt="Nice Drinks packaging by Earthling Studio" loading="lazy">
+            <div class="meta">
+              <h5>Nice Drinks</h5>
+              <span class="studio">Earthling Studio</span>
+            </div>
+          </a>
+        </div>
+        <div class="bpo-item">
+          <a href="https://bpando.org/" target="_blank" rel="noopener">
+            <img src="https://bpando.org/wp-content/uploads/sooki-the-collected-works-branding-identity-logo-wordmark-typography-bpo-review-packaging-1-1024x576.png" alt="Sooki identity by The Collected Works" loading="lazy">
+            <div class="meta">
+              <h5>Sooki</h5>
+              <span class="studio">The Collected Works</span>
+            </div>
+          </a>
+        </div>
+        <div class="bpo-item">
+          <a href="https://bpando.org/" target="_blank" rel="noopener">
+            <img src="https://bpando.org/wp-content/uploads/treblase-olsson-barbieri-logo-wordmark-bpo-review00-1024x731.webp" alt="Treblase wordmark by Olsson Barbieri" loading="lazy">
+            <div class="meta">
+              <h5>Treblase</h5>
+              <span class="studio">Olsson Barbieri</span>
+            </div>
+          </a>
+        </div>
+        <div class="bpo-item">
+          <a href="https://bpando.org/" target="_blank" rel="noopener">
+            <img src="https://bpando.org/wp-content/uploads/quip-center-brand-identity-wordmark-logo-typography-bpo-review-billboards--1024x584.png" alt="Quip Center billboards" loading="lazy">
+            <div class="meta">
+              <h5>Quip Center</h5>
+              <span class="studio">Brand identity &middot; billboards</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <p>
+        Crossover with this week's Brand New &mdash; <strong>Sooki</strong>
+        by <strong>The Collected Works</strong> appeared in both
+        publications, collecting rave reviews in Friday Likes 571.
+      </p>
+    </section>
+
+    <!-- SECTION 7: WEB CRAFT & TYPOGRAPHY -->
+    <section id="s7">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 07</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">MaxiBestOf / Web Inspo</span>
+      </div>
+        <h2>Web Craft &amp; Typography: <em>Mono Fonts, Amazon Rivers &amp; Unicode</em></h2>
+      </header>
+
+      <p>
+        <strong>MaxiBestOf (Week 16)</strong> curated 10 standout sites.
+        The monospace renaissance continues: six of ten use a mono font.
+        Pangram Pangram is everywhere. AI companies are investing in
+        typography (Burnt, LlamaIndex).
+      </p>
+
+      <div class="web-grid">
+        <div class="web-item">
+          <a href="https://maxibestof.one/websites/82152-dayy" target="_blank" rel="noopener">
+            <img src="https://assets.maxibestof.one/thumbs/e0e2c7af-0dad-4f89-91ec-c5868e89e05d_700.jpg" alt="Dayy agency website screenshot" loading="lazy">
+            <div class="meta">
+              <h5>Dayy</h5>
+              <span class="fonts">FT System Blank &middot; FT System Mono</span>
+            </div>
+          </a>
+        </div>
+        <div class="web-item">
+          <a href="https://maxibestof.one/websites/82585-anonymous-creative-futures" target="_blank" rel="noopener">
+            <img src="https://assets.maxibestof.one/thumbs/5bb3bd9c-e004-4f9e-b909-59a8cfe30a1e_700.jpg" alt="Anonymous Creative Futures website" loading="lazy">
+            <div class="meta">
+              <h5>Anonymous Creative Futures</h5>
+              <span class="fonts">Helvetica Neue &middot; JetBrains Mono</span>
+            </div>
+          </a>
+        </div>
+        <div class="web-item">
+          <a href="https://maxibestof.one/websites/82509-michele-greco" target="_blank" rel="noopener">
+            <img src="https://assets.maxibestof.one/thumbs/9c38db21-9c7e-491b-ab66-8cc2862b6a9c_700.jpg" alt="Michele Greco portfolio" loading="lazy">
+            <div class="meta">
+              <h5>Michele Greco</h5>
+              <span class="fonts">Ronzino</span>
+            </div>
+          </a>
+        </div>
+        <div class="web-item">
+          <a href="https://maxibestof.one/websites/82462-good-life" target="_blank" rel="noopener">
+            <img src="https://assets.maxibestof.one/thumbs/f3206e2c-f3cb-444c-bc32-0040ec437e37_700.jpg" alt="Good Life health website" loading="lazy">
+            <div class="meta">
+              <h5>Good Life</h5>
+              <span class="fonts">Geist Mono &middot; PP Neue Montreal</span>
+            </div>
+          </a>
+        </div>
+        <div class="web-item">
+          <a href="https://maxibestof.one/websites/82642-caret" target="_blank" rel="noopener">
+            <img src="https://assets.maxibestof.one/thumbs/f87c6af8-3bfb-44e8-8c61-03fc1fab1598_700.jpg" alt="Caret application website" loading="lazy">
+            <div class="meta">
+              <h5>Caret</h5>
+              <span class="fonts">DM Mono &middot; Figtree &middot; PP Editorial</span>
+            </div>
+          </a>
+        </div>
+        <div class="web-item">
+          <a href="https://maxibestof.one/websites/82564-burnt" target="_blank" rel="noopener">
+            <img src="https://assets.maxibestof.one/thumbs/8c24acff-95e1-4a8e-9120-77c86a73b53a_700.jpg" alt="Burnt AI website" loading="lazy">
+            <div class="meta">
+              <h5>Burnt</h5>
+              <span class="fonts">Nyght Serif &middot; Switzer</span>
+            </div>
+          </a>
+        </div>
+        <div class="web-item">
+          <a href="https://maxibestof.one/websites/82588-maze" target="_blank" rel="noopener">
+            <img src="https://assets.maxibestof.one/thumbs/b848685a-1463-49f6-8942-4aad1a7b223c_700.jpg" alt="Maze SaaS website" loading="lazy">
+            <div class="meta">
+              <h5>Maze</h5>
+              <span class="fonts">Phonic &middot; Roobert</span>
+            </div>
+          </a>
+        </div>
+        <div class="web-item">
+          <a href="https://maxibestof.one/websites/82301-darc-production" target="_blank" rel="noopener">
+            <img src="https://assets.maxibestof.one/thumbs/85487bf8-2ef5-4fe0-821e-c92099c1d27f_700.jpg" alt="Darc Production" loading="lazy">
+            <div class="meta">
+              <h5>Darc Production</h5>
+              <span class="fonts">Neue Haas Grotesk &middot; OT Jubilee</span>
+            </div>
+          </a>
+        </div>
+        <div class="web-item">
+          <a href="https://maxibestof.one/websites/82833-fluid-glass" target="_blank" rel="noopener">
+            <img src="https://assets.maxibestof.one/thumbs/56762882-a7c2-4178-906d-c3e0d7b8f02a_700.jpg" alt="Fluid Glass agency" loading="lazy">
+            <div class="meta">
+              <h5>Fluid Glass</h5>
+              <span class="fonts">Aeonik &middot; Aeonik Mono</span>
+            </div>
+          </a>
+        </div>
+        <div class="web-item">
+          <a href="https://maxibestof.one/websites/82483-llamaindex" target="_blank" rel="noopener">
+            <img src="https://assets.maxibestof.one/thumbs/f83c22f2-6284-4102-be0d-c6bff8032a84_700.jpg" alt="LlamaIndex AI website" loading="lazy">
+            <div class="meta">
+              <h5>LlamaIndex</h5>
+              <span class="fonts">IBM Plex Mono &middot; Overused Grotesk</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <h3>Amazon as typeface</h3>
+      <p>
+        <strong>Dense Discovery</strong> spotlighted a gorgeous branding
+        project for the Brazilian Amazon: every letter of a custom typeface
+        was traced from <strong>satellite imagery of real Amazonian
+        waterways</strong>, with local artists from all nine states
+        co-creating the visual system. Play with it at
+        <a href="https://igaratipo.visiteamazonia.com.br/en.html" target="_blank" rel="noopener">Igaratipo</a>.
+      </p>
+
+      <p>
+        <strong>Sidebar</strong> flagged
+        <a href="https://charcuterie.elastiq.ch" target="_blank" rel="noopener">Charcuteria</a>
+        &mdash; a visual Unicode explorer for browsing characters, discovering
+        related glyphs, and exploring scripts across the standard.
+      </p>
+    </section>
+
+    <!-- SECTION 8: ARE.NA -->
+    <section id="s8">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 08</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Are.na Newsletter #27</span>
+      </div>
+        <h2>Are.na: <em>Search, CLI, Stickers &amp; a New Annual</em></h2>
+      </header>
+
+      <p>
+        Newsletter #27 from Are.na dropped a <em>lot</em> of updates.
+        Search got smarter (better relevance, more "interesting" results
+        after 6 months of work). A full CLI shipped. iOS got drafts,
+        reader mode, and editable cover images. And the Annual is
+        accepting pitches on the theme "score."
+      </p>
+
+      <div class="arena-grid">
+        <div class="arena-item">
+          <img src="https://assets.buttondown.email/images/58a0cd46-dccb-4e1b-863f-5994e6ece583.jpg" alt="Are.na search improvements" loading="lazy">
+          <div class="meta">
+            <h6>New search for everyone</h6>
+            <span class="sub">More relevant, more interesting</span>
+          </div>
+        </div>
+        <div class="arena-item">
+          <img src="https://assets.buttondown.email/images/36241f6a-7fb5-4c9d-b3b8-f25d9d872f46.jpg" alt="Are.na CLI" loading="lazy">
+          <div class="meta">
+            <h6>Are.na has a CLI now</h6>
+            <span class="sub">Everything the API can do, from terminal</span>
+          </div>
+        </div>
+        <div class="arena-item">
+          <img src="https://assets.buttondown.email/images/f15263aa-45d8-4ef4-97e3-9146dd67cf66.jpg" alt="Are.na sticker sheet by Romina Malta" loading="lazy">
+          <div class="meta">
+            <h6>Sticker sheet by Romina Malta</h6>
+            <span class="sub">4"&times;6" black vinyl, in the store</span>
+          </div>
+        </div>
+        <div class="arena-item">
+          <img src="https://assets.buttondown.email/images/ae4708fc-d907-420f-9fed-84dec1a6404d.jpg" alt="Are.na Annual submissions" loading="lazy">
+          <div class="meta">
+            <h6>Annual Vol. 8: "Score"</h6>
+            <span class="sub">Submissions due April 20</span>
+          </div>
+        </div>
+        <div class="arena-item">
+          <img src="https://assets.buttondown.email/images/59b070f2-e17d-45e7-8d42-3bf6411e62cf.png" alt="starstar.website by Elliott Cost" loading="lazy">
+          <div class="meta">
+            <h6>starstar.website</h6>
+            <span class="sub">Site builder for Are.na by Elliott Cost</span>
+          </div>
+        </div>
+        <div class="arena-item">
+          <img src="https://assets.buttondown.email/images/223e8446-f200-42de-898d-c0904eb66bef.png" alt="NYC API meetup at Index Space" loading="lazy">
+          <div class="meta">
+            <h6>NYC API meetup</h6>
+            <span class="sub">Index Space &middot; April 30 &middot; 6:30pm</span>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        Community API projects are flourishing: <strong>starstar.website</strong>
+        (site builder), <strong>tiny.garden</strong> (another site builder),
+        <strong>arena-mux</strong> (tiling window manager),
+        <strong>kabo-design</strong> (3D channel explorer), and
+        <strong>arenareader.com</strong> (reader for Text, PDFs, and links).
+        If you're in NYC and build with the API, the April 30 meetup at
+        Index Space is the place to be.
+      </p>
+    </section>
+
+    <!-- SECTION 9: OTHER BRIEFINGS -->
+    <section id="s9">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 09</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Stills &middot; Cargo &middot; Goodtype</span>
+      </div>
+        <h2>Other Briefings: <em>Photography, Oracles &amp; Community</em></h2>
+      </header>
+
+      <h3>Stills &mdash; Weekend Inspiration</h3>
+      <p>
+        <strong>Stills</strong> (the FM-family photo licensing agency)
+        continues their Natural Forms board this weekend &mdash; "finding
+        inspiration in nature's raw design." Earlier this month they
+        spotlighted <strong>Riley Erickson</strong>, a Portland-based
+        photographer whose experimental, light-driven imagery pushes the
+        limits of color and composition. Recent picks for the board:
+        Kirsty McQue (UK), Dani Guindo (Iceland), Elliot Chau (Canada).
+      </p>
+
+      <h3>Cargo Newsletter #384</h3>
+      <p>
+        Cargo's weekly newsletter is unlike anything else &mdash; part
+        site showcase, part oracular meditation. Issue 384 opens on
+        economy: <em>"Economy is like an animating drone that runs
+        through all things &mdash; informing and performing all things.&hellip;
+        Yes, whatever the appearance, economy is there."</em> Features
+        Andrew Culp's moody personal site and a weekly Tarot &amp; I Ching
+        reading (this week: Ace of Swords reversed; Hexagram 64, Before
+        Completion; Hexagram 6, Conflict).
+      </p>
+
+      <div class="pullquote">
+        We saw transcendental economy in the desert once, and were
+        overtaken with horror. It scared us right out of our brain.
+        <cite>&mdash; Cargo #384</cite>
+      </div>
+
+      <h3>Goodtype &mdash; Croissants &amp; Community</h3>
+      <p>
+        Ilana &amp; Katie wrote from Goodtype following their COLLINS event
+        (NYC, pastries the size of a head). <em>Follow Your Art</em>,
+        their book, is out via retailers &mdash; free audiobook for
+        purchases. Also flagged: <strong>Adobe 99U Conference</strong> on
+        June 4 in NYC (code <code>99UWelcome20</code> for 20% off).
+      </p>
+    </section>
+
+    <!-- QUICK LINKS -->
+    <section id="links">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 10</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Bookmarks</span>
+      </div>
+        <h2>Quick Links <em>Worth Bookmarking</em></h2>
+      </header>
+
+      <ul class="link-list">
+        <li>
+          <span class="tag">Data</span>
+          <span class="desc"><strong><a href="https://jobsdata.ai" target="_blank" rel="noopener">JobsData.ai</a></strong> &mdash; interactive AI jobs impact tracker aggregating 500+ sources. Free.</span>
+        </li>
+        <li>
+          <span class="tag">Culture</span>
+          <span class="desc"><strong><a href="https://culturalatlas.sbs.com.au" target="_blank" rel="noopener">Cultural Atlas</a></strong> &mdash; SBS Australia's guide to cultural norms, etiquette, and communication styles.</span>
+        </li>
+        <li>
+          <span class="tag">Typography</span>
+          <span class="desc"><strong><a href="https://charcuterie.elastiq.ch" target="_blank" rel="noopener">Charcuteria</a></strong> &mdash; visual Unicode explorer for discovering glyphs &amp; scripts.</span>
+        </li>
+        <li>
+          <span class="tag">Typeface</span>
+          <span class="desc"><strong><a href="https://igaratipo.visiteamazonia.com.br/en.html" target="_blank" rel="noopener">Igaratipo</a></strong> &mdash; Brazilian Amazon satellite-traced custom typeface.</span>
+        </li>
+        <li>
+          <span class="tag">Agents</span>
+          <span class="desc"><strong>Cloudflare Browser Run</strong> &mdash; cloud-hosted browser built specifically for AI agents.</span>
+        </li>
+        <li>
+          <span class="tag">Are.na</span>
+          <span class="desc"><strong><a href="https://starstar.website" target="_blank" rel="noopener">starstar.website</a></strong> by Elliott Cost &mdash; a site builder built on top of Are.na.</span>
+        </li>
+        <li>
+          <span class="tag">Learning</span>
+          <span class="desc"><strong><a href="https://apps.ankiweb.net" target="_blank" rel="noopener">Anki</a></strong> &mdash; Dense Discovery guest recommends the free spaced-repetition system.</span>
+        </li>
+        <li>
+          <span class="tag">Event</span>
+          <span class="desc"><strong><a href="https://every.to/events/codex-for-knowledge-work" target="_blank" rel="noopener">Codex for Knowledge Work</a></strong> &mdash; Every live camp on April 24.</span>
+        </li>
+        <li>
+          <span class="tag">Event</span>
+          <span class="desc"><strong>Are.na NYC API Meetup</strong> &mdash; Index Space, April 30 at 6:30pm.</span>
+        </li>
+        <li>
+          <span class="tag">Event</span>
+          <span class="desc"><strong>Adobe 99U Conference</strong> &mdash; June 4, NYC or online. Code: <code>99UWelcome20</code> for 20% off.</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- SOURCES -->
+    <section id="sources">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 11</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Newsletters Read</span>
+      </div>
+        <h2><em>Sources</em></h2>
+      </header>
+
+      <ul class="link-list">
+        <li><span class="tag">Culture</span><span class="desc"><strong>Dense Discovery #385</strong> &mdash; Kai Brach / April 21, 2026</span></li>
+        <li><span class="tag">Media</span><span class="desc"><strong>Garbage Day</strong> &mdash; Ryan Broderick / April 20, 2026</span></li>
+        <li><span class="tag">Branding</span><span class="desc"><strong>Brand New &times; Weekly</strong> &mdash; Under Consideration / APR 13&ndash;17, 2026</span></li>
+        <li><span class="tag">Branding</span><span class="desc"><strong>BP&amp;O</strong> &mdash; Richard Baird / bpando.org current featured</span></li>
+        <li><span class="tag">Web</span><span class="desc"><strong>MaxiBestOf</strong> &mdash; Bertrand / Week 16, 2026</span></li>
+        <li><span class="tag">UX</span><span class="desc"><strong>Sidebar</strong> &mdash; UX Collective / April 20, 2026</span></li>
+        <li><span class="tag">Tech</span><span class="desc"><strong>Weekly Thing 344</strong> &mdash; Jamie Thingelstad / April 19, 2026</span></li>
+        <li><span class="tag">Tools</span><span class="desc"><strong>Are.na Newsletter #27</strong> &mdash; April 17, 2026</span></li>
+        <li><span class="tag">Oracle</span><span class="desc"><strong>Cargo Newsletter #384</strong> &mdash; Apr 7, 2026</span></li>
+        <li><span class="tag">Photo</span><span class="desc"><strong>Stills</strong> &mdash; Weekend Inspiration / April 18, 2026</span></li>
+        <li><span class="tag">Craft</span><span class="desc"><strong>Goodtype</strong> &mdash; Ilana &amp; Katie, post-COLLINS NYC</span></li>
+      </ul>
+    </section>
+
+    <!-- ARCHIVE:START -->
+    <!-- ARCHIVE -->
+    <section class="archive-dark" aria-label="Archive of past editions">
+      <div class="archive-inner">
+        <div class="archive-label">Archive<span class="archive-label-divider">&middot;</span><span class="archive-label-count">8 editions</span></div>
+        <h2 class="archive-title">References</h2>
+      <a class="archive-feature" href="https://freqz.rafacastello.com/2026-04-30.html">
+        <div class="archive-feature-meta">
+          <span class="archive-feature-tag">Latest</span>
+          <span class="archive-feature-date">April 30, 2026</span>
+        </div>
+        <h3 class="archive-feature-title">Weekly Digest / April 30, 2026</h3>
+        <p class="archive-feature-standfirst">Salone del Mobile 2026 drew 316,342 visitors from 167 countries, up 4.5% year-over-year. But the real story is who showed up to play: more than forty fashion houses staged Fuorisalone events, giving fashion 56% share-of-…</p>
+        <span class="archive-feature-cta">Read &rarr;</span>
+      </a>
+      <div class="archive-grid">
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-29.html">
+          <span class="archive-card-date">April 29, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 29, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-28.html">
+          <span class="archive-card-date">April 28, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 28, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-27.html">
+          <span class="archive-card-date">April 27, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 27, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-24.html">
+          <span class="archive-card-date">April 24, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 24, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-23.html">
+          <span class="archive-card-date">April 23, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 23, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-22.html">
+          <span class="archive-card-date">April 22, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 21–22, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-21.html">
+          <span class="archive-card-date">April 21, 2026</span>
+          <h4 class="archive-card-title">Newsletters / Weekly Digest — April 21, 2026</h4>
+        </a>
+      </div>
+      </div>
+    </section>
+      <style>
+        .archive-dark {
+          /* Full-bleed dark panel breaking out of the .container side padding */
+          margin: 96px calc(-50vw + 50%) 0;
+          padding: 96px calc(50vw - 50%) 120px;
+          background: #0a0a0a;
+          color: #ffffff;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .archive-inner {
+          max-width: 880px;
+          margin: 0 auto;
+        }
+        .archive-label {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 11px;
+          font-weight: 500;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: var(--accent);
+          margin-bottom: 16px;
+        }
+        .archive-label .archive-label-divider {
+          display: inline-block;
+          margin: 0 10px;
+          color: rgba(255,255,255,0.3);
+        }
+        .archive-label .archive-label-count {
+          color: rgba(255,255,255,0.45);
+          letter-spacing: 0.2em;
+        }
+        .archive-title {
+          font-family: "freight-display-pro", "Playfair Display", Georgia, serif;
+          font-size: clamp(44px, 7vw, 72px);
+          font-weight: 400;
+          font-style: italic;
+          line-height: 1;
+          letter-spacing: -0.02em;
+          color: #ffffff;
+          margin: 0 0 56px;
+        }
+        .archive-feature {
+          display: block;
+          padding: 36px 36px 32px;
+          background: #151515;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 4px;
+          text-decoration: none;
+          color: #ffffff;
+          margin-bottom: 48px;
+          transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+        }
+        .archive-feature:hover {
+          transform: translateY(-2px);
+          background: #1c1c1c;
+          border-color: rgba(255, 255, 255, 0.12);
+          color: #ffffff;
+        }
+        .archive-feature-meta {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 20px;
+        }
+        .archive-feature-tag {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--accent);
+          padding: 5px 11px;
+          border: 1px solid var(--accent);
+          border-radius: 2px;
+          line-height: 1;
+        }
+        .archive-feature-date {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.55);
+        }
+        .archive-feature-title {
+          font-family: "freight-display-pro", "Playfair Display", Georgia, serif;
+          font-size: clamp(28px, 4vw, 36px);
+          font-weight: 500;
+          line-height: 1.12;
+          letter-spacing: -0.015em;
+          margin: 0 0 16px;
+          color: #ffffff;
+        }
+        .archive-feature-standfirst {
+          font-family: "freight-text-pro", Georgia, serif;
+          font-size: 16px;
+          font-weight: 300;
+          line-height: 1.55;
+          color: rgba(255, 255, 255, 0.68);
+          margin: 0 0 22px;
+          max-width: 640px;
+        }
+        .archive-feature-cta {
+          display: inline-block;
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--accent);
+        }
+        .archive-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+          gap: 12px;
+        }
+        .archive-card {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          padding: 22px 24px;
+          background: #151515;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 4px;
+          text-decoration: none;
+          color: #ffffff;
+          transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+          min-height: 100px;
+        }
+        .archive-card:hover {
+          transform: translateY(-2px);
+          background: #1c1c1c;
+          border-color: rgba(255, 255, 255, 0.12);
+          color: #ffffff;
+        }
+        .archive-card-date {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.5);
+        }
+        .archive-card-title {
+          font-family: "freight-display-pro", "Playfair Display", Georgia, serif;
+          font-size: 18px;
+          font-weight: 500;
+          line-height: 1.3;
+          margin: 0;
+          color: #ffffff;
+        }
+        @media (max-width: 768px) {
+          .archive-dark {
+            padding: 72px calc(50vw - 50%) 96px;
+          }
+          .archive-title {
+            margin-bottom: 40px;
+          }
+          .archive-feature {
+            padding: 28px 24px 24px;
+          }
+          .archive-grid {
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          }
+        }
+        @media (max-width: 480px) {
+          .archive-dark {
+            padding: 56px calc(50vw - 50%) 80px;
+          }
+          .archive-grid {
+            grid-template-columns: 1fr;
+            gap: 8px;
+          }
+          .archive-feature-meta {
+            flex-wrap: wrap;
+            gap: 10px;
+          }
+        }
+      </style>
+    <!-- ARCHIVE:END -->
+
+    <footer>
+      <span>April 21, 2026</span>
+      <span>&asymp;14 min read</span>
+      <span><a href="https://freqz.rafacastello.com/feed.xml">RSS feed</a></span>
+      <span><a href="../../../rafacastello.com/index.html">&larr; rafacastello.com</a></span>
+    </footer>
+
+  </div>
+<script src="../../wordmark.js%3Fv=20260506-29" defer></script>
+</body>
+</html>

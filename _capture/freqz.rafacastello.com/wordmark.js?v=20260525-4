@@ -1,0 +1,4 @@
+// Frequencies wordmark — no JS needed. The wordmark is a static
+// frequencies-mark.svg rendered via CSS mask-image in styles.css.
+// Kept as an empty file so older HTML <script src="/wordmark.js">
+// references don't 404. Safe to delete the script tag eventually.

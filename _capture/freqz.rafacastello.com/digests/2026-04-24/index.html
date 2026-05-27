@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Digest / April 24, 2026</title>
+<link rel="alternate" type="application/rss+xml" title="Rafa Castello — Newsletter Digest" href="https://newsletters.rafacastello.com/feed.xml">
+<link rel="stylesheet" href="https://use.typekit.net/fau0gcd.css">
+<style>
+  :root {
+    --bg: #f5f2ec;
+    --ink: #111111;
+    --ink-soft: #4a4a4a;
+    --accent: #d64218;
+    --rule: #dcd6cc;
+    --card: #ffffff;
+    --hl: #fff089;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "freight-text-pro", Georgia, serif;
+    font-size: 18px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 48px 32px 120px;
+  }
+
+  /* Masthead */
+  .masthead {
+    border-top: 4px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 24px 0 20px;
+    margin-bottom: 48px;
+  }
+
+  .masthead-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+  }
+
+  h1.title {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .standfirst {
+    font-family: "freight-text-pro", Georgia, serif;
+    font-size: 20px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 620px;
+    margin-top: 12px;
+  }
+
+  /* TOC */
+  .toc {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px 32px;
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 13px;
+    margin: 32px 0 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .toc a {
+    color: var(--ink);
+    text-decoration: none;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: color 0.15s ease;
+  }
+
+  .toc a:hover { color: var(--accent); }
+  .toc a .num {
+    color: var(--accent);
+    font-weight: 600;
+    margin-right: 12px;
+    width: 24px;
+    flex-shrink: 0;
+  }
+  .toc a .label { flex: 1; }
+
+  /* Sections */
+  section {
+    margin-bottom: 72px;
+    scroll-margin-top: 24px;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 8px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .section-num {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+  }
+
+  .section-kicker {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-soft);
+    margin-left: auto;
+  }
+
+  h2 {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 16px 0 32px;
+  }
+
+  h2 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  h3 {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: 22px;
+    margin: 32px 0 12px;
+    line-height: 1.3;
+  }
+
+  p {
+    margin-bottom: 18px;
+    max-width: 700px;
+  }
+
+  a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  a:hover { color: var(--accent); }
+
+  strong { font-weight: 700; }
+
+  .drop-cap::first-letter {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-size: 5em;
+    float: left;
+    line-height: 0.9;
+    margin: 6px 10px -4px 0;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  /* Pullquotes */
+  .pullquote {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-style: italic;
+    font-size: 26px;
+    line-height: 1.25;
+    color: var(--ink);
+    border-left: 3px solid var(--accent);
+    padding: 8px 0 8px 24px;
+    margin: 28px 0;
+    max-width: 680px;
+  }
+
+  .pullquote cite {
+    display: block;
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-style: normal;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 10px;
+  }
+
+  /* Cards */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin: 24px 0;
+  }
+
+  .card {
+    background: var(--card);
+    padding: 20px 22px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+  }
+
+  .card-label {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .card h4 {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .card p {
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    margin-bottom: 0;
+  }
+
+  .card .score {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-top: 10px;
+    display: block;
+  }
+
+  /* Number stats */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
+    margin: 32px 0;
+    padding: 24px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .stat-num {
+    font-family: "freight-display-pro", Georgia, serif;
+    font-size: 52px;
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .stat-label {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  /* Link list */
+  .link-list {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+  }
+
+  .link-list li {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+  }
+
+  .link-list li:first-child { border-top: 1px solid var(--rule); }
+
+  .link-list .tag {
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    flex-shrink: 0;
+    width: 90px;
+  }
+
+  .link-list .desc {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  /* Hl */
+  mark { background: var(--hl); padding: 0 3px; }
+
+  /* Footer */
+  footer {
+    margin-top: 96px;
+    padding-top: 24px;
+    border-top: 4px solid var(--ink);
+    font-family: "nitti-grotesk", "Inter", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  footer span { text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* Mobile */
+  @media (max-width: 640px) {
+    .container { padding: 32px 20px 80px; }
+    .toc { grid-template-columns: 1fr; }
+    .pullquote { font-size: 20px; padding-left: 18px; }
+    .stat-num { font-size: 40px; }
+  }
+
+  /* Print */
+  @media print {
+    body { background: white; }
+    .toc { page-break-after: always; }
+    section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- MASTHEAD -->
+    <header class="masthead">
+      <div class="masthead-top">
+        <span>Vol. 17 / No. 4</span>
+        <span>April 24, 2026</span>
+        <span><a href="https://freqz.rafacastello.com/feed.xml" style="text-decoration:none;color:inherit;">RSS</a></span>
+      </div>
+      <h1 class="title">Below the<br><em>Surface</em></h1>
+      <p class="standfirst">
+        Matt Webb argues personal AI should be headless &mdash; no screen, no
+        GUI, just CLIs. Ant Murphy punctures the AI adoption hype: 88% of
+        companies claim to use it, barely 1% have mature deployments. Trump
+        extends the Israel-Lebanon ceasefire by three weeks. And a new tool
+        renders wireframes as nothing but Unicode box-drawing characters.
+      </p>
+    </header>
+
+    <!-- TOC -->
+    <nav class="toc" aria-label="Sections">
+      <a href="index.html#s1"><span class="num">01</span><span class="label">The Interface Dissolves</span></a>
+      <a href="index.html#s2"><span class="num">02</span><span class="label">Mind the Chasm</span></a>
+      <a href="index.html#s3"><span class="num">03</span><span class="label">Platform Signals</span></a>
+      <a href="index.html#s4"><span class="num">04</span><span class="label">World &amp; Markets</span></a>
+      <a href="index.html#s5"><span class="num">05</span><span class="label">The Toolbox</span></a>
+      <a href="index.html#links"><span class="num">06</span><span class="label">Bookmarks</span></a>
+      <a href="index.html#sources"><span class="num">07</span><span class="label">Sources</span></a>
+    </nav>
+
+    <!-- SECTION 1 -->
+    <section id="s1">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 01</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Design &amp; AI</span>
+      </div>
+        <h2>The Interface <em>Dissolves</em></h2>
+      </header>
+
+      <p class="drop-cap">
+        <a href="https://interconnected.org/home/2026/04/18/headless" target="_blank" rel="noopener"><strong>Matt Webb</strong></a>
+        published a compelling argument for headless everything &mdash; personal AI
+        agents should interact with services through CLIs and APIs, not by
+        clicking around a GUI with a bot-controlled mouse. His reasoning is
+        practical: <mark>CLIs inherit Unix philosophy, designed for
+        interoperability</mark>. Traditional apps force users through rigid
+        &ldquo;user journeys,&rdquo; but real people multitask across services.
+        Headless access is quicker, more dependable, and dramatically more
+        composable.
+      </p>
+
+      <div class="pullquote">
+        Tools were designed so that they could operate together. The natural
+        architecture for AI agents isn&rsquo;t controlling a browser &mdash;
+        it&rsquo;s commanding a terminal.
+        <cite>&mdash; Matt Webb, interconnected.org</cite>
+      </div>
+
+      <p>
+        Webb also makes a security case: complex GUIs create attack surfaces.
+        He cites the Companies House incident where users could edit rival
+        accounts by manipulating browser navigation. Minimal, hardened CLIs
+        reduce this risk. The implication is sharp: the next wave of software
+        might not have a visible interface at all. Front-end design persists,
+        he argues, but for brand and discoverability rather than daily
+        interaction. Users encounter interfaces initially, then delegate to
+        agents.
+      </p>
+
+      <h3>Claude Design and the reaction wave</h3>
+
+      <p>
+        <a href="https://sidebar.io" target="_blank" rel="noopener">Sidebar</a>&rsquo;s
+        April 22 edition led with Sam Henri Gold&rsquo;s reaction to
+        <strong>Claude Design</strong>, Anthropic&rsquo;s new design tool.
+        Gold&rsquo;s observation: &ldquo;the beast is hairy enough that entire
+        design roles now specialize in wrangling the system itself.&rdquo;
+        Describe what you need, Claude builds a first version. Refine through
+        conversation, inline comments, or direct edits. If your team has a
+        design system, Claude reads it and applies your tokens and components.
+      </p>
+
+      <p>
+        The next day&rsquo;s Sidebar surfaced Dave Rupert&rsquo;s complementary
+        provocation: <strong>&ldquo;I don&rsquo;t want a screenshot of your
+        Claude conversation.&rdquo;</strong> The number of screenshots of Claude
+        conversations going around is rising, he writes, and it&rsquo;s beginning
+        to affect his general mood. AI output is becoming a form of social
+        currency &mdash; one that substitutes process for taste.
+      </p>
+
+      <p>
+        Also from Sidebar: a provocation from tante.cc titled <strong>&ldquo;AI
+        as a Fascist Artifact&rdquo;</strong> &mdash; arguing that our world is
+        built around technological infrastructures that define what we see, who
+        we can talk to, and what information gets presented to us. The word
+        &ldquo;fascist&rdquo; is doing heavy lifting here, but the infrastructure
+        critique is real: who controls the defaults controls the discourse.
+      </p>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section id="s2">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 02</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Technology &amp; Adoption</span>
+      </div>
+        <h2>Mind the <em>Chasm</em></h2>
+      </header>
+
+      <p class="drop-cap">
+        <a href="https://antmurphy.me/newsletter/the-ai-chasm" target="_blank" rel="noopener"><strong>Ant Murphy</strong></a>
+        wrote the week&rsquo;s most grounding technology essay. While <mark>50%
+        of the global population uses some form of AI</mark>, only about 1% of
+        organizations have mature deployments delivering real value. The gap
+        between perception and reality is what he calls &ldquo;the AI Chasm.&rdquo;
+        LinkedIn enthusiasm doesn&rsquo;t reflect typical business environments.
+        Many companies have already scaled back customer-facing AI projects after
+        realizing customers weren&rsquo;t ready.
+      </p>
+
+      <div class="pullquote">
+        AI attacks our identity in a way that most software doesn&rsquo;t.
+        Unlike previous technologies, AI threatens professional identity
+        &mdash; creating existential anxiety about job replacement.
+        <cite>&mdash; Vikram Sreekanti, via Ant Murphy</cite>
+      </div>
+
+      <p>
+        Murphy follows Everett Rogers&rsquo; Diffusion of Innovation curve
+        (established 1962, still holding): early adopters embrace AI
+        enthusiastically, but the early and late majority &mdash; 68% of the
+        population &mdash; require years of peer validation before committing.
+        His advice to product leaders: redirect efforts toward back-office
+        operations and team efficiency. Build tools that serve customers better
+        from the inside. Expect the real adoption curve to take five to ten
+        years.
+      </p>
+
+      <h3>Claude goes lifestyle</h3>
+
+      <p>
+        In a move that illustrates both the promise and the chasm,
+        <strong>Anthropic</strong> announced that Claude now integrates with
+        lifestyle apps including <strong>Spotify, Uber Eats</strong>, and other
+        personal services. The vision: Claude as a single conversational
+        interface to your daily apps. Whether mass-market consumers are ready
+        to let an AI order their dinner is exactly the question Murphy raises.
+      </p>
+
+      <p>
+        On the flip side of the attention economy, a new AI startup called
+        <strong>Noscroll</strong> takes the opposite approach &mdash; it browses
+        the internet on your behalf, summarizing important events so you
+        don&rsquo;t have to doomscroll. Build AI to escape AI-optimized feeds.
+        The snake eats its tail.
+      </p>
+
+      <div class="stat-row">
+        <div>
+          <div class="stat-num">50%</div>
+          <div class="stat-label">Global population using some form of AI</div>
+        </div>
+        <div>
+          <div class="stat-num">~1%</div>
+          <div class="stat-label">Organizations with mature AI deployments</div>
+        </div>
+        <div>
+          <div class="stat-num">68%</div>
+          <div class="stat-label">Early &amp; late majority still waiting</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section id="s3">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 03</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Tech Industry</span>
+      </div>
+        <h2>Platform <em>Signals</em></h2>
+      </header>
+
+      <p class="drop-cap">
+        <strong>Microsoft</strong> is restructuring its gaming division,
+        scrapping the &ldquo;Microsoft Gaming&rdquo; umbrella and bringing
+        <strong>Xbox</strong> back as its own entity with a Discord partnership
+        in the works. The bet: the brand name still carries more weight than
+        the corporate parent. It&rsquo;s a recognition that platform identity
+        matters &mdash; customers bond with products, not org charts.
+      </p>
+
+      <div class="card-grid">
+        <div class="card">
+          <span class="card-label">Mobile</span>
+          <h4>Android 17 Beta</h4>
+          <p>Google releases the first major Android 17 beta update cycle, available for early testing on Pixel devices. The annual reinvention continues.</p>
+        </div>
+        <div class="card">
+          <span class="card-label">Security</span>
+          <h4>iOS 26.4.2 Patch</h4>
+          <p>Apple patches a security flaw reportedly &ldquo;used by FBI&rdquo; to recover deleted messages from encrypted apps. The vulnerability-as-feature tension, again.</p>
+        </div>
+        <div class="card">
+          <span class="card-label">Display</span>
+          <h4>Samsung 2D-3D Display</h4>
+          <p>Samsung and POSTECH develop switchable 2D-3D display technology using a metasurface lenticular lens. One screen, two realities.</p>
+        </div>
+        <div class="card">
+          <span class="card-label">Hardware</span>
+          <h4>DJI Lito Series</h4>
+          <p>DJI launches affordable beginner drones starting under $400, with advanced camera capabilities. The democratization of aerial photography continues.</p>
+        </div>
+      </div>
+
+      <p>
+        <strong>YouTube TV</strong> rolled out fully customizable multiview,
+        letting viewers watch any channels simultaneously &mdash; no longer
+        limited to pre-set combinations. And
+        <a href="https://sidebar.io" target="_blank" rel="noopener">Sidebar</a>
+        highlighted <strong>LessWrong&rsquo;s</strong> provocative essay arguing
+        there are only four fundamental skills: design, technical, management,
+        and physical. Everything else is a combination. The question it poses:
+        what determines whether someone can quickly acquire expert-level
+        performance in new domains? The answer is surprisingly structural
+        &mdash; it&rsquo;s about recognizing which of the four you&rsquo;re
+        actually exercising.
+      </p>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section id="s4">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 04</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Geopolitics &amp; News</span>
+      </div>
+        <h2>World &amp; <em>Markets</em></h2>
+      </header>
+
+      <h3>Ceasefire extended</h3>
+      <p>
+        Trump announced a <strong>three-week extension</strong> of the
+        Israel-Lebanon ceasefire, saying he won&rsquo;t rush Iran deal
+        negotiations. The extension buys time but doesn&rsquo;t resolve the
+        underlying dynamics. Stock futures showed mixed trading following the
+        announcement, reflecting markets that have learned to price fragile
+        diplomacy.
+      </p>
+
+      <h3>Severe weather</h3>
+      <p>
+        <strong>Tornadoes struck northern Oklahoma</strong>, leveling homes in
+        Enid and injuring at least 10 people. Multiple tornado formations
+        tracked across the state during a significant severe weather event.
+        The 4Warn Storm Team is tracking continuing damage assessments.
+      </p>
+
+      <h3>Europe &amp; Global</h3>
+      <p>
+        The <strong>EU approved a &euro;90 billion loan</strong> for Ukraine.
+        The <strong>UK and France</strong> signed an &pound;892 million deal
+        to reduce Channel crossings. <strong>Venice Biennale</strong> excluded
+        Russia and Israel from awards amid geopolitical tensions and EU
+        funding threats &mdash; the art world as geopolitical barometer.
+        <strong>Germany</strong> announced substantial military modernization
+        targeting European defense strengthening.
+      </p>
+
+      <h3>Maritime &amp; energy</h3>
+      <p>
+        <strong>Panama Canal</strong> auction slots now exceed
+        <mark>$1 million per transit</mark> amid Middle East shipping
+        disruptions. Iran took seized ships to port as naval tensions
+        escalate. The EU moved to sanction Russian banks, targeting
+        financial institutions funding military operations. European nations
+        have spent $28 billion on temporary energy subsidies as security
+        concerns persist.
+      </p>
+
+      <div class="stat-row">
+        <div>
+          <div class="stat-num">&euro;90B</div>
+          <div class="stat-label">EU loan for Ukraine</div>
+        </div>
+        <div>
+          <div class="stat-num">$1M+</div>
+          <div class="stat-label">Panama Canal transit slot price</div>
+        </div>
+        <div>
+          <div class="stat-num">$28B</div>
+          <div class="stat-label">Europe&rsquo;s energy subsidy cost</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5 -->
+    <section id="s5">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 05</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Code &amp; Craft</span>
+      </div>
+        <h2>The <em>Toolbox</em></h2>
+      </header>
+
+      <p class="drop-cap">
+        <a href="https://wiretext.app" target="_blank" rel="noopener"><strong>Wiretext</strong></a>
+        is a spatial design tool where everything renders as Unicode
+        box-drawing characters. Create wireframes, diagrams, and mockups
+        using keyboard shortcuts &mdash; press &ldquo;B&rdquo; for boxes,
+        &ldquo;T&rdquo; for text. It includes buttons, dropdowns, toggles,
+        modals, navigation bars, and skeleton loaders, all composed from
+        plain text characters. In a week dominated by conversations about
+        disappearing interfaces, a tool that reduces design to its most
+        elemental visual language feels right on time.
+      </p>
+
+      <p>
+        From Sidebar: <strong>&ldquo;Six Levels of Dark Mode&rdquo;</strong>
+        (cssence.com) maps the implementation spectrum from HTML-only to
+        JS-infused, with all the CSS in between. A useful reference for anyone
+        building a theming system. And <strong>Tailwind CSS Colors</strong>
+        (<a href="https://uicolors.app" target="_blank" rel="noopener">uicolors.app</a>)
+        lets you generate, edit, save, and share Tailwind color shades from
+        any hex code &mdash; the kind of single-purpose tool that saves
+        twenty minutes every time you use it.
+      </p>
+
+      <p>
+        OpenAI published its <strong>GPT Image Gen Prompting Guide</strong>
+        &mdash; production prompting patterns and best practices for
+        gpt-image-2, drawn from real use cases. Whether or not you&rsquo;re
+        in the OpenAI ecosystem, the patterns are transferable: specificity
+        beats length, structure beats prose, and reference images outperform
+        description every time.
+      </p>
+    </section>
+
+    <!-- BOOKMARKS -->
+    <section id="links">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 06</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Bookmarks</span>
+      </div>
+        <h2>Quick <em>Links</em></h2>
+      </header>
+
+      <ul class="link-list">
+        <li>
+          <span class="tag">AI</span>
+          <span class="desc"><a href="https://interconnected.org/home/2026/04/18/headless" target="_blank" rel="noopener">Headless Everything for Personal AI</a> &mdash; CLIs over GUIs. The Unix philosophy meets the agent era. (interconnected.org via Sidebar)</span>
+        </li>
+        <li>
+          <span class="tag">Design</span>
+          <span class="desc"><a href="https://wiretext.app" target="_blank" rel="noopener">Wiretext</a> &mdash; Spatial design tool rendering everything as Unicode box-drawing characters. Wireframes as ASCII art.</span>
+        </li>
+        <li>
+          <span class="tag">Product</span>
+          <span class="desc"><a href="https://antmurphy.me/newsletter/the-ai-chasm" target="_blank" rel="noopener">The AI Chasm</a> &mdash; 50% of people use AI, 1% of orgs have mature deployments. Focus internally first.</span>
+        </li>
+        <li>
+          <span class="tag">CSS</span>
+          <span class="desc"><strong>Six Levels of Dark Mode</strong> &mdash; From HTML-only to JS-infused, and all the CSS in between. (cssence.com via Sidebar)</span>
+        </li>
+        <li>
+          <span class="tag">AI</span>
+          <span class="desc"><strong>GPT Image Gen Prompting Guide</strong> &mdash; Production prompting patterns and best practices for gpt-image-2. (developers.openai.com via Sidebar)</span>
+        </li>
+        <li>
+          <span class="tag">Design</span>
+          <span class="desc"><a href="https://uicolors.app" target="_blank" rel="noopener">Tailwind CSS Colors</a> &mdash; Generate, edit, save, and share Tailwind color shades from a hex code.</span>
+        </li>
+        <li>
+          <span class="tag">Career</span>
+          <span class="desc"><strong>There Are Only Four Skills</strong> &mdash; Design, technical, management, and physical. Everything else is a combination. (LessWrong via Sidebar)</span>
+        </li>
+        <li>
+          <span class="tag">Culture</span>
+          <span class="desc"><strong>AI as a Fascist Artifact</strong> &mdash; Infrastructure defines what we see and who we talk to. (tante.cc via Sidebar)</span>
+        </li>
+        <li>
+          <span class="tag">Humor</span>
+          <span class="desc"><strong>I Don&rsquo;t Want a Screenshot of Your Claude Conversation</strong> &mdash; AI output as social currency, substituting process for taste. (daverupert.com via Sidebar)</span>
+        </li>
+        <li>
+          <span class="tag">Gaming</span>
+          <span class="desc"><strong>Xbox Reborn</strong> &mdash; Microsoft drops &ldquo;Microsoft Gaming,&rdquo; brings back Xbox as standalone brand with Discord partnership.</span>
+        </li>
+        <li>
+          <span class="tag">Hardware</span>
+          <span class="desc"><strong>Samsung 2D-3D Display</strong> &mdash; Switchable display tech using metasurface lenticular lens, developed with POSTECH.</span>
+        </li>
+        <li>
+          <span class="tag">Video</span>
+          <span class="desc"><strong>YouTube TV Multiview</strong> &mdash; Fully customizable, watch any channels simultaneously. No more pre-set limitations.</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- SOURCES -->
+    <section id="sources">
+      <header class="section-row">
+        <div class="section-head">
+        <span class="section-num">&sect; 07</span>
+        <h2 style="margin:0;flex:1;"></h2>
+        <span class="section-kicker">Sources</span>
+      </div>
+        <h2>Today&rsquo;s <em>Sources</em></h2>
+      </header>
+
+      <ul class="link-list">
+        <li>
+          <span class="tag">Daily</span>
+          <span class="desc"><a href="https://sidebar.io" target="_blank" rel="noopener">Sidebar / UX Collective</a> &mdash; Apr 22 &amp; 23 editions. Claude Design, headless AI, dark mode, Claude screenshot fatigue, four skills, Wiretext.</span>
+        </li>
+        <li>
+          <span class="tag">Essay</span>
+          <span class="desc"><a href="https://interconnected.org" target="_blank" rel="noopener">interconnected.org</a> &mdash; Matt Webb on headless services for personal AI.</span>
+        </li>
+        <li>
+          <span class="tag">Product</span>
+          <span class="desc"><a href="https://antmurphy.me" target="_blank" rel="noopener">Ant Murphy</a> &mdash; &ldquo;The AI Chasm&rdquo; &mdash; adoption hype vs. reality.</span>
+        </li>
+        <li>
+          <span class="tag">Tech</span>
+          <span class="desc">Engadget, The Verge, 9to5Google, 9to5Mac, TechCrunch &mdash; Claude integrations, Xbox, Android 17, iOS patch, Noscroll, DJI, YouTube TV, Samsung display.</span>
+        </li>
+        <li>
+          <span class="tag">News</span>
+          <span class="desc"><a href="https://news.google.com" target="_blank" rel="noopener">Google News</a> &mdash; Israel-Lebanon ceasefire, Oklahoma tornadoes, EU Ukraine loan, Panama Canal, maritime tensions.</span>
+        </li>
+        <li>
+          <span class="tag">News</span>
+          <span class="desc">Reuters, CNN, Politico, NBC News, CNBC &mdash; Geopolitics, energy, military, migration deals.</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ARCHIVE:START -->
+    <!-- ARCHIVE -->
+    <section class="archive-dark" aria-label="Archive of past editions">
+      <div class="archive-inner">
+        <div class="archive-label">Archive<span class="archive-label-divider">&middot;</span><span class="archive-label-count">8 editions</span></div>
+        <h2 class="archive-title">References</h2>
+      <a class="archive-feature" href="https://freqz.rafacastello.com/2026-04-30.html">
+        <div class="archive-feature-meta">
+          <span class="archive-feature-tag">Latest</span>
+          <span class="archive-feature-date">April 30, 2026</span>
+        </div>
+        <h3 class="archive-feature-title">Weekly Digest / April 30, 2026</h3>
+        <p class="archive-feature-standfirst">Salone del Mobile 2026 drew 316,342 visitors from 167 countries, up 4.5% year-over-year. But the real story is who showed up to play: more than forty fashion houses staged Fuorisalone events, giving fashion 56% share-of-…</p>
+        <span class="archive-feature-cta">Read &rarr;</span>
+      </a>
+      <div class="archive-grid">
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-29.html">
+          <span class="archive-card-date">April 29, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 29, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-28.html">
+          <span class="archive-card-date">April 28, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 28, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-27.html">
+          <span class="archive-card-date">April 27, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 27, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-24.html">
+          <span class="archive-card-date">April 24, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 24, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-23.html">
+          <span class="archive-card-date">April 23, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 23, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-22.html">
+          <span class="archive-card-date">April 22, 2026</span>
+          <h4 class="archive-card-title">Weekly Digest / April 21–22, 2026</h4>
+        </a>
+        <a class="archive-card" href="https://freqz.rafacastello.com/2026-04-21.html">
+          <span class="archive-card-date">April 21, 2026</span>
+          <h4 class="archive-card-title">Newsletters / Weekly Digest — April 21, 2026</h4>
+        </a>
+      </div>
+      </div>
+    </section>
+      <style>
+        .archive-dark {
+          /* Full-bleed dark panel breaking out of the .container side padding */
+          margin: 96px calc(-50vw + 50%) 0;
+          padding: 96px calc(50vw - 50%) 120px;
+          background: #0a0a0a;
+          color: #ffffff;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .archive-inner {
+          max-width: 880px;
+          margin: 0 auto;
+        }
+        .archive-label {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 11px;
+          font-weight: 500;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: var(--accent);
+          margin-bottom: 16px;
+        }
+        .archive-label .archive-label-divider {
+          display: inline-block;
+          margin: 0 10px;
+          color: rgba(255,255,255,0.3);
+        }
+        .archive-label .archive-label-count {
+          color: rgba(255,255,255,0.45);
+          letter-spacing: 0.2em;
+        }
+        .archive-title {
+          font-family: "freight-display-pro", "Playfair Display", Georgia, serif;
+          font-size: clamp(44px, 7vw, 72px);
+          font-weight: 400;
+          font-style: italic;
+          line-height: 1;
+          letter-spacing: -0.02em;
+          color: #ffffff;
+          margin: 0 0 56px;
+        }
+        .archive-feature {
+          display: block;
+          padding: 36px 36px 32px;
+          background: #151515;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 4px;
+          text-decoration: none;
+          color: #ffffff;
+          margin-bottom: 48px;
+          transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+        }
+        .archive-feature:hover {
+          transform: translateY(-2px);
+          background: #1c1c1c;
+          border-color: rgba(255, 255, 255, 0.12);
+          color: #ffffff;
+        }
+        .archive-feature-meta {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 20px;
+        }
+        .archive-feature-tag {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--accent);
+          padding: 5px 11px;
+          border: 1px solid var(--accent);
+          border-radius: 2px;
+          line-height: 1;
+        }
+        .archive-feature-date {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.55);
+        }
+        .archive-feature-title {
+          font-family: "freight-display-pro", "Playfair Display", Georgia, serif;
+          font-size: clamp(28px, 4vw, 36px);
+          font-weight: 500;
+          line-height: 1.12;
+          letter-spacing: -0.015em;
+          margin: 0 0 16px;
+          color: #ffffff;
+        }
+        .archive-feature-standfirst {
+          font-family: "freight-text-pro", Georgia, serif;
+          font-size: 16px;
+          font-weight: 300;
+          line-height: 1.55;
+          color: rgba(255, 255, 255, 0.68);
+          margin: 0 0 22px;
+          max-width: 640px;
+        }
+        .archive-feature-cta {
+          display: inline-block;
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--accent);
+        }
+        .archive-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+          gap: 12px;
+        }
+        .archive-card {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          padding: 22px 24px;
+          background: #151515;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 4px;
+          text-decoration: none;
+          color: #ffffff;
+          transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+          min-height: 100px;
+        }
+        .archive-card:hover {
+          transform: translateY(-2px);
+          background: #1c1c1c;
+          border-color: rgba(255, 255, 255, 0.12);
+          color: #ffffff;
+        }
+        .archive-card-date {
+          font-family: "nitti-grotesk", "Inter", "Helvetica Neue", Arial, sans-serif;
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.5);
+        }
+        .archive-card-title {
+          font-family: "freight-display-pro", "Playfair Display", Georgia, serif;
+          font-size: 18px;
+          font-weight: 500;
+          line-height: 1.3;
+          margin: 0;
+          color: #ffffff;
+        }
+        @media (max-width: 768px) {
+          .archive-dark {
+            padding: 72px calc(50vw - 50%) 96px;
+          }
+          .archive-title {
+            margin-bottom: 40px;
+          }
+          .archive-feature {
+            padding: 28px 24px 24px;
+          }
+          .archive-grid {
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          }
+        }
+        @media (max-width: 480px) {
+          .archive-dark {
+            padding: 56px calc(50vw - 50%) 80px;
+          }
+          .archive-grid {
+            grid-template-columns: 1fr;
+            gap: 8px;
+          }
+          .archive-feature-meta {
+            flex-wrap: wrap;
+            gap: 10px;
+          }
+        }
+      </style>
+    <!-- ARCHIVE:END -->
+
+    <!-- FOOTER -->
+    <footer>
+      <span>April 24, 2026</span>
+      <span>~9 min read</span>
+      <span><a href="https://freqz.rafacastello.com/feed.xml" style="color:inherit;">RSS feed</a></span>
+    </footer>
+
+  </div>
+<script src="../../wordmark.js%3Fv=20260506-29" defer></script>
+</body>
+</html>
