@@ -4,12 +4,83 @@
     box-sizing: border-box;
 }
 
+/* Typography tokens — synced with Figma styles (FREQZ) */
+:root {
+    --font-display: 'Firelli Variable', 'Times New Roman', serif;
+    --font-body: 'Questa Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-eyebrow: 'Panel', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Display/H1 */
+.t-h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 50px;
+    letter-spacing: -0.59px;
+}
+
+/* Display/H2 */
+.t-h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 25px;
+    line-height: 30px;
+    letter-spacing: -0.56px;
+}
+
+/* Display/H3 */
+.t-h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 35.2px;
+    letter-spacing: -0.22px;
+}
+
+/* Body/Callout */
+.t-callout {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 27px;
+    letter-spacing: -0.1px;
+}
+
+/* Body/Standfirst */
+.t-standfirst {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 25.5px;
+    letter-spacing: 0;
+}
+
+/* Body/Paragraph */
+.t-paragraph {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 24px;
+    letter-spacing: 0;
+}
+
+/* Body/Eyebrow */
+.t-eyebrow {
+    font-family: var(--font-eyebrow);
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 17.6px;
+    letter-spacing: 1.32px;
+    text-transform: uppercase;
+}
+
 html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
     background: #0a0a0a;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: var(--font-body);
 }
 
 /* Site header (top bar + brand) */
@@ -33,11 +104,11 @@ html, body {
     align-items: center;
     justify-content: center;
     position: relative;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-eyebrow);
     font-weight: 700;
-    font-size: 12px;
-    line-height: 19.2px;
-    letter-spacing: 1.44px;
+    font-size: 11px;
+    line-height: 17.6px;
+    letter-spacing: 1.32px;
     text-transform: uppercase;
 }
 
@@ -96,11 +167,11 @@ html, body {
     max-width: 700px;
     margin: 0 auto 56px;
     padding: 0 24px;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-eyebrow);
     font-weight: 700;
-    font-size: 14px;
-    line-height: 22.4px;
-    letter-spacing: 1.12px;
+    font-size: 11px;
+    line-height: 17.6px;
+    letter-spacing: 1.32px;
     text-transform: uppercase;
     display: flex;
     gap: 11px;
@@ -118,28 +189,29 @@ html, body {
 }
 
 .bookmark__source {
-    font-family: 'Inter', sans-serif;
-    font-weight: 500;
-    font-size: 10px;
-    line-height: 28.4px;
-    letter-spacing: 1.12px;
+    font-family: var(--font-eyebrow);
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 17.6px;
+    letter-spacing: 1.32px;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.7);
     margin-bottom: 6px;
 }
 
 .bookmark__title {
-    font-family: 'EB Garamond', Georgia, serif;
-    font-weight: 400;
+    font-family: var(--font-display);
+    font-weight: 600;
     font-size: 18px;
-    line-height: 22.5px;
+    line-height: 27px;
+    letter-spacing: -0.1px;
     color: #fff;
     margin-bottom: 8px;
 }
 
 .bookmark__desc {
-    font-family: 'Inter', sans-serif;
-    font-weight: 300;
+    font-family: var(--font-body);
+    font-weight: 400;
     font-size: 15px;
     line-height: 24px;
     color: rgba(255, 255, 255, 0.85);
@@ -339,18 +411,22 @@ html, body {
 }
 
 .callout__quote {
-    font-size: 24px;
-    line-height: 30px;
-    letter-spacing: -0.24px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 35.2px;
+    letter-spacing: -0.22px;
     margin: 0;
 }
 
 .callout__attribution {
     display: block;
     margin-top: 10px;
-    font-size: 12px;
-    line-height: 19.2px;
-    letter-spacing: 0.12em;
+    font-family: var(--font-eyebrow);
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 17.6px;
+    letter-spacing: 1.32px;
     text-transform: uppercase;
     color: #101733;
 }
@@ -385,8 +461,6 @@ html, body {
     .top-bar {
         justify-content: space-between;
         padding: 0 16px;
-        font-size: 10px;
-        letter-spacing: 1px;
     }
 
     .top-bar__issue {
