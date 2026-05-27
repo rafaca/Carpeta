@@ -1,0 +1,47 @@
+/*
+ * The Typekit service used to deliver this font or fonts for use on websites
+ * is provided by Adobe and is subject to these Terms of Use
+ * http://www.adobe.com/products/eulas/tou_typekit. For font license
+ * information, see the list below.
+ *
+ * europa:
+ *   - http://typekit.com/eulas/00000000000000007735a082
+ *   - http://typekit.com/eulas/00000000000000007735a08e
+ * freight-display-pro:
+ *   - http://typekit.com/eulas/000000000000000077359f9c
+ * mendl-sans-dawn:
+ *   - http://typekit.com/eulas/00000000000000007735e269
+ *
+ * © 2009-2026 Adobe Systems Incorporated. All Rights Reserved.
+ */
+/*{"last_published":"2021-11-04 10:26:58 UTC"}*/
+
+@import url("https://p.typekit.net/p.css?s=1&k=fau0gcd&ht=tk&f=15529.15530.18494.46241&a=371408&app=typekit&e=css");
+
+@font-face {
+font-family:"europa";
+src:url("https://use.typekit.net/af/821a05/00000000000000007735a082/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("woff2"),url("https://use.typekit.net/af/821a05/00000000000000007735a082/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("woff"),url("https://use.typekit.net/af/821a05/00000000000000007735a082/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("opentype");
+font-display:auto;font-style:normal;font-weight:300;font-stretch:normal;
+}
+
+@font-face {
+font-family:"europa";
+src:url("https://use.typekit.net/af/1db03a/00000000000000007735a08e/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff2"),url("https://use.typekit.net/af/1db03a/00000000000000007735a08e/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff"),url("https://use.typekit.net/af/1db03a/00000000000000007735a08e/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("opentype");
+font-display:auto;font-style:normal;font-weight:400;font-stretch:normal;
+}
+
+@font-face {
+font-family:"freight-display-pro";
+src:url("https://use.typekit.net/af/b5dc69/000000000000000077359f9c/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff2"),url("https://use.typekit.net/af/b5dc69/000000000000000077359f9c/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff"),url("https://use.typekit.net/af/b5dc69/000000000000000077359f9c/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("opentype");
+font-display:auto;font-style:normal;font-weight:400;font-stretch:normal;
+}
+
+@font-face {
+font-family:"mendl-sans-dawn";
+src:url("https://use.typekit.net/af/51bf58/00000000000000007735e269/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("woff2"),url("https://use.typekit.net/af/51bf58/00000000000000007735e269/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("woff"),url("https://use.typekit.net/af/51bf58/00000000000000007735e269/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("opentype");
+font-display:auto;font-style:normal;font-weight:300;font-stretch:normal;
+}
+
+.tk-europa { font-family: "europa",sans-serif; }
+.tk-freight-display-pro { font-family: "freight-display-pro",serif; }
+.tk-mendl-sans-dawn { font-family: "mendl-sans-dawn",sans-serif; }

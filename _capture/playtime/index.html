@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Self-initiated explorations of AI applied to community, play, healthcare, and entertainment — by Rafa Castello.">
+    <title>PLAYTIME — Castello</title>
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+    <link rel="preconnect" href="https://p.typekit.net" crossorigin>
+    <link rel="stylesheet" href="https://use.typekit.net/fau0gcd.css" media="print" onload="this.media='all'">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.min.css" rel="stylesheet">
+    <noscript><link rel="stylesheet" href="https://use.typekit.net/fau0gcd.css"></noscript>
+    <style>
+        :root {
+            --color-bg: #0A101B;
+            --color-surface: #141414;
+            --color-text: #f0f0f0;
+            --color-text-secondary: #999999;
+            --color-text-muted: #666666;
+            --color-accent: #45FFE9;
+            --color-tag: #45FFE9;
+            --font-main: 'europa', 'Neue Haas Grotesk Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            font-weight: 300;
+            color: var(--color-text);
+            background: var(--color-bg);
+            line-height: 1.6;
+            font-size: 17px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            background: rgba(10, 16, 27, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .logo-svg {
+            width: 260px;
+            height: 32px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        nav a {
+            font-family: var(--font-main);
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #ffffff;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: #ffffff;
+        }
+
+        /* Hero */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 200px 48px 100px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-family: var(--font-main);
+            font-size: clamp(32px, 4.5vw, 56px);
+            font-weight: 300;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            color: var(--color-text);
+        }
+
+        .hero p {
+            margin-top: 24px;
+            font-size: 18px;
+            color: var(--color-accent);
+            max-width: 520px;
+            line-height: 1.7;
+        }
+
+        /* Projects Grid — 2 columns */
+        .projects {
+            padding: 40px 80px 120px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 56px 40px;
+        }
+
+        /* Project Card */
+        .project-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .project-card:hover .project-thumbnail img {
+            transform: scale(1.03);
+        }
+
+        .project-card:hover .project-title {
+            color: var(--color-accent);
+        }
+
+        .project-thumbnail {
+            aspect-ratio: 16 / 10;
+            overflow: hidden;
+            position: relative;
+            background: var(--color-surface);
+            border-radius: 30px;
+        }
+
+        .project-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .project-card-body {
+            padding: 20px 0 0;
+        }
+
+        .project-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px 12px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .project-title {
+            font-family: var(--font-main);
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--color-text);
+            transition: color 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .project-type {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid currentColor;
+            color: var(--color-tag);
+        }
+
+        .tag-coming-soon {
+            border: none;
+            border-radius: 0;
+        }
+
+        .project-link {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-text);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            margin-left: auto;
+            cursor: pointer;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .project-link:hover {
+            color: var(--color-accent);
+        }
+
+        .project-description {
+            font-size: 15px;
+            color: #ffffff;
+            line-height: 1.65;
+            margin-top: 6px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 48px 80px;
+            border-top: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .footer-left {
+            font-size: 13px;
+            color: var(--color-text);
+        }
+
+        .footer-left a {
+            color: var(--color-text);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-left a:hover {
+            color: var(--color-accent);
+        }
+
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 28px;
+            list-style: none;
+        }
+
+        .social-links a {
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--color-text);
+            transition: color 0.2s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--color-accent);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .projects {
+                padding: 24px 32px 80px;
+            }
+            .projects-grid {
+                gap: 40px 28px;
+            }
+            footer {
+                padding: 36px 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 16px 20px;
+            }
+
+            .logo-svg {
+                width: 200px;
+                height: 26px;
+            }
+
+            nav ul {
+                gap: 16px;
+            }
+
+            nav a {
+                font-size: 11px;
+                letter-spacing: 1px;
+            }
+
+            .hero {
+                padding: 140px 20px 56px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .projects {
+                padding: 24px 20px 80px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .project-title {
+                font-size: 19px;
+            }
+
+            .project-type {
+                font-size: 9px;
+                padding: 5px 10px;
+            }
+
+            .project-link {
+                font-size: 11px;
+                padding: 6px 0;
+            }
+
+            .project-thumbnail {
+                border-radius: 20px;
+            }
+
+            footer {
+                padding: 28px 20px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 14px 16px;
+            }
+
+            .logo-svg {
+                width: 170px;
+                height: 22px;
+            }
+
+            nav ul {
+                gap: 12px;
+            }
+
+            nav a {
+                font-size: 10px;
+                letter-spacing: 0.5px;
+            }
+
+            .hero {
+                padding: 120px 16px 40px;
+            }
+
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .projects {
+                padding: 20px 16px 60px;
+            }
+
+            .project-card-meta {
+                gap: 8px;
+            }
+
+            .project-title {
+                font-size: 17px;
+                width: 100%;
+            }
+
+            .project-thumbnail {
+                border-radius: 16px;
+            }
+
+            .project-description {
+                font-size: 14px;
+            }
+
+            footer {
+                padding: 24px 16px;
+                gap: 16px;
+            }
+
+            .social-links {
+                gap: 12px 20px;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1,
+        .hero p,
+        .project-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .hero h1 { animation-delay: 0.05s; }
+        .hero p { animation-delay: 0.15s; }
+        .project-card:nth-child(1) { animation-delay: 0.20s; }
+        .project-card:nth-child(2) { animation-delay: 0.28s; }
+        .project-card:nth-child(3) { animation-delay: 0.36s; }
+        .project-card:nth-child(4) { animation-delay: 0.44s; }
+        .project-card:nth-child(5) { animation-delay: 0.52s; }
+        .project-card:nth-child(6) { animation-delay: 0.60s; }
+        .project-card:nth-child(7) { animation-delay: 0.68s; }
+        .project-card:nth-child(8) { animation-delay: 0.76s; }
+        .project-card:nth-child(9) { animation-delay: 0.84s; }
+        .project-card:nth-child(10) { animation-delay: 0.92s; }
+        .project-card:nth-child(11) { animation-delay: 1.00s; }
+        .project-card:nth-child(12) { animation-delay: 1.08s; }
+    </style>
+
+    <!-- Cloudflare Web Analytics -->
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f9af22a2cb614e0dbf81c694a6b57025"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+</head>
+<body>
+    <header>
+        <a href="https://www.rafacastello.com" class="logo" aria-label="Rafa Castello">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 305 38" class="logo-svg">
+                <g fill="#ffffff">
+                    <path d="M4.9,11.8H11c3.4,0,5.4,2,5.4,4.5c0,2-1.3,3.7-3.6,4.3l3.5,5.2h-2.7l-3.3-5H7.2v5H4.9V11.8z M11,18.6c2.1,0,3-0.9,3-2.3S13.1,14,11,14H7.2v4.6H11z"/>
+                    <path d="M27.6,11.8h5.7l3.7,14h-2.4l-1-3.6h-6.4l-0.9,3.6H24L27.6,11.8z M33.1,20l-1.6-6h-2.2l-1.5,6H33.1z"/>
+                    <path d="M45.1,11.8h9.8V14h-7.5v4h5.9v2.2h-5.9v5.6h-2.3V11.8z"/>
+                    <path d="M65,11.8h5.7l3.7,14H72l-1-3.6h-6.4l-0.9,3.6h-2.3L65,11.8z M70.5,20l-1.6-6h-2.2l-1.5,6H70.5z"/>
+                    <path d="M112.8,11.4c2.9,0,4.7,1.3,5.7,2.6c0.6,0.7,1,1.6,1.3,2.5h-2.3c-0.2-0.5-0.6-1-1-1.4c-0.7-0.7-1.9-1.5-3.7-1.5c-3,0-5.1,2.1-5.1,5.2s2.1,5.2,5.1,5.2c1.8,0,3-0.8,3.8-1.6c0.4-0.5,0.8-1,1-1.6h2.3c-0.3,1-0.8,1.9-1.5,2.7c-1.1,1.4-2.9,2.7-5.6,2.7c-4.2,0-7.5-3.1-7.5-7.4S108.6,11.4,112.8,11.4z"/>
+                    <path d="M130.5,11.8h5.7l3.7,14h-2.4l-1-3.6h-6.4l-0.9,3.6h-2.3L130.5,11.8z M136,20l-1.6-6h-2.2l-1.5,6H136z"/>
+                    <path d="M149.7,21.6c0.1,0.5,0.3,0.9,0.6,1.3c0.5,0.6,1.3,1.2,2.9,1.2c2.2,0,3.1-0.9,3.1-2.1c0-1.1-1.2-1.6-2.7-2c-2.5-0.6-5.7-1.3-5.7-4.4c0-2.2,2-4.2,5.2-4.2c2.4,0,3.8,1,4.6,2.1c0.4,0.6,0.7,1.3,0.9,2h-2.4c-0.1-0.4-0.3-0.7-0.5-1c-0.4-0.5-1.2-1-2.6-1c-1.9,0-2.8,0.9-2.8,2c0,1.1,1.2,1.6,2.7,2c2.5,0.7,5.7,1.3,5.7,4.4c0,2.3-2,4.3-5.5,4.3c-2.6,0-4.1-1.1-4.9-2.3c-0.5-0.7-0.8-1.4-1-2.3H149.7z"/>
+                    <path d="M166.1,11.8h11.5V14H173v11.8h-2.3V14h-4.6V11.8z"/>
+                    <path d="M185.6,11.8h10.1V14h-7.8v3.6h6.3v2.2h-6.3v3.8h7.8v2.2h-10.1V11.8z"/>
+                    <path d="M204.2,11.8h2.3v11.8h7.1v2.2h-9.4V11.8z"/>
+                    <path d="M221.4,11.8h2.3v11.8h7.1v2.2h-9.4V11.8z"/>
+                    <path d="M245.5,11.4c4.3,0,7.5,3.2,7.5,7.4c0,4.2-3.2,7.4-7.5,7.4S238,23,238,18.8C238,14.6,241.2,11.4,245.5,11.4z M245.5,24c3,0,5.1-2.1,5.1-5.2s-2.1-5.2-5.1-5.2c-3,0-5.1,2.1-5.1,5.2S242.5,24,245.5,24z M246.3,7.1h2.5v0l-2.3,2.9h-1.8L246.3,7.1z"/>
+                </g>
+            </svg>
+        </a>
+        <nav>
+            <ul>
+                <li><a href="https://www.rafacastello.com/"><i class="ri-user-line" style="font-size:13px;margin-right:3px;vertical-align:-1px;"></i>About</a></li>
+                <li><a href="/cdn-cgi/l/email-protection#c1a9a4adadae81b3a0a7a0a2a0b2b5a4adadaeefa2aeac"><i class="ri-mail-line" style="font-size:13px;margin-right:3px;vertical-align:-1px;"></i>Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Self-initiated explorations of AI applied to community, play, healthcare, and entertainment.</h1>
+        </section>
+
+        <section class="projects">
+            <div class="projects-grid">
+
+                <!-- 0. Curbitas -->
+                <a href="projects/curbitas.html" class="project-card">
+                    <div class="project-thumbnail">
+                        <img src="images/curbitas.webp?v=1772646528" alt="Curbitas" width="600" height="375">
+                    </div>
+                    <div class="project-card-body">
+                        <div class="project-card-meta">
+                            <h2 class="project-title">Curbitas</h2>
+                            <span class="project-type tag-platform">Marketplace</span>
+                            <span class="project-link" onclick="event.preventDefault(); window.open('https://curbitas.com', '_blank')"><i class="ri-external-link-line" style="font-size:12px;margin-right:4px;vertical-align:-1px;"></i>See Live</span>
+                        </div>
+                        <p class="project-description">A location-based marketplace for photographing and sharing street finds, built on the Universal Commerce Protocol. Text a photo, it lands on a real-time map for others to claim.</p>
+                    </div>
+                </a>
+
+                <!-- 2. Inspiration Journal -->
+                <a href="projects/references-site.html" class="project-card">
+                    <div class="project-thumbnail">
+                        <img src="images/rafrefs.webp?v=1772646528" alt="Inspiration Journal" loading="lazy" width="600" height="375">
+                    </div>
+                    <div class="project-card-body">
+                        <div class="project-card-meta">
+                            <h2 class="project-title">Inspiration Journal</h2>
+                            <span class="project-type tag-website">Website</span>
+                            <span class="project-link" onclick="event.preventDefault(); window.open('https://references.rafacastello.com', '_blank')"><i class="ri-external-link-line" style="font-size:12px;margin-right:4px;vertical-align:-1px;"></i>See Live</span>
+                        </div>
+                        <p class="project-description">A curated collection of images and videos saved from social media through the years, viewable in Instagram Stories format.</p>
+                    </div>
+                </a>
+
+                <!-- 3. Pain Tracker -->
+                <a href="projects/pain-tracker.html" class="project-card">
+                    <div class="project-thumbnail">
+                        <img src="images/paintrack.webp?v=1772646528" alt="Pain Tracker" loading="lazy" width="600" height="375">
+                    </div>
+                    <div class="project-card-body">
+                        <div class="project-card-meta">
+                            <h2 class="project-title">Pain Tracker</h2>
+                            <span class="project-type tag-tool">Tool</span>
+                            <span class="project-link" onclick="event.preventDefault(); window.open('https://pain-tracker-seven.vercel.app/', '_blank')"><i class="ri-external-link-line" style="font-size:12px;margin-right:4px;vertical-align:-1px;"></i>See Live</span>
+                        </div>
+                        <p class="project-description">A personal health tracking tool for logging pain levels, symptoms, and patterns over time with visualization, insights, and sound effects.</p>
+                    </div>
+                </a>
+
+                <!-- Comuno -->
+                <div class="project-card">
+                    <div class="project-thumbnail">
+                        <img src="images/comuno-new.webp?v=1772646528" alt="Comuno" loading="lazy" width="600" height="375">
+                    </div>
+                    <div class="project-card-body">
+                        <div class="project-card-meta">
+                            <h2 class="project-title">Comuno</h2>
+                            <span class="project-type tag-coming-soon">Coming Soon</span>
+                        </div>
+                        <p class="project-description"></p>
+                    </div>
+                </div>
+
+                <!-- Systems Thinking Game -->
+                <div class="project-card">
+                    <div class="project-thumbnail">
+                        <img src="images/lovelies.webp?v=1772646528" alt="The Lover of Lies" loading="lazy" width="600" height="375">
+                    </div>
+                    <div class="project-card-body">
+                        <div class="project-card-meta">
+                            <h2 class="project-title">The Lover of Lies</h2>
+                            <span class="project-type tag-coming-soon">Coming Soon</span>
+                        </div>
+                        <p class="project-description"><br><br><br></p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-left">
+            Part of <a href="https://www.thosewhoplay.com">thosewhoplay.com</a>
+        </div>
+        <ul class="social-links">
+            <li><a href="https://www.linkedin.com/in/rafacastello" target="_blank"><i class="ri-linkedin-box-fill" style="font-size:14px;margin-right:4px;vertical-align:-1px;"></i>LinkedIn</a></li>
+            <li><a href="https://www.instagram.com/rafacastello/" target="_blank"><i class="ri-instagram-line" style="font-size:14px;margin-right:4px;vertical-align:-1px;"></i>Instagram</a></li>
+            <li><a href="https://www.threads.net/@rafacastello" target="_blank"><i class="ri-threads-line" style="font-size:14px;margin-right:4px;vertical-align:-1px;"></i>Threads</a></li>
+        </ul>
+    </footer>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+</html>
