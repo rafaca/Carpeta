@@ -201,7 +201,7 @@ html, body {
 /* Controls */
 #controls {
     position: fixed;
-    top: 140px;
+    top: 120px;
     right: 24px;
     display: flex;
     flex-direction: column;
@@ -289,8 +289,8 @@ html, body {
 /* Page navigation link */
 #page-nav {
     position: fixed;
-    top: 88px;
-    right: 48px;
+    top: 24px;
+    right: 24px;
     z-index: 100;
 }
 
