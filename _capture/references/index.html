@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>REFERENCES — Castello</title>
+
+    <meta name="description" content="A curated visual library of references across fashion, design, branding, culture and technology — by Rafa Castello." />
+    <link rel="canonical" href="https://references.rafacastello.com/" />
+
+    <!-- Open Graph / Social Media Preview -->
+    <meta property="og:title" content="REFERENCES — Castello" />
+    <meta property="og:description" content="A curated visual library of references across fashion, design, branding, culture and technology — by Rafa Castello." />
+    <meta property="og:image" content="https://references.rafacastello.com/preview.png" />
+    <meta property="og:url" content="https://references.rafacastello.com" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Castello References" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="REFERENCES — Castello" />
+    <meta name="twitter:description" content="A curated visual library of references across fashion, design, branding, culture and technology — by Rafa Castello." />
+    <meta name="twitter:image" content="https://references.rafacastello.com/preview.png" />
+    <link rel="stylesheet" href="https://use.typekit.net/fau0gcd.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500&display=swap');
+
+        :root {
+            --color-text: #333333;
+            --color-text-light: #888888;
+            --color-background: #ffffff;
+            --color-accent-red: #F7371C;
+            --color-accent-blue: #1573DD;
+            --font-body: 'Europa', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --font-display: 'Playfair Display', 'freight-display-pro', Georgia, serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-weight: 300;
+            color: #ffffff;
+            background: #0a0a0a;
+            line-height: 1.6;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ==================== PASSWORD SCREEN ==================== */
+        .password-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .password-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .password-logo {
+            margin-bottom: 60px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .password-logo svg {
+            width: 305px;
+            height: 38px;
+            display: block;
+        }
+
+        .password-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .password-label {
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-text-light);
+        }
+
+        .password-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-input {
+            width: 280px;
+            padding: 14px 20px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: var(--color-text);
+            background: transparent;
+            border: 1px solid #ddd;
+            border-radius: 0;
+            outline: none;
+            text-align: center;
+            transition: border-color 0.2s ease;
+        }
+
+        .password-input:focus {
+            border-color: var(--color-text);
+        }
+
+        .password-input::placeholder {
+            color: #ccc;
+            letter-spacing: 4px;
+        }
+
+        .password-input.error {
+            border-color: var(--color-accent-red);
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        .password-submit {
+            margin-top: 8px;
+            padding: 12px 32px;
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-text);
+            background: transparent;
+            border: 1px solid var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .password-submit:hover {
+            background: var(--color-text);
+            color: #ffffff;
+        }
+
+        .password-hint {
+            margin-top: 16px;
+            font-size: 11px;
+            color: var(--color-accent-red);
+            letter-spacing: 1px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .password-hint.visible {
+            opacity: 1;
+        }
+
+        /* ==================== HEADER ==================== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 40px 50px;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .logo-svg {
+            width: 305px;
+            height: 38px;
+        }
+
+        .logo-divider {
+            width: 1px;
+            height: 20px;
+            background: rgba(255,255,255,0.3);
+        }
+
+        .logo-sub {
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--color-accent-red);
+        }
+
+        nav {
+            padding-top: 10px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+            align-items: center;
+        }
+
+        nav a {
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #ffffff;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--color-accent-red);
+        }
+
+        .header-count {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 1px;
+            padding-top: 2px;
+        }
+
+        /* ==================== HAMBURGER MENU ==================== */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 201;
+        }
+
+        .hamburger svg {
+            width: 24px;
+            height: 24px;
+            stroke: #ffffff;
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0a0a0a;
+            z-index: 200;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-overlay.active {
+            display: flex;
+        }
+
+        .mobile-overlay-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 16px;
+        }
+
+        .mobile-overlay-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-overlay-close svg {
+            width: 24px;
+            height: 24px;
+            stroke: #ffffff;
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+
+        .mobile-overlay-nav {
+            list-style: none;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .mobile-overlay-nav li {
+            padding: 10px 0;
+        }
+
+        .mobile-overlay-nav a,
+        .mobile-overlay-nav button {
+            font-family: var(--font-body);
+            font-size: 25px;
+            line-height: 25px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #ffffff;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s linear;
+            padding: 0;
+            display: inline-block;
+        }
+
+        .mobile-overlay-nav a:hover,
+        .mobile-overlay-nav button:hover {
+            color: var(--color-accent-red);
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 140px 20px 20px;
+        }
+
+        .grid {
+            column-count: 5;
+            column-gap: 12px;
+        }
+
+        @media (max-width: 1400px) { .grid { column-count: 4; } }
+        @media (max-width: 1100px) { .grid { column-count: 3; } }
+        @media (max-width: 768px) {
+            .grid { column-count: 2; }
+            header {
+                padding: 16px 16px;
+                align-items: center;
+            }
+            nav { display: none; }
+            .hamburger { display: block; }
+            .logo-svg { width: 180px; height: 22px; }
+            .logo-sub { display: none; }
+            .logo-divider { display: none; }
+            .container { padding-top: 70px; }
+            .password-logo svg { width: 220px; height: 28px; }
+            .password-input { width: 240px; }
+            .lightbox { padding: 10px; }
+            .lightbox-nav { width: 36px; height: 36px; font-size: 16px; }
+            .lightbox-prev { left: 8px; }
+            .lightbox-next { right: 8px; }
+            .lightbox-close { top: 12px; right: 12px; width: 36px; height: 36px; font-size: 20px; }
+            .mobile-overlay-nav a,
+            .mobile-overlay-nav button { font-size: 24px; line-height: 24px; }
+        }
+        @media (max-width: 480px) {
+            .grid { column-count: 2; column-gap: 8px; }
+            header { padding: 12px 12px; }
+            .logo-svg { width: 160px; height: 20px; }
+            .container { padding-top: 60px; padding-left: 8px; padding-right: 8px; }
+            .card { margin-bottom: 8px; }
+            .password-logo svg { width: 200px; height: 25px; }
+            .password-input { width: 260px; font-size: 14px; padding: 16px 20px; }
+            .password-label { font-size: 11px; letter-spacing: 2px; }
+            .password-submit { padding: 14px 36px; font-size: 12px; }
+            .password-container { gap: 20px; padding: 0 20px; }
+            .mobile-overlay-nav a,
+            .mobile-overlay-nav button { font-size: 23px; line-height: 23px; }
+        }
+
+        /* Extra small devices */
+        @media (max-width: 360px) {
+            .password-logo svg { width: 180px; height: 23px; }
+            .password-input { width: 240px; }
+            .logo-svg { width: 140px; height: 18px; }
+        }
+
+        .card {
+            break-inside: avoid;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            background: #1a1a1a;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card img,
+        .card video {
+            width: 100%;
+            display: block;
+            opacity: 0;
+            transform: scale(1.02);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            pointer-events: none;
+        }
+
+        .card img.loaded,
+        .card video.loaded {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            z-index: 1;
+            opacity: 1;
+            transition: opacity 0.4s ease-out;
+        }
+
+        .card.loaded::before {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .video-indicator {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 28px;
+            height: 28px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .card:hover .video-indicator {
+            opacity: 0;
+        }
+
+        .video-indicator svg {
+            width: 12px;
+            height: 12px;
+            fill: white;
+            margin-left: 2px;
+        }
+
+        .shuffle-btn {
+            background: var(--color-accent-red);
+            border: 1px solid var(--color-accent-red);
+            color: #ffffff;
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .shuffle-btn:hover {
+            background: #ffffff;
+            border-color: #ffffff;
+            color: var(--color-accent-red);
+        }
+
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 40px;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            pointer-events: none;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .lightbox-prev { left: 20px; }
+        .lightbox-next { right: 20px; }
+
+        /* ==================== STORIES MODE ==================== */
+        .stories-btn {
+            background: var(--color-accent-red);
+            border: 1px solid var(--color-accent-red);
+            color: #ffffff;
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stories-btn:hover {
+            background: #ffffff;
+            border-color: #ffffff;
+            color: var(--color-accent-red);
+        }
+
+        /* ==================== ADMIN MODE ==================== */
+        .admin-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.4);
+            font-size: 16px;
+            padding: 6px 8px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .admin-btn:hover {
+            color: var(--color-accent-red);
+        }
+
+        .admin-btn.active {
+            color: var(--color-accent-red);
+        }
+
+        body.admin-mode .card {
+            cursor: pointer;
+        }
+
+        body.admin-mode .card::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 24px;
+            height: 24px;
+            border: 2px solid white;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.3);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+        }
+
+        body.admin-mode .card.selected::after {
+            background: var(--color-accent-red);
+            border-color: var(--color-accent-red);
+        }
+
+        body.admin-mode .card.selected::before {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 24px;
+            height: 24px;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .admin-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .admin-bar.visible {
+            transform: translateY(0);
+        }
+
+        .admin-bar-info {
+            color: white;
+            font-size: 14px;
+        }
+
+        .admin-bar-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .admin-bar-btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .admin-bar-btn.cancel {
+            background: none;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+        }
+
+        .admin-bar-btn.cancel:hover {
+            border-color: white;
+        }
+
+        .admin-bar-btn.delete {
+            background: var(--color-accent-red);
+            border: none;
+            color: white;
+        }
+
+        .admin-bar-btn.delete:hover {
+            background: #d62b14;
+        }
+
+        .admin-bar-btn.delete:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        /* Admin Password Modal */
+        .admin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+        }
+
+        .admin-modal.active {
+            display: flex;
+        }
+
+        .admin-modal-content {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .admin-modal-title {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 24px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .admin-modal-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .admin-modal-input:focus {
+            outline: none;
+            border-color: var(--color-accent-red);
+        }
+
+        .admin-modal-input.error {
+            border-color: var(--color-accent-red);
+            animation: shake 0.4s ease;
+        }
+
+        .admin-modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .admin-modal-btn {
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-family: var(--font-body);
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .admin-modal-btn.cancel {
+            background: none;
+            border: 1px solid #666;
+            color: #999;
+        }
+
+        .admin-modal-btn.submit {
+            background: var(--color-accent-red);
+            border: none;
+            color: white;
+        }
+
+        .stories-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            z-index: 3000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .stories-overlay.active {
+            display: flex;
+        }
+
+        .stories-progress-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 4px;
+            padding: 16px 16px 0;
+            z-index: 10;
+        }
+
+        .stories-progress-bar {
+            flex: 1;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .stories-progress-bar .fill {
+            height: 100%;
+            background: #fff;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .stories-progress-bar.completed .fill {
+            width: 100%;
+        }
+
+        .stories-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px 50px;
+            overflow: hidden;
+            box-sizing: border-box;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .stories-content img,
+        .stories-content video {
+            max-width: calc(100vw - 40px);
+            max-height: calc(100vh - 100px);
+            width: auto;
+            pointer-events: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .stories-close {
+            position: absolute;
+            top: 40px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .stories-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .stories-nav-area {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 25%;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .stories-nav-prev {
+            left: 0;
+        }
+
+        .stories-nav-next {
+            right: 0;
+        }
+
+        .stories-pause-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 6;
+        }
+
+        .stories-pause-indicator.visible {
+            display: flex;
+        }
+
+        .stories-pause-indicator svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .stories-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 1px;
+            z-index: 10;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+    </style>
+
+    <!-- Cloudflare Web Analytics -->
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f9af22a2cb614e0dbf81c694a6b57025"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+</head>
+<body>
+    <!-- Password Screen -->
+    <div class="password-screen hidden" id="passwordScreen" style="display:none;">
+        <div class="password-logo">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="4.9 7 248.1 19">
+                <g fill="#000000">
+                    <path d="M4.9,11.8H11c3.4,0,5.4,2,5.4,4.5c0,2-1.3,3.7-3.6,4.3l3.5,5.2h-2.7l-3.3-5H7.2v5H4.9V11.8z M11,18.6c2.1,0,3-0.9,3-2.3S13.1,14,11,14H7.2v4.6H11z"></path>
+                    <path d="M27.6,11.8h5.7l3.7,14h-2.4l-1-3.6h-6.4l-0.9,3.6H24L27.6,11.8z M33.1,20l-1.6-6h-2.2l-1.5,6H33.1z"></path>
+                    <path d="M45.1,11.8h9.8V14h-7.5v4h5.9v2.2h-5.9v5.6h-2.3V11.8z"></path>
+                    <path d="M65,11.8h5.7l3.7,14H72l-1-3.6h-6.4l-0.9,3.6h-2.3L65,11.8z M70.5,20l-1.6-6h-2.2l-1.5,6H70.5z"></path>
+                    <path d="M112.8,11.4c2.9,0,4.7,1.3,5.7,2.6c0.6,0.7,1,1.6,1.3,2.5h-2.3c-0.2-0.5-0.6-1-1-1.4c-0.7-0.7-1.9-1.5-3.7-1.5c-3,0-5.1,2.1-5.1,5.2s2.1,5.2,5.1,5.2c1.8,0,3-0.8,3.8-1.6c0.4-0.5,0.8-1,1-1.6h2.3c-0.3,1-0.8,1.9-1.5,2.7c-1.1,1.4-2.9,2.7-5.6,2.7c-4.2,0-7.5-3.1-7.5-7.4S108.6,11.4,112.8,11.4z"></path>
+                    <path d="M130.5,11.8h5.7l3.7,14h-2.4l-1-3.6h-6.4l-0.9,3.6h-2.3L130.5,11.8z M136,20l-1.6-6h-2.2l-1.5,6H136z"></path>
+                    <path d="M149.7,21.6c0.1,0.5,0.3,0.9,0.6,1.3c0.5,0.6,1.3,1.2,2.9,1.2c2.2,0,3.1-0.9,3.1-2.1c0-1.1-1.2-1.6-2.7-2c-2.5-0.6-5.7-1.3-5.7-4.4c0-2.2,2-4.2,5.2-4.2c2.4,0,3.8,1,4.6,2.1c0.4,0.6,0.7,1.3,0.9,2h-2.4c-0.1-0.4-0.3-0.7-0.5-1c-0.4-0.5-1.2-1-2.6-1c-1.9,0-2.8,0.9-2.8,2c0,1.1,1.2,1.6,2.7,2c2.5,0.7,5.7,1.3,5.7,4.4c0,2.3-2,4.3-5.5,4.3c-2.6,0-4.1-1.1-4.9-2.3c-0.5-0.7-0.8-1.4-1-2.3H149.7z"></path>
+                    <path d="M166.1,11.8h11.5V14H173v11.8h-2.3V14h-4.6V11.8z"></path>
+                    <path d="M185.6,11.8h10.1V14h-7.8v3.6h6.3v2.2h-6.3v3.8h7.8v2.2h-10.1V11.8z"></path>
+                    <path d="M204.2,11.8h2.3v11.8h7.1v2.2h-9.4V11.8z"></path>
+                    <path d="M221.4,11.8h2.3v11.8h7.1v2.2h-9.4V11.8z"></path>
+                    <path d="M245.5,11.4c4.3,0,7.5,3.2,7.5,7.4c0,4.2-3.2,7.4-7.5,7.4S238,23,238,18.8C238,14.6,241.2,11.4,245.5,11.4z M245.5,24c3,0,5.1-2.1,5.1-5.2s-2.1-5.2-5.1-5.2c-3,0-5.1,2.1-5.1,5.2S242.5,24,245.5,24z M246.3,7.1h2.5v0l-2.3,2.9h-1.8L246.3,7.1z"></path>
+                </g>
+            </svg>
+        </div>
+        <div class="password-container">
+            <label class="password-label">Enter Password</label>
+            <div class="password-input-wrapper">
+                <input type="password" class="password-input" id="passwordInput" placeholder="• • • • • •" autocomplete="off">
+            </div>
+            <button class="password-submit" id="passwordSubmit">Enter</button>
+            <div class="password-hint" id="passwordHint">Incorrect password</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <header>
+        <a href="https://www.rafacastello.com" class="logo">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 305 38" class="logo-svg">
+                <g fill="#ffffff">
+                    <path d="M4.9,11.8H11c3.4,0,5.4,2,5.4,4.5c0,2-1.3,3.7-3.6,4.3l3.5,5.2h-2.7l-3.3-5H7.2v5H4.9V11.8z M11,18.6c2.1,0,3-0.9,3-2.3S13.1,14,11,14H7.2v4.6H11z"></path>
+                    <path d="M27.6,11.8h5.7l3.7,14h-2.4l-1-3.6h-6.4l-0.9,3.6H24L27.6,11.8z M33.1,20l-1.6-6h-2.2l-1.5,6H33.1z"></path>
+                    <path d="M45.1,11.8h9.8V14h-7.5v4h5.9v2.2h-5.9v5.6h-2.3V11.8z"></path>
+                    <path d="M65,11.8h5.7l3.7,14H72l-1-3.6h-6.4l-0.9,3.6h-2.3L65,11.8z M70.5,20l-1.6-6h-2.2l-1.5,6H70.5z"></path>
+                    <path d="M112.8,11.4c2.9,0,4.7,1.3,5.7,2.6c0.6,0.7,1,1.6,1.3,2.5h-2.3c-0.2-0.5-0.6-1-1-1.4c-0.7-0.7-1.9-1.5-3.7-1.5c-3,0-5.1,2.1-5.1,5.2s2.1,5.2,5.1,5.2c1.8,0,3-0.8,3.8-1.6c0.4-0.5,0.8-1,1-1.6h2.3c-0.3,1-0.8,1.9-1.5,2.7c-1.1,1.4-2.9,2.7-5.6,2.7c-4.2,0-7.5-3.1-7.5-7.4S108.6,11.4,112.8,11.4z"></path>
+                    <path d="M130.5,11.8h5.7l3.7,14h-2.4l-1-3.6h-6.4l-0.9,3.6h-2.3L130.5,11.8z M136,20l-1.6-6h-2.2l-1.5,6H136z"></path>
+                    <path d="M149.7,21.6c0.1,0.5,0.3,0.9,0.6,1.3c0.5,0.6,1.3,1.2,2.9,1.2c2.2,0,3.1-0.9,3.1-2.1c0-1.1-1.2-1.6-2.7-2c-2.5-0.6-5.7-1.3-5.7-4.4c0-2.2,2-4.2,5.2-4.2c2.4,0,3.8,1,4.6,2.1c0.4,0.6,0.7,1.3,0.9,2h-2.4c-0.1-0.4-0.3-0.7-0.5-1c-0.4-0.5-1.2-1-2.6-1c-1.9,0-2.8,0.9-2.8,2c0,1.1,1.2,1.6,2.7,2c2.5,0.7,5.7,1.3,5.7,4.4c0,2.3-2,4.3-5.5,4.3c-2.6,0-4.1-1.1-4.9-2.3c-0.5-0.7-0.8-1.4-1-2.3H149.7z"></path>
+                    <path d="M166.1,11.8h11.5V14H173v11.8h-2.3V14h-4.6V11.8z"></path>
+                    <path d="M185.6,11.8h10.1V14h-7.8v3.6h6.3v2.2h-6.3v3.8h7.8v2.2h-10.1V11.8z"></path>
+                    <path d="M204.2,11.8h2.3v11.8h7.1v2.2h-9.4V11.8z"></path>
+                    <path d="M221.4,11.8h2.3v11.8h7.1v2.2h-9.4V11.8z"></path>
+                    <path d="M245.5,11.4c4.3,0,7.5,3.2,7.5,7.4c0,4.2-3.2,7.4-7.5,7.4S238,23,238,18.8C238,14.6,241.2,11.4,245.5,11.4z M245.5,24c3,0,5.1-2.1,5.1-5.2s-2.1-5.2-5.1-5.2c-3,0-5.1,2.1-5.1,5.2S242.5,24,245.5,24z M246.3,7.1h2.5v0l-2.3,2.9h-1.8L246.3,7.1z"></path>
+                </g>
+            </svg>
+        </a>
+        <nav>
+            <ul>
+                <li><a href="https://www.rafacastello.com/">About</a></li>
+                <li><a href="mailto:hello@rafacastello.com">Contact</a></li>
+                <li><button class="shuffle-btn" id="shuffleBtn" title="Get new random selection"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px;"><path d="M18 17.8832V16L23 19L18 22V19.9095C14.9224 19.4698 12.2513 17.4584 11.0029 14.5453L11 14.5386L10.9971 14.5453C9.57893 17.8544 6.32508 20 2.72483 20H2V18H2.72483C5.52503 18 8.05579 16.3312 9.15885 13.7574L9.91203 12L9.15885 10.2426C8.05579 7.66878 5.52503 6 2.72483 6H2V4H2.72483C6.32508 4 9.57893 6.14557 10.9971 9.45473L11 9.46141L11.0029 9.45473C12.2513 6.5416 14.9224 4.53022 18 4.09051V2L23 5L18 8V6.11684C15.7266 6.53763 13.7737 8.0667 12.8412 10.2426L12.088 12L12.8412 13.7574C13.7737 15.9333 15.7266 17.4624 18 17.8832Z"></path></svg>Shuffle</button></li>
+                <li><button class="stories-btn" id="storiesBtn" title="View as stories"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px;"><path d="M13.0281 2.00073C14.1535 2.00259 14.7238 2.00855 15.2166 2.02322L15.4107 2.02956C15.6349 2.03753 15.8561 2.04753 16.1228 2.06003C17.1869 2.1092 17.9128 2.27753 18.5503 2.52503C19.2094 2.7792 19.7661 3.12253 20.3219 3.67837C20.8769 4.2342 21.2203 4.79253 21.4753 5.45003C21.7219 6.0867 21.8903 6.81337 21.9403 7.87753C21.9522 8.1442 21.9618 8.3654 21.9697 8.58964L21.976 8.78373C21.9906 9.27647 21.9973 9.84686 21.9994 10.9723L22.0002 11.7179C22.0003 11.809 22.0003 11.903 22.0003 12L22.0002 12.2821L21.9996 13.0278C21.9977 14.1532 21.9918 14.7236 21.9771 15.2163L21.9707 15.4104C21.9628 15.6347 21.9528 15.8559 21.9403 16.1225C21.8911 17.1867 21.7219 17.9125 21.4753 18.55C21.2211 19.2092 20.8769 19.7659 20.3219 20.3217C19.7661 20.8767 19.2069 21.22 18.5503 21.475C17.9128 21.7217 17.1869 21.89 16.1228 21.94C15.8561 21.9519 15.6349 21.9616 15.4107 21.9694L15.2166 21.9757C14.7238 21.9904 14.1535 21.997 13.0281 21.9992L12.2824 22C12.1913 22 12.0973 22 12.0003 22L11.7182 22L10.9725 21.9993C9.8471 21.9975 9.27672 21.9915 8.78397 21.9768L8.58989 21.9705C8.36564 21.9625 8.14444 21.9525 7.87778 21.94C6.81361 21.8909 6.08861 21.7217 5.45028 21.475C4.79194 21.2209 4.23444 20.8767 3.67861 20.3217C3.12278 19.7659 2.78028 19.2067 2.52528 18.55C2.27778 17.9125 2.11028 17.1867 2.06028 16.1225C2.0484 15.8559 2.03871 15.6347 2.03086 15.4104L2.02457 15.2163C2.00994 14.7236 2.00327 14.1532 2.00111 13.0278L2.00098 10.9723C2.00284 9.84686 2.00879 9.27647 2.02346 8.78373L2.02981 8.58964C2.03778 8.3654 2.04778 8.1442 2.06028 7.87753C2.10944 6.81253 2.27778 6.08753 2.52528 5.45003C2.77944 4.7917 3.12278 4.2342 3.67861 3.67837C4.23444 3.12253 4.79278 2.78003 5.45028 2.52503C6.08778 2.27753 6.81278 2.11003 7.87778 2.06003C8.14444 2.04816 8.36564 2.03847 8.58989 2.03062L8.78397 2.02433C9.27672 2.00969 9.8471 2.00302 10.9725 2.00086L13.0281 2.00073ZM12.0003 7.00003C9.23738 7.00003 7.00028 9.23956 7.00028 12C7.00028 14.7629 9.23981 17 12.0003 17C14.7632 17 17.0003 14.7605 17.0003 12C17.0003 9.23713 14.7607 7.00003 12.0003 7.00003ZM12.0003 9.00003C13.6572 9.00003 15.0003 10.3427 15.0003 12C15.0003 13.6569 13.6576 15 12.0003 15C10.3434 15 9.00028 13.6574 9.00028 12C9.00028 10.3431 10.3429 9.00003 12.0003 9.00003ZM17.2503 5.50003C16.561 5.50003 16.0003 6.05994 16.0003 6.74918C16.0003 7.43843 16.5602 7.9992 17.2503 7.9992C17.9395 7.9992 18.5003 7.4393 18.5003 6.74918C18.5003 6.05994 17.9386 5.49917 17.2503 5.50003Z"></path></svg>View as Stories</button></li>
+                <li><button class="admin-btn" id="adminBtn" title="Admin mode"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:13px;height:13px;vertical-align:-1px;display:inline-block;"><path d="M12 1L21.5 6.5V17.5L12 23L2.5 17.5V6.5L12 1ZM12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"></path></svg></button></li>
+            </ul>
+        </nav>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay">
+        <div class="mobile-overlay-header">
+            <a href="https://www.rafacastello.com" class="logo">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 305 38" class="logo-svg" style="width:180px;height:22px;">
+                    <g fill="#ffffff">
+                        <path d="M4.9,11.8H11c3.4,0,5.4,2,5.4,4.5c0,2-1.3,3.7-3.6,4.3l3.5,5.2h-2.7l-3.3-5H7.2v5H4.9V11.8z M11,18.6c2.1,0,3-0.9,3-2.3S13.1,14,11,14H7.2v4.6H11z"></path>
+                        <path d="M27.6,11.8h5.7l3.7,14h-2.4l-1-3.6h-6.4l-0.9,3.6H24L27.6,11.8z M33.1,20l-1.6-6h-2.2l-1.5,6H33.1z"></path>
+                        <path d="M45.1,11.8h9.8V14h-7.5v4h5.9v2.2h-5.9v5.6h-2.3V11.8z"></path>
+                        <path d="M65,11.8h5.7l3.7,14H72l-1-3.6h-6.4l-0.9,3.6h-2.3L65,11.8z M70.5,20l-1.6-6h-2.2l-1.5,6H70.5z"></path>
+                        <path d="M112.8,11.4c2.9,0,4.7,1.3,5.7,2.6c0.6,0.7,1,1.6,1.3,2.5h-2.3c-0.2-0.5-0.6-1-1-1.4c-0.7-0.7-1.9-1.5-3.7-1.5c-3,0-5.1,2.1-5.1,5.2s2.1,5.2,5.1,5.2c1.8,0,3-0.8,3.8-1.6c0.4-0.5,0.8-1,1-1.6h2.3c-0.3,1-0.8,1.9-1.5,2.7c-1.1,1.4-2.9,2.7-5.6,2.7c-4.2,0-7.5-3.1-7.5-7.4S108.6,11.4,112.8,11.4z"></path>
+                        <path d="M130.5,11.8h5.7l3.7,14h-2.4l-1-3.6h-6.4l-0.9,3.6h-2.3L130.5,11.8z M136,20l-1.6-6h-2.2l-1.5,6H136z"></path>
+                        <path d="M149.7,21.6c0.1,0.5,0.3,0.9,0.6,1.3c0.5,0.6,1.3,1.2,2.9,1.2c2.2,0,3.1-0.9,3.1-2.1c0-1.1-1.2-1.6-2.7-2c-2.5-0.6-5.7-1.3-5.7-4.4c0-2.2,2-4.2,5.2-4.2c2.4,0,3.8,1,4.6,2.1c0.4,0.6,0.7,1.3,0.9,2h-2.4c-0.1-0.4-0.3-0.7-0.5-1c-0.4-0.5-1.2-1-2.6-1c-1.9,0-2.8,0.9-2.8,2c0,1.1,1.2,1.6,2.7,2c2.5,0.7,5.7,1.3,5.7,4.4c0,2.3-2,4.3-5.5,4.3c-2.6,0-4.1-1.1-4.9-2.3c-0.5-0.7-0.8-1.4-1-2.3H149.7z"></path>
+                        <path d="M166.1,11.8h11.5V14H173v11.8h-2.3V14h-4.6V11.8z"></path>
+                        <path d="M185.6,11.8h10.1V14h-7.8v3.6h6.3v2.2h-6.3v3.8h7.8v2.2h-10.1V11.8z"></path>
+                        <path d="M204.2,11.8h2.3v11.8h7.1v2.2h-9.4V11.8z"></path>
+                        <path d="M221.4,11.8h2.3v11.8h7.1v2.2h-9.4V11.8z"></path>
+                        <path d="M245.5,11.4c4.3,0,7.5,3.2,7.5,7.4c0,4.2-3.2,7.4-7.5,7.4S238,23,238,18.8C238,14.6,241.2,11.4,245.5,11.4z M245.5,24c3,0,5.1-2.1,5.1-5.2s-2.1-5.2-5.1-5.2c-3,0-5.1,2.1-5.1,5.2S242.5,24,245.5,24z M246.3,7.1h2.5v0l-2.3,2.9h-1.8L246.3,7.1z"></path>
+                    </g>
+                </svg>
+            </a>
+            <button class="mobile-overlay-close" id="mobileOverlayClose" aria-label="Close menu">
+                <svg viewBox="0 0 24 24" fill="none"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+            </button>
+        </div>
+        <ul class="mobile-overlay-nav">
+            <li><a href="https://www.rafacastello.com/">About</a></li>
+            <li><a href="mailto:hello@rafacastello.com">Contact</a></li>
+            <li><button onclick="shuffle(); closeMobileMenu();"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;margin-right:6px;vertical-align:-3px;display:inline-block;"><path d="M18 17.8832V16L23 19L18 22V19.9095C14.9224 19.4698 12.2513 17.4584 11.0029 14.5453L11 14.5386L10.9971 14.5453C9.57893 17.8544 6.32508 20 2.72483 20H2V18H2.72483C5.52503 18 8.05579 16.3312 9.15885 13.7574L9.91203 12L9.15885 10.2426C8.05579 7.66878 5.52503 6 2.72483 6H2V4H2.72483C6.32508 4 9.57893 6.14557 10.9971 9.45473L11 9.46141L11.0029 9.45473C12.2513 6.5416 14.9224 4.53022 18 4.09051V2L23 5L18 8V6.11684C15.7266 6.53763 13.7737 8.0667 12.8412 10.2426L12.088 12L12.8412 13.7574C13.7737 15.9333 15.7266 17.4624 18 17.8832Z"></path></svg>Shuffle</button></li>
+            <li><button onclick="openStories(0); closeMobileMenu();"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px;margin-right:6px;vertical-align:-3px;display:inline-block;"><path d="M13.0281 2.00073C14.1535 2.00259 14.7238 2.00855 15.2166 2.02322L15.4107 2.02956C15.6349 2.03753 15.8561 2.04753 16.1228 2.06003C17.1869 2.1092 17.9128 2.27753 18.5503 2.52503C19.2094 2.7792 19.7661 3.12253 20.3219 3.67837C20.8769 4.2342 21.2203 4.79253 21.4753 5.45003C21.7219 6.0867 21.8903 6.81337 21.9403 7.87753C21.9522 8.1442 21.9618 8.3654 21.9697 8.58964L21.976 8.78373C21.9906 9.27647 21.9973 9.84686 21.9994 10.9723L22.0002 11.7179C22.0003 11.809 22.0003 11.903 22.0003 12L22.0002 12.2821L21.9996 13.0278C21.9977 14.1532 21.9918 14.7236 21.9771 15.2163L21.9707 15.4104C21.9628 15.6347 21.9528 15.8559 21.9403 16.1225C21.8911 17.1867 21.7219 17.9125 21.4753 18.55C21.2211 19.2092 20.8769 19.7659 20.3219 20.3217C19.7661 20.8767 19.2069 21.22 18.5503 21.475C17.9128 21.7217 17.1869 21.89 16.1228 21.94C15.8561 21.9519 15.6349 21.9616 15.4107 21.9694L15.2166 21.9757C14.7238 21.9904 14.1535 21.997 13.0281 21.9992L12.2824 22C12.1913 22 12.0973 22 12.0003 22L11.7182 22L10.9725 21.9993C9.8471 21.9975 9.27672 21.9915 8.78397 21.9768L8.58989 21.9705C8.36564 21.9625 8.14444 21.9525 7.87778 21.94C6.81361 21.8909 6.08861 21.7217 5.45028 21.475C4.79194 21.2209 4.23444 20.8767 3.67861 20.3217C3.12278 19.7659 2.78028 19.2067 2.52528 18.55C2.27778 17.9125 2.11028 17.1867 2.06028 16.1225C2.0484 15.8559 2.03871 15.6347 2.03086 15.4104L2.02457 15.2163C2.00994 14.7236 2.00327 14.1532 2.00111 13.0278L2.00098 10.9723C2.00284 9.84686 2.00879 9.27647 2.02346 8.78373L2.02981 8.58964C2.03778 8.3654 2.04778 8.1442 2.06028 7.87753C2.10944 6.81253 2.27778 6.08753 2.52528 5.45003C2.77944 4.7917 3.12278 4.2342 3.67861 3.67837C4.23444 3.12253 4.79278 2.78003 5.45028 2.52503C6.08778 2.27753 6.81278 2.11003 7.87778 2.06003C8.14444 2.04816 8.36564 2.03847 8.58989 2.03062L8.78397 2.02433C9.27672 2.00969 9.8471 2.00302 10.9725 2.00086L13.0281 2.00073ZM12.0003 7.00003C9.23738 7.00003 7.00028 9.23956 7.00028 12C7.00028 14.7629 9.23981 17 12.0003 17C14.7632 17 17.0003 14.7605 17.0003 12C17.0003 9.23713 14.7607 7.00003 12.0003 7.00003ZM12.0003 9.00003C13.6572 9.00003 15.0003 10.3427 15.0003 12C15.0003 13.6569 13.6576 15 12.0003 15C10.3434 15 9.00028 13.6574 9.00028 12C9.00028 10.3431 10.3429 9.00003 12.0003 9.00003ZM17.2503 5.50003C16.561 5.50003 16.0003 6.05994 16.0003 6.74918C16.0003 7.43843 16.5602 7.9992 17.2503 7.9992C17.9395 7.9992 18.5003 7.4393 18.5003 6.74918C18.5003 6.05994 17.9386 5.49917 17.2503 5.50003Z"></path></svg>View as Stories</button></li>
+            <li><button onclick="toggleAdminMode(); closeMobileMenu();"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;margin-right:6px;vertical-align:-1px;display:inline-block;"><path d="M12 1L21.5 6.5V17.5L12 23L2.5 17.5V6.5L12 1ZM12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"></path></svg></button></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div class="grid" id="grid"></div>
+        <div class="loading" id="loading">Loading...</div>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <button class="lightbox-nav lightbox-prev" onclick="navigate(-1)">&#8249;</button>
+        <button class="lightbox-nav lightbox-next" onclick="navigate(1)">&#8250;</button>
+        <div id="lightbox-container"></div>
+    </div>
+
+    <!-- Stories Mode -->
+    <div class="stories-overlay" id="storiesOverlay">
+        <div class="stories-progress-container" id="storiesProgress"></div>
+        <button class="stories-close" id="storiesClose">&times;</button>
+        <div class="stories-nav-area stories-nav-prev" id="storiesNavPrev"></div>
+        <div class="stories-nav-area stories-nav-next" id="storiesNavNext"></div>
+        <div class="stories-content" id="storiesContent"></div>
+        <div class="stories-pause-indicator" id="storiesPause">
+            <svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        </div>
+        <div class="stories-counter" id="storiesCounter"></div>
+    </div>
+
+    <!-- Admin Mode UI -->
+    <div class="admin-bar" id="adminBar">
+        <div class="admin-bar-info">
+            <span id="adminSelectionCount">0</span> files selected
+        </div>
+        <div class="admin-bar-actions">
+            <button class="admin-bar-btn cancel" onclick="clearSelection()">Clear</button>
+            <button class="admin-bar-btn delete" id="adminDeleteBtn" onclick="deleteSelectedFiles()">Delete Selected</button>
+        </div>
+    </div>
+
+    <!-- Admin Password Modal -->
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-modal-content">
+            <div class="admin-modal-title">Admin Access</div>
+            <input type="password" class="admin-modal-input" id="adminPasswordInput" placeholder="Enter admin password">
+            <div class="admin-modal-buttons">
+                <button class="admin-modal-btn cancel" onclick="closeAdminModal()">Cancel</button>
+                <button class="admin-modal-btn submit" onclick="submitAdminPassword()">Enter</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== PASSWORD PROTECTION ====================
+        const CORRECT_PASSWORD = 'referencias'; // Change this to your desired password
+        const SESSION_KEY = 'references_authenticated';
+
+        function checkAuthentication() {
+            return true;
+        }
+
+        function authenticate() {
+            sessionStorage.setItem(SESSION_KEY, 'true');
+            document.getElementById('passwordScreen').classList.add('hidden');
+            loadFiles();
+        }
+
+        function handlePasswordSubmit() {
+            const input = document.getElementById('passwordInput');
+            const hint = document.getElementById('passwordHint');
+            
+            if (input.value === CORRECT_PASSWORD) {
+                authenticate();
+            } else {
+                input.classList.add('error');
+                hint.classList.add('visible');
+                
+                setTimeout(() => {
+                    input.classList.remove('error');
+                }, 400);
+                
+                setTimeout(() => {
+                    hint.classList.remove('visible');
+                }, 2000);
+                
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        // Password event listeners
+        document.getElementById('passwordSubmit').addEventListener('click', handlePasswordSubmit);
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handlePasswordSubmit();
+        });
+
+        // Password protection removed
+        document.getElementById('passwordScreen').classList.add('hidden');
+
+        // ==================== GALLERY FUNCTIONALITY ====================
+        const isMobile = window.innerWidth <= 768;
+        const DISPLAY_COUNT = isMobile ? 18 : 30;
+        const MAX_VIDEOS = isMobile ? 4 : 10;
+        let allFiles = [];
+        let displayedFiles = [];
+        let currentIndex = -1;
+
+        // ==================== ADMIN MODE ====================
+        // Admin password is verified server-side — never stored in client code
+        let adminVerifiedPassword = null; // Temporarily held in memory after server verification
+        const ADMIN_SESSION_KEY = 'references_admin_authenticated';
+        let adminMode = false;
+        let adminAuthenticated = false;
+        let selectedFiles = new Set();
+
+        function checkAdminAuth() {
+            return sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
+        }
+
+        function showAdminModal() {
+            document.getElementById('adminModal').classList.add('active');
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('adminPasswordInput').focus();
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.remove('active');
+            document.getElementById('adminPasswordInput').classList.remove('error');
+        }
+
+        async function submitAdminPassword() {
+            const input = document.getElementById('adminPasswordInput');
+            const submitBtn = document.querySelector('.admin-modal-btn.submit');
+            submitBtn.textContent = 'Verifying...';
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('verify-admin.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: input.value })
+                });
+                const result = await response.json();
+
+                if (result.valid) {
+                    adminVerifiedPassword = input.value;
+                    sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
+                    adminAuthenticated = true;
+                    closeAdminModal();
+                    enableAdminMode();
+                } else {
+                    input.classList.add('error');
+                    setTimeout(() => {
+                        input.classList.remove('error');
+                        input.value = '';
+                        input.focus();
+                    }, 400);
+                }
+            } catch (error) {
+                console.error('Admin verification failed:', error);
+                alert('Could not verify password. Check server connection.');
+            } finally {
+                submitBtn.textContent = 'Enter';
+                submitBtn.disabled = false;
+            }
+        }
+
+        function toggleAdminMode() {
+            if (!adminMode) {
+                // Trying to enable admin mode
+                if (checkAdminAuth()) {
+                    adminAuthenticated = true;
+                    enableAdminMode();
+                } else {
+                    showAdminModal();
+                }
+            } else {
+                // Disable admin mode
+                disableAdminMode();
+            }
+        }
+
+        function enableAdminMode() {
+            adminMode = true;
+            document.body.classList.add('admin-mode');
+            document.getElementById('adminBtn').classList.add('active');
+            clearSelection();
+        }
+
+        function disableAdminMode() {
+            adminMode = false;
+            document.body.classList.remove('admin-mode');
+            document.getElementById('adminBtn').classList.remove('active');
+            clearSelection();
+        }
+
+        function toggleFileSelection(fileName, cardElement) {
+            if (selectedFiles.has(fileName)) {
+                selectedFiles.delete(fileName);
+                cardElement.classList.remove('selected');
+            } else {
+                selectedFiles.add(fileName);
+                cardElement.classList.add('selected');
+            }
+            updateAdminBar();
+        }
+
+        function clearSelection() {
+            selectedFiles.clear();
+            document.querySelectorAll('.card.selected').forEach(card => {
+                card.classList.remove('selected');
+            });
+            updateAdminBar();
+        }
+
+        function updateAdminBar() {
+            const count = selectedFiles.size;
+            document.getElementById('adminSelectionCount').textContent = count;
+            const adminBar = document.getElementById('adminBar');
+            if (count > 0 && adminMode) {
+                adminBar.classList.add('visible');
+            } else {
+                adminBar.classList.remove('visible');
+            }
+        }
+
+        async function deleteSelectedFiles() {
+            if (selectedFiles.size === 0) return;
+
+            const confirmMsg = `Are you sure you want to permanently delete ${selectedFiles.size} file(s)? This cannot be undone.`;
+            if (!confirm(confirmMsg)) return;
+
+            const deleteBtn = document.getElementById('adminDeleteBtn');
+            deleteBtn.disabled = true;
+            deleteBtn.textContent = 'Deleting...';
+
+            try {
+                if (!adminVerifiedPassword) {
+                    alert('Admin session expired. Please re-enter your admin password.');
+                    disableAdminMode();
+                    return;
+                }
+
+                const response = await fetch('delete.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        files: Array.from(selectedFiles),
+                        password: adminVerifiedPassword
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Remove deleted files from allFiles
+                    allFiles = allFiles.filter(f => !result.deleted.includes(f.name));
+                    // Remove from displayedFiles
+                    displayedFiles = displayedFiles.filter(f => !result.deleted.includes(f.name));
+
+                    // Re-render grid
+                    renderGrid();
+                    clearSelection();
+
+                    const msg = `Deleted ${result.deleted.length} file(s).` +
+                        (result.failed.length > 0 ? ` Failed: ${result.failed.length}` : '');
+                    alert(msg);
+                } else {
+                    alert('Error: ' + (result.error || 'Failed to delete files'));
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('Error deleting files. Check console for details.');
+            } finally {
+                deleteBtn.disabled = false;
+                deleteBtn.textContent = 'Delete Selected';
+            }
+        }
+
+        // Admin event listeners
+        document.getElementById('adminBtn').addEventListener('click', toggleAdminMode);
+        document.getElementById('adminPasswordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') submitAdminPassword();
+        });
+
+        function getDailySeed() {
+            const today = new Date();
+            return today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+        }
+
+        function seededShuffle(array, seed) {
+            const shuffled = [...array];
+            let currentSeed = seed;
+            
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                currentSeed = (currentSeed * 9301 + 49297) % 233280;
+                const j = Math.floor((currentSeed / 233280) * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            
+            return shuffled;
+        }
+
+        // Split files into recent (2024+) and older, with 60/40 weighted selection
+        const RECENT_CUTOFF = 1704067200; // Jan 1, 2024 UTC
+        const RECENT_RATIO = 0.6;
+
+        function splitByAge(files) {
+            const recent = files.filter(f => f.modified >= RECENT_CUTOFF);
+            const older = files.filter(f => f.modified < RECENT_CUTOFF);
+            return { recent, older };
+        }
+
+        function weightedSelect(recentShuffled, olderShuffled, count) {
+            const recentCount = Math.round(count * RECENT_RATIO);
+            const olderCount = count - recentCount;
+            // Take as many as available from each pool, fill remainder from the other
+            const fromRecent = recentShuffled.slice(0, recentCount);
+            const fromOlder = olderShuffled.slice(0, olderCount);
+            let combined = [...fromRecent, ...fromOlder];
+            // If either pool was short, fill from the other
+            if (combined.length < count) {
+                const used = new Set(combined.map(f => f.name));
+                const remaining = [...recentShuffled, ...olderShuffled].filter(f => !used.has(f.name));
+                combined = combined.concat(remaining.slice(0, count - combined.length));
+            }
+            return combined;
+        }
+
+        function getDailySelection(files, count) {
+            const seed = getDailySeed();
+            const { recent, older } = splitByAge(files);
+            const recentShuffled = seededShuffle(recent, seed);
+            const olderShuffled = seededShuffle(older, seed + 1);
+            const weighted = weightedSelect(recentShuffled, olderShuffled, count);
+            // Final shuffle to mix recent and older together
+            const mixed = seededShuffle(weighted, seed + 2);
+            return capVideos(mixed, count);
+        }
+
+        function getRandomSelection(files, count) {
+            const { recent, older } = splitByAge(files);
+            const recentShuffled = [...recent].sort(() => Math.random() - 0.5);
+            const olderShuffled = [...older].sort(() => Math.random() - 0.5);
+            const weighted = weightedSelect(recentShuffled, olderShuffled, count);
+            // Final shuffle to mix them together
+            const mixed = [...weighted].sort(() => Math.random() - 0.5);
+            return capVideos(mixed, count);
+        }
+
+        function capVideos(shuffled, count) {
+            const selected = [];
+            let videoCount = 0;
+            for (const file of shuffled) {
+                if (selected.length >= count) break;
+                if (file.type === "video") {
+                    if (videoCount < MAX_VIDEOS) {
+                        selected.push(file);
+                        videoCount++;
+                    }
+                } else {
+                    selected.push(file);
+                }
+            }
+            return selected;
+        }
+
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const card = entry.target;
+                    const media = card.querySelector('img, video');
+
+                    if (media && !media.src) {
+                        const src = media.dataset.src;
+                        if (src) {
+                            media.src = src;
+
+                            if (media.tagName === 'IMG') {
+                                media.onload = () => {
+                                    media.classList.add('loaded');
+                                    card.classList.add('loaded');
+                                };
+                                media.onerror = () => {
+                                    card.style.display = 'none';
+                                };
+                            } else {
+                                media.onloadeddata = () => {
+                                    media.classList.add('loaded');
+                                    card.classList.add('loaded');
+                                    media.play().catch(() => {});
+                                };
+                                media.onerror = () => {
+                                    card.style.display = 'none';
+                                };
+                            }
+                        }
+                    }
+                    imageObserver.unobserve(card);
+                }
+            });
+        }, {
+            rootMargin: '200px',
+            threshold: 0.1
+        });
+
+        async function loadFiles() {
+            if (!checkAuthentication()) return;
+            
+            try {
+                const response = await fetch('files.json?v=' + Date.now());
+                const data = await response.json();
+                allFiles = data.files;
+
+                displayedFiles = getDailySelection(allFiles, DISPLAY_COUNT);
+                renderGrid();
+                
+            } catch (error) {
+                console.error('Error loading files:', error);
+                document.getElementById('loading').textContent = 'Error loading files. Make sure files.json exists.';
+            }
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            
+            displayedFiles.forEach((file, index) => {
+                const card = createCard(file, index);
+                grid.appendChild(card);
+                imageObserver.observe(card);
+            });
+            
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function shuffle() {
+            displayedFiles = getRandomSelection(allFiles, DISPLAY_COUNT);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => {
+                renderGrid();
+            }, 300);
+        }
+
+        function createCard(file, index) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.index = index;
+            card.dataset.filename = file.name;
+            card.onclick = (e) => {
+                if (adminMode) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleFileSelection(file.name, card);
+                } else {
+                    openLightbox(index);
+                }
+            };
+
+            const encodedPath = encodeURIComponent(file.name).replace(/%2F/g, '/');
+
+            if (file.type === 'video') {
+                const video = document.createElement('video');
+                video.dataset.src = encodedPath;
+                video.muted = true;
+                video.loop = true;
+                video.playsInline = true;
+                video.autoplay = !isMobile;
+                video.preload = isMobile ? 'none' : 'auto';
+
+                // Videos autoplay when visible - no hover needed
+
+                card.appendChild(video);
+
+                const indicator = document.createElement('div');
+                indicator.className = 'video-indicator';
+                indicator.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                card.appendChild(indicator);
+            } else {
+                const img = document.createElement('img');
+                img.dataset.src = encodedPath;
+                img.alt = file.name;
+                card.appendChild(img);
+            }
+
+            return card;
+        }
+
+        function openLightbox(index) {
+            currentIndex = index;
+            const file = displayedFiles[index];
+            const container = document.getElementById('lightbox-container');
+            container.innerHTML = '';
+
+            const encodedPath = encodeURIComponent(file.name).replace(/%2F/g, '/');
+
+            if (file.type === 'video') {
+                const video = document.createElement('video');
+                video.src = encodedPath;
+                video.className = 'lightbox-content';
+                video.controls = true;
+                video.autoplay = true;
+                container.appendChild(video);
+            } else {
+                const img = document.createElement('img');
+                img.src = encodedPath;
+                img.className = 'lightbox-content';
+                img.alt = file.name;
+                container.appendChild(img);
+            }
+
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+
+            const container = document.getElementById('lightbox-container');
+            const video = container.querySelector('video');
+            if (video) video.pause();
+            container.innerHTML = '';
+        }
+
+        function navigate(direction) {
+            const newIndex = currentIndex + direction;
+            if (newIndex >= 0 && newIndex < displayedFiles.length) {
+                openLightbox(newIndex);
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('lightbox').classList.contains('active')) return;
+
+            switch (e.key) {
+                case 'Escape':
+                    closeLightbox();
+                    break;
+                case 'ArrowLeft':
+                    navigate(-1);
+                    break;
+                case 'ArrowRight':
+                    navigate(1);
+                    break;
+            }
+        });
+
+        document.getElementById('shuffleBtn').addEventListener('click', shuffle);
+
+        // ==================== HAMBURGER MOBILE MENU ====================
+        function closeMobileMenu() {
+            const overlay = document.getElementById('mobileOverlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                overlay.style.opacity = '';
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        function openMobileMenu() {
+            const overlay = document.getElementById('mobileOverlay');
+            overlay.classList.add('active');
+            // Force reflow then animate
+            overlay.offsetHeight;
+            overlay.style.opacity = '1';
+            document.body.style.overflow = 'hidden';
+        }
+
+        document.getElementById('hamburgerBtn').addEventListener('click', openMobileMenu);
+        document.getElementById('mobileOverlayClose').addEventListener('click', closeMobileMenu);
+
+        // Close overlay on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('mobileOverlay').classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+
+        // ==================== TOUCH SWIPE FOR LIGHTBOX ====================
+        (function() {
+            let touchStartX = 0;
+            let touchStartY = 0;
+            const lightbox = document.getElementById('lightbox');
+
+            lightbox.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+
+            lightbox.addEventListener('touchend', (e) => {
+                const deltaX = e.changedTouches[0].screenX - touchStartX;
+                const deltaY = e.changedTouches[0].screenY - touchStartY;
+                // Only trigger if horizontal swipe is dominant and > 50px
+                if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+                    if (deltaX < 0) navigate(1);  // swipe left = next
+                    else navigate(-1);             // swipe right = prev
+                }
+            }, { passive: true });
+        })();
+
+        // ==================== STORIES MODE ====================
+        let storiesIndex = 0;
+        let storiesTimer = null;
+        let storiesInterval = null;
+        let storiesProgress = 0;
+        let storiesPaused = false;
+        const IMAGE_DURATION = 5000; // 5 seconds for images
+        const PROGRESS_UPDATE_INTERVAL = 50; // Update progress every 50ms
+
+        function initStoriesProgress() {
+            const container = document.getElementById('storiesProgress');
+            container.innerHTML = '';
+
+            // Show progress bars for visible range (max 20 at a time for performance)
+            const maxBars = Math.min(displayedFiles.length, 20);
+            for (let i = 0; i < maxBars; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'stories-progress-bar';
+                bar.innerHTML = '<div class="fill"></div>';
+                container.appendChild(bar);
+            }
+        }
+
+        function updateStoriesProgress(progress) {
+            const bars = document.querySelectorAll('.stories-progress-bar');
+            const maxBars = bars.length;
+
+            bars.forEach((bar, i) => {
+                const fill = bar.querySelector('.fill');
+                if (i < storiesIndex % maxBars) {
+                    fill.style.width = '100%';
+                } else if (i === storiesIndex % maxBars) {
+                    fill.style.width = progress + '%';
+                } else {
+                    fill.style.width = '0%';
+                }
+            });
+        }
+
+        function openStories(startIndex = 0) {
+            if (displayedFiles.length === 0) return;
+
+            storiesIndex = startIndex;
+            storiesPaused = false;
+
+            initStoriesProgress();
+            document.getElementById('storiesOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            showStoryItem();
+        }
+
+        function closeStories() {
+            clearTimeout(storiesTimer);
+            clearInterval(storiesInterval);
+
+            document.getElementById('storiesOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+
+            const content = document.getElementById('storiesContent');
+            const video = content.querySelector('video');
+            if (video) video.pause();
+            content.innerHTML = '';
+        }
+
+        function showStoryItem() {
+            clearTimeout(storiesTimer);
+            clearInterval(storiesInterval);
+            storiesProgress = 0;
+
+            if (storiesIndex >= displayedFiles.length) {
+                closeStories();
+                return;
+            }
+
+            const file = displayedFiles[storiesIndex];
+            const content = document.getElementById('storiesContent');
+            content.innerHTML = '';
+
+            const encodedPath = encodeURIComponent(file.name).replace(/%2F/g, '/');
+
+            // Update counter
+            document.getElementById('storiesCounter').textContent =
+                `${storiesIndex + 1} / ${displayedFiles.length}`;
+
+            if (file.type === 'video') {
+                const video = document.createElement('video');
+                video.src = encodedPath;
+                video.autoplay = true;
+                video.playsInline = true;
+                video.muted = false;
+
+                video.onloadedmetadata = () => {
+                    const duration = video.duration * 1000;
+                    startProgressTimer(duration, video);
+                };
+
+                video.onended = () => {
+                    nextStory();
+                };
+
+                video.onerror = () => {
+                    if (!skipErrorHandler) nextStory();
+                };
+
+                content.appendChild(video);
+            } else {
+                const img = document.createElement('img');
+                img.src = encodedPath;
+
+                img.onload = () => {
+                    startProgressTimer(IMAGE_DURATION);
+                };
+
+                img.onerror = () => {
+                    if (!skipErrorHandler) nextStory();
+                };
+
+                content.appendChild(img);
+            }
+        }
+
+        function startProgressTimer(duration, video = null) {
+            const startTime = Date.now();
+
+            storiesInterval = setInterval(() => {
+                if (storiesPaused) return;
+
+                const elapsed = Date.now() - startTime;
+                storiesProgress = Math.min((elapsed / duration) * 100, 100);
+                updateStoriesProgress(storiesProgress);
+            }, PROGRESS_UPDATE_INTERVAL);
+
+            if (!video) {
+                storiesTimer = setTimeout(() => {
+                    if (!storiesPaused) nextStory();
+                }, duration);
+            }
+        }
+
+        function nextStory() {
+            storiesIndex++;
+            if (storiesIndex >= displayedFiles.length) {
+                closeStories();
+            } else {
+                showStoryItem();
+            }
+        }
+
+        let skipErrorHandler = false;
+
+        function prevStory() {
+            // Skip multiple broken images when going back
+            skipErrorHandler = true;
+            if (storiesIndex > 0) {
+                storiesIndex--;
+            }
+            showStoryItem();
+            // Re-enable error handler after a short delay
+            setTimeout(() => { skipErrorHandler = false; }, 500);
+        }
+
+        function toggleStoriesPause() {
+            storiesPaused = !storiesPaused;
+
+            const pauseIndicator = document.getElementById('storiesPause');
+            const content = document.getElementById('storiesContent');
+            const video = content.querySelector('video');
+
+            if (storiesPaused) {
+                pauseIndicator.classList.add('visible');
+                if (video) video.pause();
+            } else {
+                pauseIndicator.classList.remove('visible');
+                if (video) video.play();
+            }
+        }
+
+        // Stories event listeners
+        document.getElementById('storiesBtn').addEventListener('click', () => openStories(0));
+        document.getElementById('storiesClose').addEventListener('click', closeStories);
+        document.getElementById('storiesNavPrev').addEventListener('click', prevStory);
+        document.getElementById('storiesNavNext').addEventListener('click', nextStory);
+
+        // Click on content to pause/resume
+        document.getElementById('storiesContent').addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleStoriesPause();
+        });
+
+        // Keyboard controls for stories
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('storiesOverlay').classList.contains('active')) return;
+
+            switch (e.key) {
+                case 'Escape':
+                    closeStories();
+                    break;
+                case 'ArrowLeft':
+                    prevStory();
+                    break;
+                case 'ArrowRight':
+                    nextStory();
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    toggleStoriesPause();
+                    break;
+            }
+        });
+
+        // Touch swipe for stories
+        (function() {
+            let sStartX = 0;
+            const overlay = document.getElementById('storiesOverlay');
+            overlay.addEventListener('touchstart', (e) => {
+                sStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+            overlay.addEventListener('touchend', (e) => {
+                const deltaX = e.changedTouches[0].screenX - sStartX;
+                if (Math.abs(deltaX) > 50) {
+                    if (deltaX < 0) nextStory();
+                    else prevStory();
+                }
+            }, { passive: true });
+        })();
+
+        // ==================== IMAGE DOWNLOAD PROTECTION ====================
+        // Disable right-click context menu on images/videos
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO' || e.target.closest('.card') || e.target.closest('.lightbox')) {
+                e.preventDefault();
+            }
+        });
+
+        // Disable drag on images
+        document.addEventListener('dragstart', function(e) {
+            if (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO') {
+                e.preventDefault();
+            }
+        });
+
+        // Block Ctrl/Cmd+S save page
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+            }
+        });
+
+        // Initialize if authenticated
+        if (checkAuthentication()) {
+            loadFiles();
+        }
+    </script>
+</body>
+</html>
