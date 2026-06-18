@@ -1,0 +1,133 @@
+/*
+ * Shared site chrome — rafacastello.com family
+ * Used by: rafacastello.com (root), playtime.rafacastello.com, freqz.rafacastello.com
+ *
+ * The point of this file is that every domain in the family loads the EXACT
+ * same chrome (background, type, top bar, brand band, ::selection) so that
+ * switching between domain tabs does not visually shift the page.
+ *
+ * Integration in each site's <head>, before the site-specific stylesheet:
+ *   <link rel="preconnect" href="https://fonts.googleapis.com">
+ *   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ *   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=EB+Garamond:wght@400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+ *   <link rel="stylesheet" href="/shared/site-chrome.css">
+ *
+ * Then paste shared/site-header.html as the first child of <body>, swapping
+ * only the per-site bits called out in that file.
+ *
+ * Sizing tokens live in :root below. Logo and menu sizes are the canonical
+ * reference values shared by every site; change them in one place to update
+ * every domain that loads this file.
+ */
+
+:root {
+    /* Palette */
+    --site-bg: #0a0a0a;
+    --site-fg: #ffffff;
+    --site-accent: #fc3b2c;
+    --site-eyebrow-bg: #fef189;
+    --site-eyebrow-fg: #9a7b00;
+    --site-selection-fg: #101733;
+
+    /* Type families */
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'EB Garamond', Georgia, serif;
+    --font-script: 'Pinyon Script', 'Snell Roundhand', cursive;
+
+    /* Header sizing — canonical reference, tune to match playtime */
+    --logo-font-size: 64px;
+    --logo-font-size-mobile: 42px;
+    --menu-font-size: 12px;
+    --menu-font-size-mobile: 10px;
+    --menu-letter-spacing: 1.44px;
+    --menu-letter-spacing-mobile: 1px;
+    --top-bar-height: 29px;
+    --brand-height: 66px;
+}
+
+html, body {
+    background: var(--site-bg);
+    font-family: var(--font-body);
+}
+
+::selection { background: var(--site-eyebrow-bg); color: var(--site-selection-fg); }
+::-moz-selection { background: var(--site-eyebrow-bg); color: var(--site-selection-fg); }
+
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    pointer-events: none;
+}
+
+.site-header > * { pointer-events: auto; }
+
+.top-bar {
+    background: var(--site-eyebrow-bg);
+    height: var(--top-bar-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--menu-font-size);
+    line-height: 19.2px;
+    letter-spacing: var(--menu-letter-spacing);
+    text-transform: uppercase;
+}
+
+.top-bar__issue { color: var(--site-eyebrow-fg); }
+
+.top-bar__links {
+    position: absolute;
+    right: 312px;
+    display: flex;
+    gap: 14px;
+}
+
+.top-bar__link {
+    color: var(--site-accent);
+    text-decoration: none;
+}
+
+.top-bar__link:hover { text-decoration: underline; }
+
+.brand {
+    background: var(--site-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--brand-height);
+    padding: 0 24px;
+}
+
+.brand__logo {
+    font-family: var(--font-script);
+    font-size: var(--logo-font-size);
+    line-height: 1;
+    color: var(--site-accent);
+    text-decoration: none;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+    .top-bar {
+        justify-content: space-between;
+        padding: 0 16px;
+        font-size: var(--menu-font-size-mobile);
+        letter-spacing: var(--menu-letter-spacing-mobile);
+    }
+
+    .top-bar__issue { position: static; }
+
+    .top-bar__links {
+        position: static;
+        right: auto;
+        gap: 10px;
+    }
+
+    .brand__logo { font-size: var(--logo-font-size-mobile); }
+}
