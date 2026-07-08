@@ -1,5 +1,0 @@
-# Blocked IPs
-<RequireAll>
-    Require all granted
-    Require not ip 91.217.249.184
-</RequireAll>
