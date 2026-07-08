@@ -63,6 +63,18 @@
 
     <nav id="page-nav"><a href="network.html">Creator network →</a></nav>
 
+    <!-- Admin drag-and-drop (revealed by ?admin=1) -->
+    <div id="admin-panel" class="hidden" aria-hidden="true">
+        <div id="admin-status">Drop an image anywhere to publish</div>
+        <button id="admin-signout" type="button" title="Sign out of admin">×</button>
+    </div>
+    <div id="admin-dropzone" class="hidden" aria-hidden="true">
+        <div class="admin-dropzone__inner">
+            <div class="admin-dropzone__title">Drop to publish</div>
+            <div class="admin-dropzone__sub">Image will be committed to the repo</div>
+        </div>
+    </div>
+
     <figure class="callout">
         <blockquote class="callout__quote">&ldquo;Generally AI companies distill other AI companies.&rdquo;</blockquote>
         <figcaption class="callout__attribution">Elon Musk, under oath</figcaption>
@@ -81,5 +93,6 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="admin.js"></script>
 </body>
 </html>
