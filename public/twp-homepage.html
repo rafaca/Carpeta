@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Those Who Play — Homepage capture v3</title>
-<!-- Adobe kit fua3jud: Firelli Variable, Decoy, Magari Variable, Montecatini Pro Normale, TGN Soft Round Comp -->
+<!-- Adobe Fonts: kit fua3jud (same as dev.thosewhoplay.com) + Google Gothic A1 -->
 <link rel="stylesheet" href="https://use.typekit.net/fua3jud.css">
-<!-- Fallback stand-in for the hand-drawn script (footer echo) -->
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
 <style>
 :root{
   --sky:#DAFEFD;
@@ -26,12 +26,13 @@
   --gut:clamp(24px, 5vw, 80px);
   --ease:cubic-bezier(.22,1,.36,1);
 
-  --f-display:"firelli-variable","Firelli Variable","montecatini-pro-normale","Montecatini Pro Normale","Palatino Linotype",Georgia,serif;
-  --f-title:"montecatini-pro-normale","Montecatini Pro Normale","Palatino Linotype",Georgia,serif;
-  --f-body:"magari-variable","Magari Variable","Helvetica Neue",Arial,sans-serif;
-  --f-alt:"decoy","Iowan Old Style","Palatino Linotype",Georgia,serif;
-  --f-mono:"tgn-soft-round-comp","IBM Plex Mono","Gothic A1",ui-monospace,monospace;
+  /* Match the live site's kit fua3jud font stack exactly */
+  --f-display:"decoy","Iowan Old Style","Palatino Linotype",Georgia,serif;
+  --f-title:"montecatini-pro-normale","Palatino Linotype","Book Antiqua",Georgia,serif;
+  --f-body:"magari-variable","Magari Variable","Magari","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"tgn-soft-round-comp","Gothic A1",ui-sans-serif,system-ui,sans-serif;
   --f-script:"Sacramento","Segoe Script","Bradley Hand","Brush Script MT",cursive;
+  --nav-wght:clamp(100, calc(100 + 300 * ((100vw - 400px) / 1040px)), 400);
 }
 @media (prefers-color-scheme: dark){
   :root{
@@ -96,8 +97,8 @@ a:focus-visible{ outline:2px solid var(--mint-deep); outline-offset:3px; border-
   letter-spacing:.14em;
   text-transform:uppercase;
   color:var(--ink);
-  font-weight:500;
-  font-variation-settings:"wght" 480;
+  font-weight:400;
+  font-variation-settings:"wght" var(--nav-wght);
   transition:color .2s var(--ease);
 }
 .nav-link:hover{ color:var(--mint-deep) }
