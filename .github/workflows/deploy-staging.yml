@@ -74,3 +74,21 @@ jobs:
             -e "ssh -i ~/.ssh/dreamhost -p $PORT -o StrictHostKeyChecking=yes" \
             ./out/ \
             "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:$DREAMHOST_DEPLOY_PATH"
+
+      - name: Mirror mockups to dev.thosewhoplay.com (basic-auth site)
+        env:
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          files=(public/twp-*.html)
+          if (( ${#files[@]} == 0 )); then
+            echo "No public/twp-*.html to mirror to dev"; exit 0
+          fi
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          echo "Mirroring to dev.thosewhoplay.com: ${files[*]}"
+          scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
+            "${files[@]}" \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/"
