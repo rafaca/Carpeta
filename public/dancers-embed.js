@@ -68,7 +68,7 @@ uniform float uK;                // goop: how eagerly limbs melt together
 uniform vec3  uBg;               // base colour, bottom of the gradient (linearised)
 uniform vec3  uBgTop;            // top-of-page colour (linearised)
 uniform float uBgStop;           // where the gradient settles (0..1 of canvas height)
-uniform vec4  uEyes[${DANCERS*2}];  // eye centres xyz + softness radius in w
+uniform vec4  uEyes[${DANCERS*3}];  // face dots (2 eyes + mouth) xyz + softness in w
 uniform float uEyeDark;          // how dark the eye dots read
 
 /* tapered capsule (round cone) — limbs slim toward wrists and
@@ -182,7 +182,7 @@ vec3 shadeFigure(vec3 p, vec3 n, vec3 v, vec3 base){
   // surface facing the dancer's way, so they only read when the
   // dancer faces you
   float eyeK = 1.0;
-  for(int e = 0; e < ${DANCERS*2}; e++){
+  for(int e = 0; e < ${DANCERS*3}; e++){
     vec3 ev = p - uEyes[e].xyz;
     float s2 = uEyes[e].w * uEyes[e].w;
     eyeK *= 1.0 - uEyeDark*exp(-dot(ev, ev)/(2.0*s2));
@@ -299,10 +299,12 @@ const FIGURE_DEFAULTS = { ...FIGURE };
 
 /* ---------- THE EYES — all factors of head size ---------- */
 const EYES = {
-  dark: 0.45,  // how dark the dots read
-  size: 0.19,  // dot softness
-  sep:  0.58,  // distance apart
-  up:   0.14,  // height on the face
+  dark:    0.55,  // how dark the dots read
+  size:    0.17,  // eye softness
+  sep:     0.42,  // eye distance apart
+  up:      0.16,  // eye height on the face
+  mouth:   0.11,  // mouth size (0 = no mouth)
+  mouthUp: -0.22, // mouth height on the face
 };
 const EYES_DEFAULTS = { ...EYES };
 
@@ -463,7 +465,7 @@ ptr.addEventListener('pointerdown', trackPointer);
 const segA = new Float32Array(SEGS * 4);
 const segB = new Float32Array(SEGS * 4);
 const bnd  = new Float32Array(DANCERS * 4);
-const eyes = new Float32Array(DANCERS * 2 * 4);
+const eyes = new Float32Array(DANCERS * 3 * 4);
 
 // per-dancer bounding sphere over all 20 capsule endpoints,
 // padded by the fattest radius + the smooth-min blend reach
@@ -615,7 +617,8 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt){
     seg(belly, neck, F.torsoR*0.96, F.torsoR*0.78); // slims to shoulders
     seg(head, head, F.head, F.head);                // head
 
-    // eyes ride the head, looking wherever the dancer faces
+    // the face rides the head, looking wherever the dancer faces:
+    // two eyes and a small mouth below them
     const eSep = F.head * EYES.sep, eFwd = F.head * 1.02;
     const eUp = F.head * EYES.up, eSoft = F.head * Math.max(EYES.size, 0.02);
     for(const sd of [-1, 1]){
@@ -623,7 +626,16 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt){
         head[0] + O[0]*eFwd + T[0]*sd*eSep,
         head[1] + eUp,
         head[2] + O[2]*eFwd + T[2]*sd*eSep,
-        eSoft], (i*2 + (sd > 0 ? 1 : 0)) * 4);
+        eSoft], (i*3 + (sd > 0 ? 1 : 0)) * 4);
+    }
+    if(EYES.mouth > 0.02){
+      eyes.set([
+        head[0] + O[0]*eFwd,
+        head[1] + F.head * EYES.mouthUp,
+        head[2] + O[2]*eFwd,
+        F.head * EYES.mouth], (i*3 + 2) * 4);
+    } else {
+      eyes.set([0, -99, 0, 0.001], (i*3 + 2) * 4); // parked far under the floor
     }
 
     // arms: in the round they reach to the shared held hands;
