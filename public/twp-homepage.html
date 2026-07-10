@@ -2045,10 +2045,10 @@ function frame(now){
   // into a line behind it — as long as it keeps leading, they keep
   // following. A cursor moving too fast broke them above; a cursor
   // that goes still lets everything decay back to the circle dance.
-  if(m && now - mouse.lastMove < 1500 && broken < 0.15 && energy < 0.35
+  if(m && now - mouse.lastMove < 2500 && broken < 0.25 && energy < 0.55
      && (lineW > 0.3 || !touching)){
     if(!beckonSince) beckonSince = now;
-    if(now - beckonSince > 900) lineUntil = Math.max(lineUntil, now + 1800);
+    if(now - beckonSince > 350) lineUntil = Math.max(lineUntil, now + 2600);
   } else {
     beckonSince = 0;
   }
