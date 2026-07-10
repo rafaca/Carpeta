@@ -8,6 +8,9 @@
          background: '#E4FFFE',          // any hex — the whole scene derives from it
          figure: { size: 0.8 },          // optional FIGURE overrides
          motion: { tempo: 0.705 },       // optional MOTION overrides
+         backgroundTop: '#FFFFFF',       // optional: vertical gradient top colour
+         backgroundStop: 0.61,           // optional: where the gradient settles
+         pointer: 'window',              // for click-through full-page background layers
        });
      </script>
    The instance returned has .destroy(), .setBackground(hex),
@@ -62,7 +65,9 @@ uniform vec4  uSegA[${SEGS}];    // limb start xyz + start radius in w
 uniform vec4  uSegB[${SEGS}];    // limb end xyz + end radius in w
 uniform vec4  uBnd[${DANCERS}];  // per-dancer bounding sphere, xyz + radius
 uniform float uK;                // goop: how eagerly limbs melt together
-uniform vec3  uBg;               // background colour (linearised)
+uniform vec3  uBg;               // base colour, bottom of the gradient (linearised)
+uniform vec3  uBgTop;            // top-of-page colour (linearised)
+uniform float uBgStop;           // where the gradient settles (0..1 of canvas height)
 
 /* tapered capsule (round cone) — limbs slim toward wrists and
    ankles instead of reading as constant-width pegs */
@@ -184,8 +189,11 @@ void main(){
   vec3 u = cross(r, f);
   vec3 rd = normalize(r*uv.x + u*uv.y + f*${FL.toFixed(2)});
 
-  // background: the chosen colour with a faint radial breath
-  vec3 bg = uBg * (1.0 - 0.1*length(uv));
+  // background: vertical gradient (top colour settling into the base
+  // by uBgStop) with a faint radial breath
+  float vy = 1.0 - gl_FragCoord.y / uRes.y;
+  vec3 bg = mix(uBgTop, uBg, smoothstep(0.0, max(uBgStop, 1e-3), vy));
+  bg *= 1.0 - 0.06*length(uv);
   vec3 col = bg;
 
   float t = 0.0, glow = 1e5, tGlow = 0.0;
@@ -340,24 +348,31 @@ gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
 const U = n => gl.getUniformLocation(prog, n);
 const uRes = U('uRes'), uTime = U('uTime'), uCenter = U('uCenter');
 const uSegA = U('uSegA'), uSegB = U('uSegB'), uBnd = U('uBnd'), uK = U('uK');
-const uBg = U('uBg');
+const uBg = U('uBg'), uBgTop = U('uBgTop'), uBgStop = U('uBgStop');
 
 /* ---------- background colour ---------- */
 const BG_DEFAULT = '#E4FFFE';
 let bgHex = BG_DEFAULT;
-let bgLin = [0, 0, 0];
-function applyBg(hex){
-  bgHex = hex;
+let bgLin = [0, 0, 0], bgTopLin = [0, 0, 0], bgStop = 0.61;
+const linHex = hex => {
   const r = parseInt(hex.slice(1,3), 16) / 255;
   const g = parseInt(hex.slice(3,5), 16) / 255;
   const b = parseInt(hex.slice(5,7), 16) / 255;
   // linearise: the shader gammas at the end, returning the exact hex
-  bgLin = [Math.pow(r, 2.2), Math.pow(g, 2.2), Math.pow(b, 2.2)];
-  host.style.background = hex;
+  return [Math.pow(r, 2.2), Math.pow(g, 2.2), Math.pow(b, 2.2)];
+};
+function applyBg(hex, topHex, stop){
+  bgHex = hex;
+  bgLin = linHex(hex);
+  bgTopLin = linHex(topHex || hex);
+  bgStop = stop == null ? (topHex ? 0.61 : 1.0) : stop;
+  host.style.background = topHex
+    ? `linear-gradient(180deg, ${topHex} 0%, ${hex} ${Math.round(bgStop*100)}%)`
+    : hex;
 }
 if(opts.figure) Object.assign(FIGURE, opts.figure);
 if(opts.motion) Object.assign(MOTION, opts.motion);
-applyBg(opts.background || BG_DEFAULT);
+applyBg(opts.background || BG_DEFAULT, opts.backgroundTop, opts.backgroundStop);
 
 // full resolution (up to 1.5x on retina) — bounding spheres in the
 // shader keep the per-pixel cost down, and edges stay crisp
@@ -415,8 +430,11 @@ function trackPointer(e){
   mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
   mouse.lastMove = performance.now();
 }
-host.addEventListener('pointermove', trackPointer);
-host.addEventListener('pointerdown', trackPointer);
+// pointer:'window' lets a click-through background layer
+// (pointer-events:none) still see the cursor anywhere on the page
+const ptr = opts.pointer === 'window' ? window : host;
+ptr.addEventListener('pointermove', trackPointer);
+ptr.addEventListener('pointerdown', trackPointer);
 
 /* ---------- the troupe ---------- */
 const segA = new Float32Array(SEGS * 4);
@@ -742,6 +760,8 @@ function frame(now){
   gl.uniform4fv(uBnd, bnd);
   gl.uniform1f(uK, FIGURE.blend * FIGURE.size);
   gl.uniform3f(uBg, bgLin[0], bgLin[1], bgLin[2]);
+  gl.uniform3f(uBgTop, bgTopLin[0], bgTopLin[1], bgTopLin[2]);
+  gl.uniform1f(uBgStop, bgStop);
   gl.drawArrays(gl.TRIANGLES, 0, 3);
   raf = requestAnimationFrame(frame);
 }
@@ -753,8 +773,8 @@ function destroy(){
   cancelAnimationFrame(raf);
   ro.disconnect();
   window.removeEventListener('resize', resize);
-  host.removeEventListener('pointermove', trackPointer);
-  host.removeEventListener('pointerdown', trackPointer);
+  ptr.removeEventListener('pointermove', trackPointer);
+  ptr.removeEventListener('pointerdown', trackPointer);
   canvas.remove();
 }
 return { destroy, canvas, figure: FIGURE, motion: MOTION, setBackground: applyBg };

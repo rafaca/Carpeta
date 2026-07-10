@@ -13,6 +13,16 @@ export interface DancersInstance {
 export interface DancersOptions {
   /** Hex colour the whole scene derives from. Default "#E4FFFE". */
   background?: string;
+  /** Optional gradient: page-top colour blending into `background`. */
+  backgroundTop?: string;
+  /** Where the gradient settles, 0..1 of canvas height. Default 0.61. */
+  backgroundStop?: number;
+  /**
+   * "window" tracks the cursor across the whole page — required for
+   * click-through background layers (pointer-events: none).
+   * Default "host".
+   */
+  pointer?: "host" | "window";
   /** Overrides for figure proportions (size, head, torso, ...). */
   figure?: Record<string, number>;
   /** Overrides for choreography (tempo, circle, bounce, jump, sway, lines). */
