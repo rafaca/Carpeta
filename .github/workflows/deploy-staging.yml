@@ -92,3 +92,29 @@ jobs:
           scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
             "${files[@]}" \
             "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/"
+
+      - name: Publish twp-homepage.html as the dev index (archiving the old page)
+        env:
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          [ -f public/twp-homepage.html ] || { echo "No twp-homepage.html; skipping"; exit 0; }
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          # one-time archive: the page that was dev's index before the
+          # twp homepage took over stays at archive/index-pre-twp-*.html
+          ssh -i ~/.ssh/dreamhost -p "$PORT" -o StrictHostKeyChecking=yes \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" 'bash -s' <<'EOSSH'
+          set -euo pipefail
+          cd ~/dev.thosewhoplay.com
+          mkdir -p archive
+          if [ -f index.html ] && ! ls archive/index-pre-twp-* >/dev/null 2>&1; then
+            cp index.html "archive/index-pre-twp-$(date +%Y%m%d-%H%M%S).html"
+            echo "Archived previous index to archive/"
+          fi
+          EOSSH
+          scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
+            public/twp-homepage.html \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/index.html"
+          echo "dev.thosewhoplay.com/ now serves twp-homepage.html"
