@@ -1,0 +1,189 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --accent: #f7371c;
+    --accent-hover: #ff1919;
+    --ink: #000;
+    --logo: #0a0002;
+}
+
+html, body {
+    background: #fff;
+    color: var(--ink);
+    font-family: "europa", Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Header (Figma) ---- */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 48px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.logo {
+    display: inline-flex;
+    align-items: center;
+}
+
+.logo svg {
+    width: 209px;
+    height: auto;
+    fill: var(--logo);
+    display: block;
+}
+
+.site-nav {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+.site-nav a {
+    font-size: 13px;
+    line-height: 20.8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--logo);
+    white-space: nowrap;
+    transition: color 0.2s ease;
+}
+
+.site-nav a:hover { color: var(--accent-hover); }
+.site-nav a.current { color: var(--accent); }
+
+/* ---- Bio ---- */
+.rc-bio-section {
+    padding: 110px 20px 80px 295px;
+    max-width: 830px;
+}
+
+.rc-bio-section h1 {
+    font-family: "freight-display-pro", Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1.35;
+    color: var(--ink);
+}
+
+.rc-bio-section p {
+    font-family: "europa", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-top: 40px;
+}
+
+.rc-bio-section .label {
+    display: inline-block;
+    margin-bottom: 3px;
+    color: var(--accent);
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 11px;
+}
+
+/* ---- Projects ---- */
+.content-wrapper {
+    padding: 110px 20px 80px 295px;
+    max-width: 1100px;
+}
+
+.page-title {
+    font-family: "freight-display-pro", Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1.35;
+    color: var(--ink);
+    margin-bottom: 60px;
+}
+
+.project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.project {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.25s ease;
+}
+
+.project:hover { opacity: 0.7; }
+
+.project-image {
+    width: 100%;
+    max-width: 530px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    margin-bottom: 12px;
+    background: #f2f2f2;
+}
+
+.project-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 2px;
+}
+
+.project-category {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #919191;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+    .rc-bio-section {
+        padding-left: 50px;
+    }
+    .content-wrapper {
+        padding-left: 50px;
+    }
+}
+
+@media (max-width: 767px) {
+    .site-header { padding: 16px 20px; }
+    .logo svg { width: 150px; }
+    .site-nav { gap: 22px; }
+    .site-nav a { font-size: 11px; letter-spacing: 1px; }
+
+    .rc-bio-section {
+        padding: 110px 20px 60px 20px;
+        max-width: 100%;
+    }
+    .rc-bio-section h1 { font-size: 24px; }
+
+    .content-wrapper {
+        padding: 110px 20px 60px 20px;
+        max-width: 100%;
+    }
+    .page-title { font-size: 22px; margin-bottom: 40px; }
+    .project-image { max-width: 100%; }
+}
