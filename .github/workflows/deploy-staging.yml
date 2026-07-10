@@ -92,6 +92,12 @@ jobs:
           scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
             "${files[@]}" \
             "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/"
+          # assets ride along so the mockups' logos resolve on dev
+          if [ -d public/assets ]; then
+            scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes -r \
+              public/assets \
+              "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/"
+          fi
 
       - name: Publish twp-homepage.html as the dev index (archiving the old page)
         env:
