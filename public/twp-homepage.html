@@ -1369,6 +1369,7 @@ uniform float uK;                // goop: how eagerly limbs melt together
 uniform vec3  uBg;               // base colour, bottom of the gradient (linearised)
 uniform vec3  uBgTop;            // top-of-page colour (linearised)
 uniform float uBgStop;           // where the gradient settles (0..1 of canvas height)
+uniform vec4  uEyes[${DANCERS*2}];  // eye centres xyz + softness radius in w
 
 /* tapered capsule (round cone) — limbs slim toward wrists and
    ankles instead of reading as constant-width pegs */
@@ -1477,6 +1478,16 @@ vec3 shadeFigure(vec3 p, vec3 n, vec3 v, vec3 base){
   vec3 l2 = normalize(vec3(-0.6, -0.3, 0.7));
   body += vec3(1.0) * pow(max(dot(reflect(-l1, n), v), 0.0), 90.0) * 1.2;
   body += vec3(0.25, 0.3, 0.4) * pow(max(dot(reflect(-l2, n), v), 0.0), 24.0) * 0.15;
+  // eyes: two soft frosted dots on each face — they sit on the head
+  // surface facing the dancer's way, so they only read when the
+  // dancer faces you
+  float eyeK = 1.0;
+  for(int e = 0; e < ${DANCERS*2}; e++){
+    vec3 ev = p - uEyes[e].xyz;
+    float s2 = uEyes[e].w * uEyes[e].w;
+    eyeK *= 1.0 - 0.45*exp(-dot(ev, ev)/(2.0*s2));
+  }
+  body *= eyeK;
   return body;
 }
 
@@ -1650,6 +1661,7 @@ const U = n => gl.getUniformLocation(prog, n);
 const uRes = U('uRes'), uTime = U('uTime'), uCenter = U('uCenter');
 const uSegA = U('uSegA'), uSegB = U('uSegB'), uBnd = U('uBnd'), uK = U('uK');
 const uBg = U('uBg'), uBgTop = U('uBgTop'), uBgStop = U('uBgStop');
+const uEyes = U('uEyes');
 
 /* ---------- background colour ---------- */
 const BG_DEFAULT = '#E4FFFE';
@@ -1741,6 +1753,7 @@ ptr.addEventListener('pointerdown', trackPointer);
 const segA = new Float32Array(SEGS * 4);
 const segB = new Float32Array(SEGS * 4);
 const bnd  = new Float32Array(DANCERS * 4);
+const eyes = new Float32Array(DANCERS * 2 * 4);
 
 // per-dancer bounding sphere over all 20 capsule endpoints,
 // padded by the fattest radius + the smooth-min blend reach
@@ -1891,6 +1904,17 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt){
     seg(hip, belly, F.torsoR*1.08, F.torsoR*0.96);  // torso, hips widest
     seg(belly, neck, F.torsoR*0.96, F.torsoR*0.78); // slims to shoulders
     seg(head, head, F.head, F.head);                // head
+
+    // eyes ride the head, looking wherever the dancer faces
+    const eSep = F.head * 0.58, eFwd = F.head * 1.02;
+    const eUp = F.head * 0.14, eSoft = F.head * 0.19;
+    for(const sd of [-1, 1]){
+      eyes.set([
+        head[0] + O[0]*eFwd + T[0]*sd*eSep,
+        head[1] + eUp,
+        head[2] + O[2]*eFwd + T[2]*sd*eSep,
+        eSoft], (i*2 + (sd > 0 ? 1 : 0)) * 4);
+    }
 
     // arms: in the round they reach to the shared held hands;
     // solo they pump and wave to their own beat
@@ -2063,6 +2087,7 @@ function frame(now){
   gl.uniform3f(uBg, bgLin[0], bgLin[1], bgLin[2]);
   gl.uniform3f(uBgTop, bgTopLin[0], bgTopLin[1], bgTopLin[2]);
   gl.uniform1f(uBgStop, bgStop);
+  gl.uniform4fv(uEyes, eyes);
   gl.drawArrays(gl.TRIANGLES, 0, 3);
   raf = requestAnimationFrame(frame);
 }

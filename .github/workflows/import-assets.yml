@@ -1,0 +1,86 @@
+name: Import logo assets into the repo
+
+# One-shot importer (run manually from the Actions tab or via API):
+# 1. copies the /assets directory already serving dev.thosewhoplay.com
+#    (logo-twp.svg etc.) from DreamHost into public/assets/, and
+# 2. downloads the footer artwork from Figma's temporary MCP asset
+#    URLs (valid ~7 days from 2026-07-10) with proper extensions.
+# Then commits whatever changed back to this branch, so the logos
+# stop living only on the server / behind expiring URLs.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: claude/redesign-website-iubYk
+
+      - name: Configure SSH
+        env:
+          DREAMHOST_SSH_KEY: ${{ secrets.DREAMHOST_SSH_KEY }}
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$DREAMHOST_SSH_KEY" > ~/.ssh/dreamhost
+          chmod 600 ~/.ssh/dreamhost
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          ssh-keyscan -p "$PORT" -H "$DREAMHOST_SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Pull /assets from the dev server
+        env:
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          set -uo pipefail
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          mkdir -p public/assets
+          scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes -r \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/assets/*" \
+            public/assets/ || echo "No server assets to pull (ok)"
+
+      - name: Download footer artwork from Figma asset URLs
+        run: |
+          set -euo pipefail
+          mkdir -p public/assets
+          fetch () { # url, basename — saves with extension by content type
+            local url="$1" base="$2" tmp
+            tmp=$(mktemp)
+            if ! curl -fsSL --max-time 60 -o "$tmp" "$url"; then
+              echo "FAILED: $base ($url)"; rm -f "$tmp"; return 0
+            fi
+            local type; type=$(file -b --mime-type "$tmp")
+            case "$type" in
+              image/svg+xml|text/xml|text/plain) mv "$tmp" "public/assets/$base.svg" ;;
+              image/png)  mv "$tmp" "public/assets/$base.png" ;;
+              image/jpeg) mv "$tmp" "public/assets/$base.jpg" ;;
+              *) mv "$tmp" "public/assets/$base.bin"; echo "unknown type $type for $base" ;;
+            esac
+            echo "saved $base ($type)"
+          }
+          fetch "https://www.figma.com/api/mcp/asset/6118379e-5040-46cc-97c3-1a9c99bc31d0" "foot-script"
+          fetch "https://www.figma.com/api/mcp/asset/7aa20365-c0be-416a-b635-e3fa93381c6f" "logo-twp-wordmark"
+          fetch "https://www.figma.com/api/mcp/asset/4b5f7a89-2afc-49d8-bcaf-b19912cbb060" "icon-instagram"
+          fetch "https://www.figma.com/api/mcp/asset/ff6eb466-a516-42f3-94f0-b68eedc7bafd" "icon-linkedin"
+          fetch "https://www.figma.com/api/mcp/asset/855c561c-1667-4f94-a322-051a31252ada" "icon-substack"
+          fetch "https://www.figma.com/api/mcp/asset/de2840e7-74a7-44a5-ae6f-38766ad82540" "icon-freqz"
+
+      - name: Commit imported assets
+        run: |
+          set -euo pipefail
+          git add public/assets
+          if git diff --cached --quiet; then
+            echo "Nothing new to commit"; exit 0
+          fi
+          git -c user.name="asset-importer" -c user.email="actions@github.com" \
+            commit -m "Assets: import logos from dev server + Figma into the repo"
+          git push origin claude/redesign-website-iubYk
