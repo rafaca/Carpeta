@@ -1746,6 +1746,9 @@ const anchors = Array.from({length: DANCERS}, () => [0, 0]); // last frame's fee
 const phase = new Float64Array(DANCERS); // each dancer's personal beat, integrated
 const spots = Array.from({length: DANCERS}, () => null);     // eased floor positions
 const faceAng = Array.from({length: DANCERS}, () => null);   // eased facing angles
+let faceIn = 0;                // 0 = ring faces outward, 1 = they face each other
+let faceInTarget = 0;
+let nextFaceFlip = 12000;      // when the ring next turns in (or out)
 let lineW = 0;                 // 0 = ring formation, 1 = follow-the-leader line
 let lineUntil = 0;             // when the current line dance ends
 let nextLineAt = 9000;         // when the next one starts
@@ -1790,7 +1793,7 @@ function computeBounds(){
   }
 }
 
-function buildSkeleton(t, wild, brk, lnW, lead, m, dt){
+function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
   const step = TAU / DANCERS;
   let n = 0;
   const seg = (a, b, rA, rB) => {
@@ -1877,7 +1880,7 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt){
 
     // facing: outward in the ring, wherever the groove goes when solo,
     // direction of travel in the line — always eased, never snapped
-    let faceGoal = a + brk * n1(i*4+7, t*0.25) * 3.0;
+    let faceGoal = a + Math.PI * fIn + brk * n1(i*4+7, t*0.25) * 3.0;
     if(lnW > 0.4 && Math.hypot(headX, headZ) > 0.02){
       faceGoal = Math.atan2(headZ, headX);
     } else if(lnW > 0.4 && faceAng[i] !== null){
@@ -2053,6 +2056,14 @@ function frame(now){
   const lt = now < lineUntil ? 1 : 0;
   lineW += (lt - lineW) * ease(lt > lineW ? 2.0 : 1.2);
 
+  // the round dance alternates: sometimes they face each other,
+  // sometimes they turn outward — flipping on a lazy, uneven clock
+  if(now > nextFaceFlip && broken < 0.3){
+    faceInTarget = 1 - faceInTarget;
+    nextFaceFlip = now + 8000 + Math.random() * 9000;
+  }
+  faceIn += (faceInTarget - faceIn) * ease(1.1);
+
   // where the leader is headed: the cursor if it's around, else a wander
   let lead;
   if(m && now - mouse.lastMove < 3000){
@@ -2097,7 +2108,7 @@ function frame(now){
     phase[i] += tempo * dt * MOTION.tempo;
   }
 
-  buildSkeleton(t, energy, broken, lineW, lead, m, dt);
+  buildSkeleton(t, energy, broken, lineW, lead, m, dt, faceIn);
   computeBounds();
 
   gl.uniform2f(uRes, W, H);
