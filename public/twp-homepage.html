@@ -1370,6 +1370,7 @@ uniform vec3  uBg;               // base colour, bottom of the gradient (lineari
 uniform vec3  uBgTop;            // top-of-page colour (linearised)
 uniform float uBgStop;           // where the gradient settles (0..1 of canvas height)
 uniform vec4  uEyes[${DANCERS*2}];  // eye centres xyz + softness radius in w
+uniform float uEyeDark;          // how dark the eye dots read
 
 /* tapered capsule (round cone) — limbs slim toward wrists and
    ankles instead of reading as constant-width pegs */
@@ -1485,7 +1486,7 @@ vec3 shadeFigure(vec3 p, vec3 n, vec3 v, vec3 base){
   for(int e = 0; e < ${DANCERS*2}; e++){
     vec3 ev = p - uEyes[e].xyz;
     float s2 = uEyes[e].w * uEyes[e].w;
-    eyeK *= 1.0 - 0.45*exp(-dot(ev, ev)/(2.0*s2));
+    eyeK *= 1.0 - uEyeDark*exp(-dot(ev, ev)/(2.0*s2));
   }
   body *= eyeK;
   return body;
@@ -1597,6 +1598,15 @@ const FIGURE = {
 };
 const FIGURE_DEFAULTS = { ...FIGURE };
 
+/* ---------- THE EYES — all factors of head size ---------- */
+const EYES = {
+  dark: 0.45,  // how dark the dots read
+  size: 0.19,  // dot softness
+  sep:  0.58,  // distance apart
+  up:   0.14,  // height on the face
+};
+const EYES_DEFAULTS = { ...EYES };
+
 /* ---------- THE DANCE — pace & choreography (also in the editor) */
 const MOTION = {
   tempo:  0.705, // beat speed — steps, bobs, arm pumps
@@ -1661,7 +1671,7 @@ const U = n => gl.getUniformLocation(prog, n);
 const uRes = U('uRes'), uTime = U('uTime'), uCenter = U('uCenter');
 const uSegA = U('uSegA'), uSegB = U('uSegB'), uBnd = U('uBnd'), uK = U('uK');
 const uBg = U('uBg'), uBgTop = U('uBgTop'), uBgStop = U('uBgStop');
-const uEyes = U('uEyes');
+const uEyes = U('uEyes'), uEyeDark = U('uEyeDark');
 
 /* ---------- background colour ---------- */
 const BG_DEFAULT = '#E4FFFE';
@@ -1685,6 +1695,7 @@ function applyBg(hex, topHex, stop){
 }
 if(opts.figure) Object.assign(FIGURE, opts.figure);
 if(opts.motion) Object.assign(MOTION, opts.motion);
+if(opts.eyes) Object.assign(EYES, opts.eyes);
 applyBg(opts.background || BG_DEFAULT, opts.backgroundTop, opts.backgroundStop);
 
 // full resolution (up to 1.5x on retina) — bounding spheres in the
@@ -1906,8 +1917,8 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt){
     seg(head, head, F.head, F.head);                // head
 
     // eyes ride the head, looking wherever the dancer faces
-    const eSep = F.head * 0.58, eFwd = F.head * 1.02;
-    const eUp = F.head * 0.14, eSoft = F.head * 0.19;
+    const eSep = F.head * EYES.sep, eFwd = F.head * 1.02;
+    const eUp = F.head * EYES.up, eSoft = F.head * Math.max(EYES.size, 0.02);
     for(const sd of [-1, 1]){
       eyes.set([
         head[0] + O[0]*eFwd + T[0]*sd*eSep,
@@ -2088,6 +2099,7 @@ function frame(now){
   gl.uniform3f(uBgTop, bgTopLin[0], bgTopLin[1], bgTopLin[2]);
   gl.uniform1f(uBgStop, bgStop);
   gl.uniform4fv(uEyes, eyes);
+  gl.uniform1f(uEyeDark, EYES.dark);
   gl.drawArrays(gl.TRIANGLES, 0, 3);
   raf = requestAnimationFrame(frame);
 }
