@@ -299,12 +299,12 @@ const FIGURE_DEFAULTS = { ...FIGURE };
 
 /* ---------- THE EYES — all factors of head size ---------- */
 const EYES = {
-  dark:    0.55,  // how dark the dots read
-  size:    0.17,  // eye softness
-  sep:     0.42,  // eye distance apart
-  up:      0.16,  // eye height on the face
-  mouth:   0.11,  // mouth size (0 = no mouth)
-  mouthUp: -0.22, // mouth height on the face
+  dark:    0.638, // how dark the dots read
+  size:    0.099, // eye softness
+  sep:     0.359, // eye distance apart
+  up:      0.160, // eye height on the face
+  mouth:   0.109, // mouth size (0 = no mouth)
+  mouthUp: -0.235,// mouth height on the face
 };
 const EYES_DEFAULTS = { ...EYES };
 
