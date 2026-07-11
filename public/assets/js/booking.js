@@ -20,7 +20,7 @@
   //   → Worker calls Google Calendar freebusy.query, subtracts busy
   //     blocks + buffers from your working hours, returns ISO strings.
   // ── Point this at your deployed Worker to go live. Empty string = built-in demo data. ──
-  const API_BASE = "https://rc-booking.thosewhoplay.workers.dev";   // live Worker → Google Calendar (empty string = built-in demo data)
+  const API_BASE = "https://rc-booking.rafacastello.workers.dev";   // live Worker → Google Calendar (empty string = built-in demo data); verified e2e 2026-07-11
 
   async function getAvailability(day){
     if(API_BASE){                                     // LIVE: Worker → Google Calendar free/busy
