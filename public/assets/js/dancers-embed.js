@@ -41,9 +41,19 @@ if(!host) throw new Error('BubbleDancers: container not found');
    and they drift back, join hands, and the round dance resumes.
    ============================================================ */
 
-const DANCERS = 6;
+const BASE = 6;            // the round starts with six dancers
+// each extra dancer costs ~25 fragment uniform vectors, so the
+// multiplication ceiling comes from the GPU's uniform budget
+const MAXD = (() => {
+  try{
+    const g = document.createElement('canvas').getContext('webgl');
+    const cap = g ? g.getParameter(g.MAX_FRAGMENT_UNIFORM_VECTORS) : 224;
+    return cap >= 330 ? 12 : cap >= 260 ? 9 : 6;
+  }catch(e){ return 6; }
+})();
+let N = BASE;              // living count — splits raise it, calm merges settle it
 const SPD = 9;             // segments per dancer: 2-piece spine + head + 2×2 arms + 2×1 legs
-const SEGS = DANCERS * SPD;
+const SEGS = MAXD * SPD;
 const TAU = Math.PI * 2;
 const RR = 0.92;           // radius of the ring at size 1 (scales with FIGURE.size)
 
@@ -63,13 +73,15 @@ uniform float uTime;
 uniform vec2  uCenter;           // stage-light centre on the floor (xz)
 uniform vec4  uSegA[${SEGS}];    // limb start xyz + start radius in w
 uniform vec4  uSegB[${SEGS}];    // limb end xyz + end radius in w
-uniform vec4  uBnd[${DANCERS}];  // per-dancer bounding sphere, xyz + radius
+uniform vec4  uBnd[${MAXD}];  // per-dancer bounding sphere, xyz + radius
 uniform float uK;                // goop: how eagerly limbs melt together
 uniform vec3  uBg;               // base colour, bottom of the gradient (linearised)
 uniform vec3  uBgTop;            // top-of-page colour (linearised)
 uniform float uBgStop;           // where the gradient settles (0..1 of canvas height)
-uniform vec4  uEyes[${DANCERS*3}];  // face dots (2 eyes + mouth) xyz + softness in w
-uniform float uEyeDark;          // how dark the eye dots read
+uniform vec4  uFaceA[${MAXD*3}]; // face feature: capsule start xyz + radius w
+uniform vec4  uFaceB[${MAXD*3}]; // face feature: capsule end xyz + type w (0 eye, 1 mouth)
+uniform float uEyeDark;          // how dark the face reads
+uniform float uEyeBlur;          // feature edge: crisp -> frosted haze
 
 /* tapered capsule (round cone) — limbs slim toward wrists and
    ankles instead of reading as constant-width pegs */
@@ -100,7 +112,7 @@ float smin(float a, float b, float k){
 
 float mapFigures(vec3 p){
   float d = 1e5;
-  for(int j = 0; j < ${DANCERS}; j++){
+  for(int j = 0; j < ${MAXD}; j++){
     // outside a dancer's bounding sphere, the sphere distance is a
     // safe lower bound — skip their 10 capsules entirely
     float bd = length(p - uBnd[j].xyz) - uBnd[j].w;
@@ -140,9 +152,9 @@ vec3 floorColor(vec3 p, float t, vec3 bg, float shAmt){
   float dc = length(p.xz - uCenter);
   fl += (uBg * 0.11 + vec3(0.02, 0.02, 0.03)) * smoothstep(2.0, 0.3, dc);
   float sh = 1.0;
-  for(int i = 0; i < ${DANCERS}; i++){
+  for(int i = 0; i < ${MAXD}; i++){
     float hd = length(p.xz - uSegA[i*${SPD}].xz);
-    sh *= 1.0 - 0.25*exp(-hd*hd*7.0);
+    sh *= 1.0 - 0.15*exp(-hd*hd*7.0);
   }
   fl *= mix(1.0, sh, shAmt);
   return mix(fl, bg, smoothstep(2.5, 8.0, t));
@@ -182,12 +194,29 @@ vec3 shadeFigure(vec3 p, vec3 n, vec3 v, vec3 base){
   // surface facing the dancer's way, so they only read when the
   // dancer faces you
   float eyeK = 1.0;
-  for(int e = 0; e < ${DANCERS*3}; e++){
-    vec3 ev = p - uEyes[e].xyz;
-    float s2 = uEyes[e].w * uEyes[e].w;
-    eyeK *= 1.0 - uEyeDark*exp(-dot(ev, ev)/(2.0*s2));
+  float shine = 0.0;
+  for(int e = 0; e < ${MAXD*3}; e++){
+    vec3 a = uFaceA[e].xyz; float r = uFaceA[e].w;
+    vec3 ba = uFaceB[e].xyz - a;
+    vec3 pa = p - a;
+    float h = clamp(dot(pa, ba)/max(dot(ba, ba), 1e-6), 0.0, 1.0);
+    float d = length(pa - ba*h);
+    float m = 1.0 - smoothstep(r*(1.0 - uEyeBlur), r*(1.0 + uEyeBlur), d);
+    if(uFaceB[e].w > 0.5){
+      // the mouth is a half-disc: flat top, round bottom — mid-song
+      m *= smoothstep(r*0.18, -r*0.18, p.y - a.y);
+    } else if(m > 0.001){
+      // catchlight: a small bright dot high in each eye, offset to
+      // one side of the view so it reads like the reference face
+      vec3 axis = normalize(ba + vec3(0.0, 1e-4, 0.0));
+      vec3 sidev = normalize(cross(axis, v));
+      vec3 hl = a + ba*0.72 + sidev*(r*0.38);
+      shine += (1.0 - smoothstep(r*0.20, r*0.48, length(p - hl))) * m;
+    }
+    eyeK *= 1.0 - uEyeDark*m;
   }
   body *= eyeK;
+  body += vec3(0.85) * min(shine, 1.0) * uEyeDark * 0.6;
   return body;
 }
 
@@ -288,8 +317,9 @@ const FIGURE = {
   torso:   0.267,  // hip-to-shoulder length
   torsoR:  0.110,  // torso thickness
   hip:     0.424,  // hip height off the floor
-  armR:    0.064,  // arm thickness
-  armLen:  0.215,  // arm reach — how far hands stretch from the shoulders
+  armR:    0.036,  // arm thickness
+  armLen:  0.325,  // arm reach — how far hands stretch from the shoulders
+  hand:    0.075,  // hand thickness — the round tip at the end of the arm
   legR:    0.085,  // leg thickness
   stance:  0.080,  // how far apart the feet stand
   handH:   0.622,  // height where neighbours' hands meet
@@ -300,11 +330,13 @@ const FIGURE_DEFAULTS = { ...FIGURE };
 /* ---------- THE EYES — all factors of head size ---------- */
 const EYES = {
   dark:    0.558, // how dark the dots read
-  size:    0.108, // eye softness
-  sep:     0.460, // eye distance apart
+  size:    0.102, // eye dot size
+  blur:    0.80,  // edge blur: low = crisp print, high = frosted haze
+  stretch: 0.81,  // eye elongation - 0 = round dot, 0.81 = the reference pill
+  sep:     0.322, // eye distance apart
   up:      0.160, // eye height on the face
   mouth:   0.109, // mouth size (0 = no mouth)
-  mouthUp: -0.239,// mouth height on the face
+  mouthUp: -0.250,// mouth height on the face
 };
 const EYES_DEFAULTS = { ...EYES };
 
@@ -316,6 +348,8 @@ const MOTION = {
   jump:   0.742, // jump height
   sway:   0.547, // hips, spine, arms and kick looseness
   lines:  1.938, // how often they snake off in a follow-the-leader line
+  roam:   1.5,   // how far the whole round promenades about the floor
+  multiply: 1.0, // how often a dancer splits in two (0 = never)
 };
 const MOTION_DEFAULTS = { ...MOTION };
 const MPARAMS = [
@@ -325,6 +359,8 @@ const MPARAMS = [
   ['jump height', 'jump',   0.0, 2.5],
   ['sway',        'sway',   0.0, 2.5],
   ['line dances', 'lines',  0.0, 2.5],
+  ['roaming',     'roam',   0.0, 3.0],
+  ['multiplying', 'multiply', 0.0, 2.5],
 ];
 
 // the editor panel: label, key, min, max
@@ -372,7 +408,8 @@ const U = n => gl.getUniformLocation(prog, n);
 const uRes = U('uRes'), uTime = U('uTime'), uCenter = U('uCenter');
 const uSegA = U('uSegA'), uSegB = U('uSegB'), uBnd = U('uBnd'), uK = U('uK');
 const uBg = U('uBg'), uBgTop = U('uBgTop'), uBgStop = U('uBgStop');
-const uEyes = U('uEyes'), uEyeDark = U('uEyeDark');
+const uFaceA = U('uFaceA'), uFaceB = U('uFaceB'), uEyeDark = U('uEyeDark');
+const uEyeBlur = U('uEyeBlur');
 
 /* ---------- background colour ---------- */
 const BG_DEFAULT = '#E4FFFE';
@@ -443,10 +480,13 @@ let broken = 0;         // 0 = hands held, 1 = circle broken, all solo
 let lastTouch = -1e9;
 let ringA = 0;          // the circling
 let last = performance.now();
-const anchors = Array.from({length: DANCERS}, () => [0, 0]); // last frame's feet spots
-const phase = new Float64Array(DANCERS); // each dancer's personal beat, integrated
-const spots = Array.from({length: DANCERS}, () => null);     // eased floor positions
-const faceAng = Array.from({length: DANCERS}, () => null);   // eased facing angles
+const anchors = Array.from({length: BASE}, () => [0, 0]); // last frame's feet spots
+const phase = Array.from({length: BASE}, () => 0);   // personal beats — splice-able, the troupe grows
+const spots = Array.from({length: BASE}, () => null);     // eased floor positions
+const faceAng = Array.from({length: BASE}, () => null);   // eased facing angles
+let nextSplitAt = 0;           // when a dancer next splits in two
+let nextMergeAt = 0;           // when a calm round next absorbs an extra
+let mergeI = -1;               // dancer currently melting into its neighbour
 let jumpClock = 0;             // shared beat: broken dancers jump in unison
 let faceIn = 0;                // 0 = ring faces outward, 1 = they face each other
 let faceInTarget = 0;
@@ -470,13 +510,14 @@ ptr.addEventListener('pointerdown', trackPointer);
 /* ---------- the troupe ---------- */
 const segA = new Float32Array(SEGS * 4);
 const segB = new Float32Array(SEGS * 4);
-const bnd  = new Float32Array(DANCERS * 4);
-const eyes = new Float32Array(DANCERS * 3 * 4);
+const bnd  = new Float32Array(MAXD * 4);
+const faceA = new Float32Array(MAXD * 3 * 4);
+const faceB = new Float32Array(MAXD * 3 * 4);
 
 // per-dancer bounding sphere over all 20 capsule endpoints,
 // padded by the fattest radius + the smooth-min blend reach
 function computeBounds(){
-  for(let j = 0; j < DANCERS; j++){
+  for(let j = 0; j < N; j++){
     let cx = 0, cy = 0, cz = 0, maxR = 0;
     for(let i = 0; i < SPD; i++){
       const k = (j*SPD + i) * 4;
@@ -493,10 +534,24 @@ function computeBounds(){
     }
     bnd.set([cx, cy, cz, r + maxR + 0.06], j * 4);
   }
+  // slots beyond the living count are parked far away — the shader
+  // still loops over them, but they can't touch the picture
+  for(let j = N; j < MAXD; j++){
+    for(let i = 0; i < SPD; i++){
+      segA.set([999, -999, 999, 0.001], (j*SPD + i) * 4);
+      segB.set([999, -999, 999, 0.001], (j*SPD + i) * 4);
+    }
+    for(let f = 0; f < 3; f++){
+      faceA.set([999, -999, 999, 0.001], (j*3 + f) * 4);
+      faceB.set([999, -999, 999, 1], (j*3 + f) * 4);
+    }
+    bnd.set([999, -999, 999, 0.001], j * 4);
+  }
 }
 
 function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
-  const step = TAU / DANCERS;
+  const step = TAU / N;
+  anchors.length = N;
   let n = 0;
   const seg = (a, b, rA, rB) => {
     segA.set([a[0], a[1], a[2], rA], n * 4);
@@ -515,12 +570,12 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
   const S = FIGURE.size * (1 - 0.34 * lnW);
   const F = {};
   for(const k in FIGURE) F[k] = k === 'size' ? S : FIGURE[k] * S;
-  const RRs = RR * S;
+  const RRs = RR * S * Math.sqrt(N / BASE); // the round widens as it multiplies
   // longer arms bow the held hands outward, shorter arms pull the
   // grip in tight — so arm length reads in the ring pose too
   const heldR = RRs + (0.06 + (F.armLen - 0.245*S) * 0.8);
   const held = [];
-  for(let i = 0; i < DANCERS; i++){
+  for(let i = 0; i < N; i++){
     const a = ringA + (i + 0.5) * step;
     held.push([
       center[0] + heldR * Math.cos(a) + n1(i*3+1, t) * (0.05 + 0.2*wild) * S,
@@ -529,15 +584,18 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
     ]);
   }
 
-  for(let i = 0; i < DANCERS; i++){
+  for(let i = 0; i < N; i++){
     const a = ringA + i * step;
 
     // spot on the ring vs. their own solo spot: scattered outward,
     // wandering, and shooed along if the cursor chases them
     const ringSpot = [center[0] + RRs*Math.cos(a), center[1] + RRs*Math.sin(a)];
+    // roaming widens the freestyle scatter too — broken dancers
+    // range across the floor instead of hovering near their spot
+    const scat = (0.7 + 0.55 * MOTION.roam) * S;
     let solo = [
-      ringSpot[0] + Math.cos(a)*0.22*S + n1(i*9+3, t*0.45)*S,
-      ringSpot[1] + Math.sin(a)*0.22*S + n1(i*9+53, t*0.45)*S];
+      ringSpot[0] + Math.cos(a)*0.22*S + n1(i*9+3, t*0.45)*scat,
+      ringSpot[1] + Math.sin(a)*0.22*S + n1(i*9+53, t*0.45)*scat];
     if(brk > 0.01 && m){
       const dx = solo[0]-m[0], dz = solo[1]-m[1];
       const d = Math.hypot(dx, dz);
@@ -567,12 +625,17 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
       }
       spotT = mix2(spotT, lineSpot, lnW);
     }
+    // a merging dancer walks onto its neighbour and melts in
+    if(i === mergeI){
+      const tgt = spots[(i + 1) % N];
+      if(tgt) spotT = [tgt[0], tgt[1]];
+    }
 
     // ease toward the target spot — repulsion pushes, mode blends and
     // the chasing line all arrive as smooth steps, not snaps
     if(!spots[i]) spots[i] = spotT.slice();
     const headX = spotT[0] - spots[i][0], headZ = spotT[1] - spots[i][1];
-    const se = 1 - Math.exp(-dt * 5);
+    const se = 1 - Math.exp(-dt * (i === mergeI ? 9 : 5));
     spots[i][0] += headX * se;
     spots[i][1] += headZ * se;
     anchors[i] = spots[i];
@@ -632,28 +695,32 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
     // the face rides the head, looking wherever the dancer faces:
     // two eyes and a small mouth below them
     const eSep = F.head * EYES.sep, eFwd = F.head * 1.02;
-    const eUp = F.head * EYES.up, eSoft = F.head * Math.max(EYES.size, 0.02);
+    const eUp = F.head * EYES.up, eR = F.head * Math.max(EYES.size, 0.02);
+    const eHalf = eR * EYES.stretch;  // capsule half-length — tall pill eyes
     for(const sd of [-1, 1]){
-      eyes.set([
-        head[0] + O[0]*eFwd + T[0]*sd*eSep,
-        head[1] + eUp,
-        head[2] + O[2]*eFwd + T[2]*sd*eSep,
-        eSoft], (i*3 + (sd > 0 ? 1 : 0)) * 4);
+      const k = (i*3 + (sd > 0 ? 1 : 0)) * 4;
+      const cx = head[0] + O[0]*eFwd + T[0]*sd*eSep,
+            cy = head[1] + eUp,
+            cz = head[2] + O[2]*eFwd + T[2]*sd*eSep;
+      faceA.set([cx, cy - eHalf, cz, eR], k);
+      faceB.set([cx, cy + eHalf, cz, 0], k);
     }
     if(EYES.mouth > 0.02){
-      eyes.set([
-        head[0] + O[0]*eFwd,
-        head[1] + F.head * EYES.mouthUp,
-        head[2] + O[2]*eFwd,
-        F.head * EYES.mouth], (i*3 + 2) * 4);
+      const k = (i*3 + 2) * 4;
+      const mx = head[0] + O[0]*eFwd,
+            my = head[1] + F.head * EYES.mouthUp,
+            mz = head[2] + O[2]*eFwd;
+      faceA.set([mx, my, mz, F.head * EYES.mouth], k);
+      faceB.set([mx, my, mz, 1], k);
     } else {
-      eyes.set([0, -99, 0, 0.001], (i*3 + 2) * 4); // parked far under the floor
+      faceA.set([0, -99, 0, 0.001], (i*3 + 2) * 4); // parked far under the floor
+      faceB.set([0, -99, 0, 1], (i*3 + 2) * 4);
     }
 
     // arms: in the round they reach to the shared held hands;
     // solo they pump and wave to their own beat
     const shoulder = lerp3(hip, neck, 0.85);
-    const armPairs = [[held[i], 1], [held[(i + DANCERS - 1) % DANCERS], -1]];
+    const armPairs = [[held[i], 1], [held[(i + N - 1) % N], -1]];
     for(const [heldHand, side] of armPairs){
       const wave = face + side * (1.3 + n1(i*6 + side*3 + 30, t) * 1.2 * MOTION.sway);
       const raise = (0.42 + 0.4 * Math.max(0, Math.sin(phase[i]*0.5 + side*1.8))) * S;
@@ -675,7 +742,7 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
         mid[1] - Math.cos(bendA)*eb,
         mid[2] + p1[2]*Math.sin(bendA)*eb];
       seg(shoulder, elbow, F.armR, F.armR*0.85);
-      seg(elbow, hand, F.armR*0.85, F.armR*0.66); // slims to the wrist
+      seg(elbow, hand, F.armR*0.85, F.hand); // rounds out into the hand
     }
 
     // legs: alternate stepping; solo kicks fly higher and wider,
@@ -734,7 +801,7 @@ function frame(now){
   const m = mouseToFloor(mouse.x, mouse.y);
   let touching = false;
   if(m){
-    const dBand = Math.abs(Math.hypot(m[0]-center[0], m[1]-center[1]) - RR*FIGURE.size);
+    const dBand = Math.abs(Math.hypot(m[0]-center[0], m[1]-center[1]) - RR*FIGURE.size*Math.sqrt(N/BASE));
     const nearDancer = anchors.some(s => Math.hypot(m[0]-s[0], m[1]-s[1]) < 0.30);
     touching = dBand < 0.22 || nearDancer;
   }
@@ -786,9 +853,12 @@ function frame(now){
   }
 
   // the round drifts gently after the cursor (never when broken —
-  // solo dancers hold their own ground)
+  // solo dancers hold their own ground). Left alone, the whole
+  // troupe promenades slowly about the floor instead of holding
+  // the centre of the stage
   const followed = m && now - mouse.lastMove < 2500 && broken < 0.5 && lineW < 0.5;
-  let goal = [0, 0];
+  let goal = [n1(620, t*0.20) * 2.3 * MOTION.roam,
+              n1(660, t*0.16) * 1.5 * MOTION.roam];
   if(followed){
     const l = Math.hypot(m[0], m[1]);
     goal = l > 0.55 ? [m[0]*0.55/l, m[1]*0.55/l] : [m[0], m[1]];
@@ -802,7 +872,7 @@ function frame(now){
   if(lineW > 0.01){
     let cx = 0, cz = 0;
     for(const s of anchors){ cx += s[0]; cz += s[1]; }
-    cx /= DANCERS; cz /= DANCERS;
+    cx /= N; cz /= N;
     const cl = Math.hypot(cx, cz);
     if(cl > 1.1){ cx *= 1.1/cl; cz *= 1.1/cl; }
     center[0] += (cx - center[0]) * ease(1.5) * lineW;
@@ -812,10 +882,40 @@ function frame(now){
   // the circling: steady in the round, paused while broken
   ringA += dt * (0.22 + energy * 0.9) * (1 - broken * 0.92) * MOTION.circle;
 
+  // multiplication: at any moment a dancer can split in two — the
+  // newborn slides out of its parent's droplet and the round widens
+  if(!nextSplitAt) nextSplitAt = now + 9000;
+  if(MOTION.multiply > 0.02 && now > nextSplitAt){
+    nextSplitAt = now + (12000 + Math.random() * 20000) / MOTION.multiply;
+    if(N < MAXD){
+      const pi = Math.floor(Math.random() * N);
+      phase.splice(pi + 1, 0, phase[pi] + 0.4);
+      spots.splice(pi + 1, 0, spots[pi] ? [spots[pi][0] + 0.02, spots[pi][1]] : null);
+      faceAng.splice(pi + 1, 0, faceAng[pi]);
+      N++;
+    }
+  }
+  // and back down: past the base six, a calm round now and then lets
+  // one dancer melt into its neighbour
+  if(mergeI < 0 && N > BASE && broken < 0.3 && lineW < 0.3 && now > nextMergeAt){
+    if(!nextMergeAt){ nextMergeAt = now + 14000; }
+    else mergeI = Math.floor(Math.random() * N);
+  }
+  if(mergeI >= 0){
+    const a = spots[mergeI], b = spots[(mergeI + 1) % N];
+    if(broken > 0.5 || lineW > 0.5){
+      mergeI = -1; nextMergeAt = now + 9000;   // scattered — call it off
+    } else if(a && b && Math.hypot(a[0]-b[0], a[1]-b[1]) < 0.18 * FIGURE.size){
+      phase.splice(mergeI, 1); spots.splice(mergeI, 1); faceAng.splice(mergeI, 1);
+      N--; mergeI = -1;
+      nextMergeAt = now + 16000 + Math.random() * 14000;
+    }
+  }
+
   // integrate each dancer's personal beat — held: one shared tempo,
   // solo: everyone drifts to their own. Integration (not t×tempo)
   // is what keeps a tempo change from snapping the whole pose.
-  for(let i = 0; i < DANCERS; i++){
+  for(let i = 0; i < N; i++){
     const tempo = 7 * (1 + broken * (0.35 + rnd(i, 20) * 0.5)) * (1 + 0.4*energy);
     phase[i] += tempo * dt * MOTION.tempo;
   }
@@ -834,8 +934,10 @@ function frame(now){
   gl.uniform3f(uBg, bgLin[0], bgLin[1], bgLin[2]);
   gl.uniform3f(uBgTop, bgTopLin[0], bgTopLin[1], bgTopLin[2]);
   gl.uniform1f(uBgStop, bgStop);
-  gl.uniform4fv(uEyes, eyes);
+  gl.uniform4fv(uFaceA, faceA);
+  gl.uniform4fv(uFaceB, faceB);
   gl.uniform1f(uEyeDark, EYES.dark);
+  gl.uniform1f(uEyeBlur, EYES.blur);
   gl.drawArrays(gl.TRIANGLES, 0, 3);
   raf = requestAnimationFrame(frame);
 }
