@@ -993,3 +993,35 @@ body.twp-sub{
   border:0; border-radius:12px; background:#DFF6FF;
 }
 @media (max-width:720px){ .video-band{ padding:30px 16px } }
+
+/* ============ MOBILE COLLAPSE (<=768px) ============ */
+/* Stacked header per the spec: logo on top, links wrap beneath,
+   contact pill joins the flow. CSS-only so it works without JS. */
+@media (max-width:768px){
+  .site-head{
+    flex-direction:column; gap:6px;
+    padding:14px 16px 10px;
+  }
+  .head-nav{
+    flex-wrap:wrap; justify-content:center;
+    gap:14px 22px; padding:8px 0;
+    width:100%;
+  }
+  .head-nav .nav-link{ font-size:16px }
+  .head-logo{ order:-1; flex-basis:100%; display:flex; justify-content:center; margin-bottom:6px }
+  .head-logo img{ margin:0 auto }
+  .contact-btn{ position:static; transform:none; margin-top:4px }
+  /* forms and rows give up their fixed widths */
+  .news-form{ flex-wrap:wrap; justify-content:center }
+  .news-form input{ width:100%; max-width:100%; flex:1 1 220px }
+  .newsletter--row{ padding:60px 16px }
+  .newsletter--row h2{ max-width:100% }
+  .newsletter{ padding:70px 16px }
+  .article, .split, .callout, .page-hero, .hero-basic{ padding-left:16px; padding-right:16px }
+  .feed{ padding:24px 16px }
+  .store-layout, .product-wrap, .reviews{ padding-left:16px; padding-right:16px }
+  .caps{ padding:40px 8px; gap:8px }
+  .caps .col{ padding:0 10px; white-space:normal }
+  .bigtext{ padding:40px 20px }
+  .tiles-wrap, .video-band, .twp-store-module{ padding-left:16px; padding-right:16px }
+}

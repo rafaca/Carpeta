@@ -149,10 +149,16 @@
         grid.innerHTML = '<div class="store-empty">Nothing matches — loosen a filter or two.</div>';
         return;
       }
-      // standard cards first, featured wides after (2-up row), per the frame
-      var std = list.filter(function(p){ return !p.featured; });
-      var wide = list.filter(function(p){ return p.featured; });
-      grid.innerHTML = std.map(card).join('') + wide.map(card).join('');
+      if(state.sort === 'new'){
+        // default view groups the frame's way: standard cards first,
+        // featured wides in their own 2-up rows after
+        var std = list.filter(function(p){ return !p.featured; });
+        var wide = list.filter(function(p){ return p.featured; });
+        grid.innerHTML = std.map(card).join('') + wide.map(card).join('');
+      } else {
+        // explicit sorts keep the true order, wides flowing inline
+        grid.innerHTML = list.map(card).join('');
+      }
     }
     render();
   }
