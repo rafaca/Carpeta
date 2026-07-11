@@ -1,0 +1,106 @@
+[
+  {
+    "slug": "google",
+    "title": "Google",
+    "client": "Google",
+    "year": 2025,
+    "tags": [
+      "experiential",
+      "systems"
+    ],
+    "cardColor": "#84FFE9",
+    "heroColor": "#DFF6FF",
+    "href": "/project.html?p=google"
+  },
+  {
+    "slug": "pepsi",
+    "title": "Pepsi",
+    "client": "PepsiCo",
+    "year": 2025,
+    "tags": [
+      "campaign",
+      "motion"
+    ],
+    "cardColor": "#84FFE9",
+    "heroColor": "#E4FFFE",
+    "href": "/project.html?p=pepsi"
+  },
+  {
+    "slug": "aesop",
+    "title": "Aesop",
+    "client": "Aesop",
+    "year": 2024,
+    "tags": [
+      "retail",
+      "identity"
+    ],
+    "cardColor": "#84FFE9",
+    "heroColor": "#F0EAD6",
+    "href": "/project.html?p=aesop"
+  },
+  {
+    "slug": "tylenol",
+    "title": "Tylenol",
+    "client": "Kenvue",
+    "year": 2024,
+    "tags": [
+      "product",
+      "ux"
+    ],
+    "cardColor": "#84FFE9",
+    "heroColor": "#DFF6FF",
+    "href": "/project.html?p=tylenol"
+  },
+  {
+    "slug": "comuno",
+    "title": "Comuno",
+    "client": "Comuno",
+    "year": 2026,
+    "tags": [
+      "identity",
+      "go-to-market"
+    ],
+    "cardColor": "#84FFE9",
+    "heroColor": "#E4FFFE",
+    "href": "/project.html?p=comuno"
+  },
+  {
+    "slug": "curbitas",
+    "title": "Curbitas",
+    "client": "Curbitas",
+    "year": 2025,
+    "tags": [
+      "product",
+      "prototyping"
+    ],
+    "cardColor": "#84FFE9",
+    "heroColor": "#F0EAD6",
+    "href": "/project.html?p=curbitas"
+  },
+  {
+    "slug": "pain-tracker",
+    "title": "Pain Tracker",
+    "client": "Pain Tracker",
+    "year": 2024,
+    "tags": [
+      "ux",
+      "research"
+    ],
+    "cardColor": "#84FFE9",
+    "heroColor": "#DFF6FF",
+    "href": "/project.html?p=pain-tracker"
+  },
+  {
+    "slug": "lover-of-lies",
+    "title": "The Lover of Lies",
+    "client": "Those Who Play",
+    "year": 2026,
+    "tags": [
+      "immersive",
+      "original"
+    ],
+    "cardColor": "#84FFE9",
+    "heroColor": "#A8D8F0",
+    "href": "/projects/lover-of-lies.html"
+  }
+]
