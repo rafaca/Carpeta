@@ -83,23 +83,38 @@ jobs:
         run: |
           set -euo pipefail
           shopt -s nullglob
-          files=(public/twp-*.html)
-          if (( ${#files[@]} == 0 )); then
-            echo "No public/twp-*.html to mirror to dev"; exit 0
-          fi
           PORT="${DREAMHOST_SSH_PORT:-22}"
-          echo "Mirroring to dev.thosewhoplay.com: ${files[*]}"
+          # the whole static site: every page at the public root plus the
+          # asset tree and the per-section page directories
+          files=(public/*.html)
+          echo "Mirroring pages to dev.thosewhoplay.com: ${files[*]}"
           scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
             "${files[@]}" \
             "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/"
-          # assets ride along so the mockups' logos resolve on dev
-          if [ -d public/assets ]; then
-            scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes -r \
-              public/assets \
-              "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/"
-          fi
+          for d in assets projects research; do
+            if [ -d "public/$d" ]; then
+              scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes -r \
+                "public/$d" \
+                "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/"
+            fi
+          done
 
-      - name: Keep the original dev index (mock stays at /twp-homepage.html until approved)
+      - name: Publish twp-homepage.html as the dev index (approved 2026-07-11)
+        env:
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          [ -f public/twp-homepage.html ] || { echo "No twp-homepage.html; skipping"; exit 0; }
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          # the pre-twp original stays recoverable at archive/index-pre-twp-*
+          scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
+            public/twp-homepage.html \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/index.html"
+          echo "dev.thosewhoplay.com/ now serves the new site"
+
+      - name: Verify the deployed files landed
         env:
           DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
           DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
@@ -107,17 +122,6 @@ jobs:
         run: |
           set -euo pipefail
           PORT="${DREAMHOST_SSH_PORT:-22}"
-          # the twp homepage briefly took over dev's index; until it is
-          # tested and approved, the archived original stays in front
           ssh -i ~/.ssh/dreamhost -p "$PORT" -o StrictHostKeyChecking=yes \
-            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" 'bash -s' <<'EOSSH'
-          set -euo pipefail
-          cd ~/dev.thosewhoplay.com
-          latest=$(ls -t archive/index-pre-twp-* 2>/dev/null | head -1 || true)
-          if [ -n "$latest" ]; then
-            cp "$latest" index.html
-            echo "dev index restored from $latest"
-          else
-            echo "No archived index found; leaving index.html untouched"
-          fi
-          EOSSH
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" \
+            "cd ~/dev.thosewhoplay.com && ls *.html && ls projects research assets/css assets/js assets/data"
