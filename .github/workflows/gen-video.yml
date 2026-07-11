@@ -1,0 +1,51 @@
+name: Generate placeholder loop mp4 (runner has ffmpeg; sandbox does not)
+
+# One-shot: renders an 8s abstract gradient loop in the TWP palette and
+# commits it as public/assets/video/twp-loop.mp4. Re-runs only if this
+# file changes or on manual dispatch. Rafa: replace the mp4 with the
+# real reel whenever it's ready — nothing regenerates on its own.
+
+on:
+  push:
+    paths:
+      - .github/workflows/gen-video.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gen-video
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: claude/redesign-website-iubYk
+
+      - name: Render the loop
+        run: |
+          set -euo pipefail
+          mkdir -p public/assets/video
+          ffmpeg -y -f lavfi \
+            -i "gradients=size=1440x810:speed=0.03:nb_colors=4:c0=0xE4FFFE:c1=0xDFF6FF:c2=0xF0EAD6:c3=0x84FFE9:duration=8:rate=30" \
+            -c:v libx264 -preset slow -crf 24 -pix_fmt yuv420p -movflags +faststart \
+            public/assets/video/twp-loop.mp4
+          ls -la public/assets/video/
+
+      - name: Commit the asset
+        run: |
+          set -euo pipefail
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git add public/assets/video/twp-loop.mp4
+          git diff --cached --quiet && { echo "No change"; exit 0; }
+          git commit -m "TWP §4.9: placeholder loop mp4 (rendered on the runner)"
+          for i in 1 2 3; do
+            git push && break
+            git pull --rebase && sleep 3
+          done

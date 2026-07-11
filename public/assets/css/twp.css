@@ -984,3 +984,12 @@ body.twp-sub{
   .prod-card.wide{ grid-column:auto }
   .twp-store-module .strip{ grid-template-columns:1fr }
 }
+
+/* ============ VIDEO BAND ============ */
+.video-band{ width:100%; padding:50px 40px }
+.video-band video, .video-band iframe{
+  width:min(1360px,100%); margin:0 auto; display:block;
+  aspect-ratio:16/9; height:auto; object-fit:cover;
+  border:0; border-radius:12px; background:#DFF6FF;
+}
+@media (max-width:720px){ .video-band{ padding:30px 16px } }
