@@ -1,4 +1,4 @@
-name: Generate placeholder loop mp4 (runner has ffmpeg; sandbox does not)
+name: Generate placeholder loop mp4 (ffmpeg installed on the runner)
 
 # One-shot: renders an 8s abstract gradient loop in the TWP palette and
 # commits it as public/assets/video/twp-loop.mp4. Re-runs only if this
@@ -26,6 +26,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: claude/redesign-website-iubYk
+
+      # ubuntu-latest does not ship ffmpeg (the first run failed with
+      # "command not found"), so install it explicitly.
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends ffmpeg
+          ffmpeg -version | head -1
 
       - name: Render the loop
         run: |
