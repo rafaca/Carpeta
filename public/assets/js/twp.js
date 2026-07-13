@@ -26,9 +26,12 @@
     });
   }, { threshold: .12, rootMargin: '0px 0px -8% 0px' });
   // hold anything visible at load until the intro (dancers → headline →
-  // header) has landed; reduced-motion users get everything immediately
-  var hasIntro = !!document.getElementById('dancers-stage');
-  var introMs = (hasIntro && matchMedia('(prefers-reduced-motion: no-preference)').matches) ? 4600 : 0;
+  // header) has landed; the intro only runs when the page opted in via
+  // html.twp-intro (first visit this session) — repeats and
+  // reduced-motion users get everything immediately
+  var hasIntro = document.documentElement.classList.contains('twp-intro')
+    && !!document.getElementById('dancers-stage');
+  var introMs = (hasIntro && matchMedia('(prefers-reduced-motion: no-preference)').matches) ? 2600 : 0;
   setTimeout(function(){ els.forEach(function(el){ io.observe(el); }); }, introMs);
 })();
 

@@ -383,7 +383,9 @@ const PARAMS = [
 const canvas = document.createElement('canvas');
 canvas.style.cssText = 'display:block;width:100%;height:100%';
 host.appendChild(canvas);
-const gl = canvas.getContext('webgl');
+// no MSAA/depth/stencil: it's a single fullscreen triangle whose shader
+// does its own edge softening, so the default buffers are pure cost
+const gl = canvas.getContext('webgl', { antialias: false, depth: false, stencil: false });
 function sh(type, src){
   const h = gl.createShader(type);
   gl.shaderSource(h, src); gl.compileShader(h);
@@ -436,13 +438,16 @@ if(opts.motion) Object.assign(MOTION, opts.motion);
 if(opts.eyes) Object.assign(EYES, opts.eyes);
 applyBg(opts.background || BG_DEFAULT, opts.backgroundTop, opts.backgroundStop);
 
-// full resolution (up to 1.5x on retina) — bounding spheres in the
-// shader keep the per-pixel cost down, and edges stay crisp
-const RES_SCALE = Math.min(window.devicePixelRatio || 1, 1.5);
+// the scene is soft gradients, so it upscales invisibly: render at 1x
+// CSS pixels (not retina) and degrade further when the machine can't
+// hold the frame rate — resolution is the whole cost of a fullscreen
+// SDF shader
+let resScale = Math.min(window.devicePixelRatio || 1, 1);
+let slowFrames = 0; // consecutive-ish frames over budget (see frame())
 let W, H;
 function resize(){
-  W = canvas.width = Math.round(host.clientWidth * RES_SCALE);
-  H = canvas.height = Math.round(host.clientHeight * RES_SCALE);
+  W = canvas.width = Math.round(host.clientWidth * resScale);
+  H = canvas.height = Math.round(host.clientHeight * resScale);
   gl.viewport(0, 0, W, H);
 }
 const ro = new ResizeObserver(resize);
@@ -779,6 +784,14 @@ function frame(now){
   const rawDt = Math.max((now - last) / 1000, 1e-3);
   const dt = Math.min(rawDt, 0.05);
   last = now;
+
+  // adaptive quality: when the GPU can't hold ~40fps for a sustained
+  // stretch, shrink the internal buffer a step (floor 0.55) rather than
+  // letting the whole page go clunky; single spikes (tab switches,
+  // scroll starts) don't trip it
+  if(rawDt > 0.025){
+    if(++slowFrames >= 40 && resScale > 0.55){ resScale *= 0.8; slowFrames = 0; resize(); }
+  } else if(slowFrames > 0) slowFrames--;
 
   // time-based easing so behaviour is identical at any frame rate
   const ease = rate => 1 - Math.exp(-dt * rate);
