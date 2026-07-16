@@ -48,7 +48,7 @@ const MAXD = (() => {
   try{
     const g = document.createElement('canvas').getContext('webgl');
     const cap = g ? g.getParameter(g.MAX_FRAGMENT_UNIFORM_VECTORS) : 224;
-    return cap >= 330 ? 12 : cap >= 260 ? 9 : 6;
+    return cap >= 348 ? 12 : cap >= 276 ? 9 : 6;
   }catch(e){ return 6; }
 })();
 let N = BASE;              // living count — splits raise it, calm merges settle it
@@ -82,6 +82,9 @@ uniform vec4  uFaceA[${MAXD*3}]; // face feature: capsule start xyz + radius w
 uniform vec4  uFaceB[${MAXD*3}]; // face feature: capsule end xyz + type w (0 eye, 1 mouth)
 uniform float uEyeDark;          // how dark the face reads
 uniform float uEyeBlur;          // feature edge: crisp -> frosted haze
+uniform vec3  uTint[${MAXD}];    // per-dancer interior colour (linearised)
+uniform float uTintAmt;          // 0 = droplet (ground colour) .. 1 = full tint
+uniform float uEdge;             // edge softness — higher blurs the silhouette
 
 /* tapered capsule (round cone) — limbs slim toward wrists and
    ankles instead of reading as constant-width pegs */
@@ -133,7 +136,7 @@ float map(vec3 p){
 /* wider sampling for distant hits smooths normals like mipmapping —
    without it the iridescent rim shimmers into per-pixel confetti */
 vec3 calcNormal(vec3 p, float t){
-  vec2 e = vec2(0.0012 + t*0.0009, 0.0);
+  vec2 e = vec2((0.0012 + t*0.0009) * (0.55 + 0.6*uEdge), 0.0);
   return normalize(vec3(
     map(p + e.xyy) - map(p - e.xyy),
     map(p + e.yxy) - map(p - e.yxy),
@@ -153,11 +156,32 @@ vec3 floorColor(vec3 p, float t, vec3 bg, float shAmt){
   fl += (uBg * 0.11 + vec3(0.02, 0.02, 0.03)) * smoothstep(2.0, 0.3, dc);
   float sh = 1.0;
   for(int i = 0; i < ${MAXD}; i++){
+    float R = uBnd[i].w;                        // the figure's own radius
     float hd = length(p.xz - uSegA[i*${SPD}].xz);
-    sh *= 1.0 - 0.15*exp(-hd*hd*7.0);
+    // footprint AND darkness both shrink with the figure, so a small
+    // droplet drops a small, faint shadow — not a fixed dark blob
+    sh *= 1.0 - 0.15*clamp(R*2.2, 0.0, 1.0)*exp(-hd*hd*1.49/(R*R));
   }
   fl *= mix(1.0, sh, shAmt);
   return mix(fl, bg, smoothstep(2.5, 8.0, t));
+}
+
+/* nearest dancer's tint — the smooth-min union loses identity, so
+   re-find the closest dancer at the shading point and read its colour */
+vec3 figureTint(vec3 p){
+  float best = 1e5; int bi = 0;
+  for(int j = 0; j < ${MAXD}; j++){
+    if(length(p - uBnd[j].xyz) - uBnd[j].w > best) continue;
+    float dj = 1e5;
+    for(int i = 0; i < ${SPD}; i++){
+      dj = min(dj, sdRoundCone(p, uSegA[j*${SPD}+i].xyz, uSegB[j*${SPD}+i].xyz,
+                               uSegA[j*${SPD}+i].w, uSegB[j*${SPD}+i].w));
+    }
+    if(dj < best){ best = dj; bi = j; }
+  }
+  vec3 c = uTint[0];
+  for(int j = 0; j < ${MAXD}; j++){ if(j == bi) c = uTint[j]; }
+  return c;
 }
 
 /* droplets: the body takes the colour of the ground beneath it —
@@ -182,10 +206,16 @@ vec3 shadeFigure(vec3 p, vec3 n, vec3 v, vec3 base){
   // figures this small — the colour reaches into the body, not just
   // the outermost pixels
   float freW = pow(1.0 - ndv, 1.5);
-  float film = 3.2*freW + 0.25*n.x + 0.18*n.y + 0.05*uTime;
+  // fewer, wider bands when edge softness is up — less rainbow confetti
+  // the normal-driven phase term is halved: finite-difference normals
+  // are noisy, and feeding that noise into the palette turned it into
+  // coloured speckle across the rim
+  float film = (2.2/uEdge)*freW + 0.12*n.x + 0.09*n.y + 0.05*uTime;
   vec3 irid = pal(film);
-  body += irid * freW * 1.35 * (1.0 - lightness);
-  body = mix(body, body * (0.20 + 1.4*irid), min(freW * 1.3, 1.0) * lightness);
+  body += irid * freW * (1.35/uEdge) * (1.0 - lightness);
+  // gentler band contrast on light grounds — the wide rainbow swing is
+  // what aliased into dither; a narrow swing keeps a whisper of sheen
+  body = mix(body, body * (0.72 + 0.5*irid), min(freW * 1.3, 1.0) * lightness);
   vec3 l1 = normalize(vec3(0.55, 0.75, 0.55));
   vec3 l2 = normalize(vec3(-0.6, -0.3, 0.7));
   body += vec3(1.0) * pow(max(dot(reflect(-l1, n), v), 0.0), 90.0) * 1.2;
@@ -258,7 +288,9 @@ void main(){
 
     vec3 fl = floorColor(p, t, bg, 1.0);
     // the drop takes the colour of the ground directly beneath it
-    vec3 body = shadeFigure(p, n, v, floorColor(vec3(p.x, 0.0, p.z), t, bg, 0.25));
+    vec3 gnd = floorColor(vec3(p.x, 0.0, p.z), t, bg, 0.25);
+    // each drop tints toward its own colour, so they read differently inside
+    vec3 body = shadeFigure(p, n, v, uTintAmt > 0.001 ? mix(gnd, figureTint(p), uTintAmt) : gnd);
 
     // blend across the foot meniscus so contacts stay goopy
     col = mix(body, fl, smoothstep(0.0, 0.05, dFig));
@@ -270,12 +302,13 @@ void main(){
 
     // silhouette anti-aliasing: rays that grazed a figure by less
     // than a pixel's footprint get a share of its rim colour
-    float fw = tGlow * 2.8 / (uRes.y * ${FL.toFixed(2)});
+    float fw = tGlow * (2.8 * uEdge) / (uRes.y * ${FL.toFixed(2)});
     if(glow < fw && tGlow > 0.0){
       vec3 pe = ro + rd*tGlow;
       float cov = 1.0 - glow/fw;
       vec3 eBase = floorColor(vec3(pe.x, 0.0, pe.z), tGlow, bg, 0.25);
-      col = mix(col, shadeFigure(pe, calcNormal(pe, tGlow), -rd, eBase), cov*cov);
+      if(uTintAmt > 0.001) eBase = mix(eBase, figureTint(pe), uTintAmt);
+      col = mix(col, shadeFigure(pe, calcNormal(pe, tGlow), -rd, eBase), cov);
     }
   }
 
@@ -311,45 +344,50 @@ const rnd = (i, j) => noise(i * 13.7 + 3.1, j * 27.9 + 9.4) - 0.5; // per-dancer
 // WHOLE dancer — body, motion amplitudes, ring, spacing — uniformly,
 // so the look is preserved at any scale (0.8 = the 20% smaller ask)
 const FIGURE = {
-  size:    0.8,    // overall scale of the troupe
+  size:    0.624,  // overall scale of the troupe
   head:    0.105,  // head radius
   neckLift:0.061,  // how far the head floats above the shoulders
-  torso:   0.267,  // hip-to-shoulder length
+  torso:   0.265,  // hip-to-shoulder length
   torsoR:  0.110,  // torso thickness
-  hip:     0.424,  // hip height off the floor
-  armR:    0.036,  // arm thickness
-  armLen:  0.325,  // arm reach — how far hands stretch from the shoulders
-  hand:    0.075,  // hand thickness — the round tip at the end of the arm
+  hip:     0.399,  // hip height off the floor
+  armR:    0.052,  // arm thickness
+  armLen:  0.220,  // arm reach — how far hands stretch from the shoulders
+  armH:    0.531,  // free-arm height — how high the hands ride (low = arms hang)
+  hand:    0.040,  // hand thickness — the round tip at the end of the arm
+  elbow:   0.973,  // how much the arms fold at the joint (0 = straight reach)
   legR:    0.085,  // leg thickness
   stance:  0.080,  // how far apart the feet stand
-  handH:   0.622,  // height where neighbours' hands meet
-  blend:   0.096,  // goop: how eagerly limbs melt together
+  handH:   0.424,  // height where neighbours' hands meet
+  blend:   0.036,  // goop: how eagerly limbs melt together
+  tint:    0.0,    // per-figure interior colour (0 = transparent drop, matches ground)
+  edge:    1.8,    // edge softness — higher blurs the silhouette, less dither
 };
 const FIGURE_DEFAULTS = { ...FIGURE };
 
 /* ---------- THE EYES — all factors of head size ---------- */
 const EYES = {
-  dark:    0.558, // how dark the dots read
-  size:    0.102, // eye dot size
-  blur:    0.80,  // edge blur: low = crisp print, high = frosted haze
-  stretch: 0.81,  // eye elongation - 0 = round dot, 0.81 = the reference pill
-  sep:     0.322, // eye distance apart
-  up:      0.160, // eye height on the face
+  dark:    0.900, // how dark the dots read
+  size:    0.188, // eye dot size
+  blur:    0.050, // edge blur: low = crisp print, high = frosted haze
+  stretch: 0.304, // eye elongation - 0 = round dot, 0.81 = the reference pill
+  sep:     0.395, // eye distance apart
+  up:      0.412, // eye height on the face
   mouth:   0.109, // mouth size (0 = no mouth)
-  mouthUp: -0.250,// mouth height on the face
+  mouthUp: -0.115,// mouth height on the face
 };
 const EYES_DEFAULTS = { ...EYES };
 
 /* ---------- THE DANCE — pace & choreography (also in the editor) */
 const MOTION = {
-  tempo:  0.705, // beat speed — steps, bobs, arm pumps
-  circle: 2.775, // how fast the ring turns
-  bounce: 1.782, // step bounce height
-  jump:   0.742, // jump height
-  sway:   0.547, // hips, spine, arms and kick looseness
+  tempo:  1.003, // beat speed — steps, bobs, arm pumps
+  circle: 2.335, // how fast the ring turns
+  bounce: 1.374, // step bounce height
+  jump:   0.766, // jump height
+  sway:   0.528, // hips, spine, arms and kick looseness
   lines:  1.938, // how often they snake off in a follow-the-leader line
-  roam:   1.5,   // how far the whole round promenades about the floor
+  roam:   1.949, // how far the whole round promenades about the floor
   multiply: 1.0, // how often a dancer splits in two (0 = never)
+  artic:  0.0,   // articulation — limbs hit poses on the beat and hold (0 = liquid drift)
 };
 const MOTION_DEFAULTS = { ...MOTION };
 const MPARAMS = [
@@ -361,6 +399,7 @@ const MPARAMS = [
   ['line dances', 'lines',  0.0, 2.5],
   ['roaming',     'roam',   0.0, 3.0],
   ['multiplying', 'multiply', 0.0, 2.5],
+  ['articulation','artic',   0.0, 2.5],
 ];
 
 // the editor panel: label, key, min, max
@@ -412,6 +451,28 @@ const uSegA = U('uSegA'), uSegB = U('uSegB'), uBnd = U('uBnd'), uK = U('uK');
 const uBg = U('uBg'), uBgTop = U('uBgTop'), uBgStop = U('uBgStop');
 const uFaceA = U('uFaceA'), uFaceB = U('uFaceB'), uEyeDark = U('uEyeDark');
 const uEyeBlur = U('uEyeBlur');
+const uTint = U('uTint'), uTintAmt = U('uTintAmt'), uEdge = U('uEdge');
+// each dancer a soft pastel of its own — golden-angle hue spacing, low
+// saturation so they still read as translucent drops; linearised to
+// match uBg (the shader gammas at the end)
+const TINTS = (function(){
+  const out = new Float32Array(MAXD * 3);
+  const hsl = function(h, s, l){
+    const a = s * Math.min(l, 1 - l);
+    const f = function(n){ const k = (n + h*12) % 12; return l - a * Math.max(-1, Math.min(Math.min(k-3, 9-k), 1)); };
+    return [f(0), f(8), f(4)];
+  };
+  for(let j = 0; j < MAXD; j++){
+    const u = (j * 0.618034) % 1;                     // spread, non-adjacent
+    const h = 0.15 + u * (0.38 - 0.15);               // yellow -> green ONLY
+    const l = 0.62 + 0.13 * ((j * 0.618034 * 2.3) % 1); // vary the shade per figure
+    const rgb = hsl(h, 0.55, l);
+    out[j*3]   = Math.pow(rgb[0], 2.2);
+    out[j*3+1] = Math.pow(rgb[1], 2.2);
+    out[j*3+2] = Math.pow(rgb[2], 2.2);
+  }
+  return out;
+})();
 
 /* ---------- background colour ---------- */
 const BG_DEFAULT = '#E4FFFE';
@@ -438,16 +499,17 @@ if(opts.motion) Object.assign(MOTION, opts.motion);
 if(opts.eyes) Object.assign(EYES, opts.eyes);
 applyBg(opts.background || BG_DEFAULT, opts.backgroundTop, opts.backgroundStop);
 
-// the scene is soft gradients, so it upscales invisibly: render at 1x
-// CSS pixels (not retina) and degrade further when the machine can't
-// hold the frame rate — resolution is the whole cost of a fullscreen
-// SDF shader
-let resScale = Math.min(window.devicePixelRatio || 1, 1);
-let slowFrames = 0; // consecutive-ish frames over budget (see frame())
+// as a fullscreen background this is all soft gradients, so it upscales
+// invisibly: render at 1x CSS pixels (not retina) and let the governor
+// degrade to a low floor — resolution is the whole cost of an SDF shader
+const BASE_SCALE = Math.min(window.devicePixelRatio || 1, 1);
+const MIN_SCALE = 0.55;
+let renderScale = BASE_SCALE;      // adaptive — drops when frames run slow
+let frameEMA = 16.7, framesSinceScale = 0;
 let W, H;
 function resize(){
-  W = canvas.width = Math.round(host.clientWidth * resScale);
-  H = canvas.height = Math.round(host.clientHeight * resScale);
+  W = canvas.width = Math.max(1, Math.round(host.clientWidth * renderScale));
+  H = canvas.height = Math.max(1, Math.round(host.clientHeight * renderScale));
   gl.viewport(0, 0, W, H);
 }
 const ro = new ResizeObserver(resize);
@@ -481,8 +543,10 @@ const mouse = { x: -1e4, y: -1e4, lastMove: -1e9 };
 let px = 0, py = 0;
 let center = [0, 0];    // where the troupe gathers
 let energy = 0;         // cursor speed → wilder moves
-let broken = 0;         // 0 = hands held, 1 = circle broken, all solo
+let broken = 1;         // 0 = hands held, 1 = circle broken, all solo — START scattered
 let lastTouch = -1e9;
+const bornAt = performance.now();  // the round only joins hands after a dwell
+let INTRO_MS = 5000;               // ~5s of freestyle before they hold hands
 let ringA = 0;          // the circling
 let last = performance.now();
 const anchors = Array.from({length: BASE}, () => [0, 0]); // last frame's feet spots
@@ -665,6 +729,24 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
     const O = [Math.cos(face), 0, Math.sin(face)];   // outward / facing
     const T = [-Math.sin(face), 0, Math.cos(face)];  // sideways
 
+    // ─── articulation: moves land ON the beat, then hold ───
+    // A pose-clock advances in a quick burst (first ~40% of each
+    // half-beat) and dwells for the rest. Limbs whose noise is
+    // sampled on this clock move in deliberate, jointed bursts and
+    // freeze into little poses between them, while the body keeps
+    // its continuous liquid sway. artic = 0 reproduces the old
+    // continuous drift exactly.
+    const artic = MOTION.artic || 0;
+    const beats = phase[i] * 0.5;
+    const bi0 = Math.floor(beats), bf0 = beats - bi0;
+    const aq = Math.min(1, bf0 / 0.38);
+    const poseT = beats > 0.001 ? t * ((bi0 + aq*aq*(3 - 2*aq)) / beats) : t;
+    const aW = Math.min(1, artic * (0.45 + 0.3 * loose));
+    const tA = t + (poseT - t) * aW;   // articulated noise clock
+    const hit = Math.pow(Math.max(0, Math.sin(phase[i] * 0.5)), 3);   // beat accent
+    // weight transfer: hips settle over the planted foot each step
+    const wShift = -Math.sin(phase[i]) * 0.024 * artic * S * (0.5 + 0.5*loose);
+
     // phase[i] is integrated in the frame loop, so tempo changes
     // (breaking away, cursor energy) never snap the limbs
     const bob = Math.abs(Math.sin(phase[i])) * (0.02 + 0.05*wild + 0.06*loose)
@@ -679,11 +761,11 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
     const swayT = n1(i*5+2, t) * (0.08 + 0.25*wild + 0.15*loose) * MOTION.sway * S;
     const leanO = n1(i*5+62, t) * (0.05 + 0.18*wild + 0.12*loose) * MOTION.sway * S;
 
-    const hip  = [ax + T[0]*swayT, F.hip + bob + jump + rnd(i,4)*0.02*S, az + T[2]*swayT];
+    const hip  = [ax + T[0]*(swayT + wShift), F.hip + bob + jump + rnd(i,4)*0.02*S, az + T[2]*(swayT + wShift)];
     const neck = [hip[0] + T[0]*swayT*0.8 + O[0]*leanO,
                   hip[1] + F.torso,
                   hip[2] + T[2]*swayT*0.8 + O[2]*leanO];
-    const head = [neck[0] + O[0]*leanO*0.7, neck[1] + F.neckLift, neck[2] + O[2]*leanO*0.7];
+    const head = [neck[0] + O[0]*leanO*0.7, neck[1] + F.neckLift - hit*0.014*artic*S, neck[2] + O[2]*leanO*0.7];
 
     // two-piece spine with a wandering belly point — the torso
     // breathes and curves instead of standing like a post
@@ -727,25 +809,41 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
     const shoulder = lerp3(hip, neck, 0.85);
     const armPairs = [[held[i], 1], [held[(i + N - 1) % N], -1]];
     for(const [heldHand, side] of armPairs){
-      const wave = face + side * (1.3 + n1(i*6 + side*3 + 30, t) * 1.2 * MOTION.sway);
-      const raise = (0.42 + 0.4 * Math.max(0, Math.sin(phase[i]*0.5 + side*1.8))) * S;
+      const wave = face + side * (1.3 + n1(i*6 + side*3 + 30, tA) * 1.2 * MOTION.sway);
+      const raise = F.armH + 0.4 * Math.max(0, Math.sin(phase[i]*0.5 + side*1.8)) * S;
+      // free hands reach to ~80% of the arm's length, so the arm
+      // always has slack to fold at the elbow
       const free = [
-        shoulder[0] + Math.cos(wave) * F.armLen,
+        shoulder[0] + Math.cos(wave) * F.armLen * 0.8,
         raise,
-        shoulder[2] + Math.sin(wave) * F.armLen];
+        shoulder[2] + Math.sin(wave) * F.armLen * 0.8];
       const hand = lerp3(heldHand, free, Math.max(brk, lnW));
       const mid = lerp3(shoulder, hand, 0.5);
       // elbows bend in a direction that keeps wandering — a mix of
       // droop and sideways flex, so arms curve organically
+      // REAL elbows: upper arm and forearm are each ~half the reach,
+      // so whatever chord the hand demands, the joint pokes out by
+      // the two-bone triangle's height — arms visibly FOLD instead
+      // of curving. The fold direction keeps wandering (droop +
+      // sideways flex) and snaps on the beat when articulated.
+      const cd = Math.hypot(hand[0]-shoulder[0], hand[1]-shoulder[1], hand[2]-shoulder[2]);
+      // bones adapt when the chord overstretches (held hands in the
+      // ring pull further than the arm's rest length) so the joint
+      // never collapses flat — a modest bend in the round, a full
+      // fold when the arms are free
+      const half = Math.max(F.armLen * 0.52, cd * 0.53);
+      const hMax = Math.sqrt(Math.max(0, half*half - cd*cd*0.25));
       const adx = hand[0]-shoulder[0], adz = hand[2]-shoulder[2];
       const adl = Math.hypot(adx, adz) || 1;
       const p1 = [-adz/adl, 0, adx/adl];       // horizontal perp to the arm
-      const bendA = n1(i*6 + side*4 + 70, t*0.9) * 1.6;
-      const eb = (0.028*(1 + rnd(i, 5 + side)) + 0.045*loose) * S;
+      const bendA = n1(i*6 + side*4 + 70, tA*0.9) * 1.6;
+      // beat accent: elbows snap into their bend on the hit, per arm
+      const hitS = Math.pow(Math.max(0, Math.sin(phase[i]*0.5 + side*1.57)), 3);
+      const bend = hMax * Math.min(1, (0.4 + 0.6 * F.elbow / Math.max(S, 1e-6)) * (1 + 0.5 * artic * hitS));
       const elbow = [
-        mid[0] + p1[0]*Math.sin(bendA)*eb,
-        mid[1] - Math.cos(bendA)*eb,
-        mid[2] + p1[2]*Math.sin(bendA)*eb];
+        mid[0] + p1[0]*Math.sin(bendA)*bend,
+        mid[1] - Math.abs(Math.cos(bendA))*bend*0.9,   // elbows mostly droop
+        mid[2] + p1[2]*Math.sin(bendA)*bend];
       seg(shoulder, elbow, F.armR, F.armR*0.85);
       seg(elbow, hand, F.armR*0.85, F.hand); // rounds out into the hand
     }
@@ -756,7 +854,7 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
       const beat = phase[i] + (side > 0 ? 0 : Math.PI);
       const lift = Math.max(0, Math.sin(beat)) * (0.04 + 0.14*wild + 0.14*loose)
                  * MOTION.bounce * S + jump * 0.85;
-      const kickO = n1(i*7 + side*2 + 20, t) * (0.04 + 0.3*wild + 0.3*loose) * MOTION.sway * S;
+      const kickO = n1(i*7 + side*2 + 20, tA) * (0.04 + 0.3*wild + 0.3*loose) * MOTION.sway * S;
       // the rounded foot end RESTS on the floor instead of sinking
       // into it — a buried tip read as a thin stem in a wide puddle
       const foot = [
@@ -783,15 +881,21 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
 function frame(now){
   const rawDt = Math.max((now - last) / 1000, 1e-3);
   const dt = Math.min(rawDt, 0.05);
-  last = now;
 
-  // adaptive quality: when the GPU can't hold ~40fps for a sustained
-  // stretch, shrink the internal buffer a step (floor 0.55) rather than
-  // letting the whole page go clunky; single spikes (tab switches,
-  // scroll starts) don't trip it
-  if(rawDt > 0.025){
-    if(++slowFrames >= 40 && resScale > 0.55){ resScale *= 0.8; slowFrames = 0; resize(); }
-  } else if(slowFrames > 0) slowFrames--;
+  // adaptive resolution: trade a little sharpness for a steady frame
+  // rate so the motion never stutters. A slow running-average frame
+  // time drops the render scale; ample headroom restores it up to the
+  // display's native cap. Proportions never change — only the
+  // raymarch's per-pixel resolution.
+  frameEMA += (rawDt*1000 - frameEMA) * 0.1;
+  if(++framesSinceScale > 45){
+    if(frameEMA > 26 && renderScale > MIN_SCALE){
+      renderScale = Math.max(MIN_SCALE, renderScale * 0.85); resize(); framesSinceScale = 0;
+    }else if(frameEMA < 15 && renderScale < BASE_SCALE){
+      renderScale = Math.min(BASE_SCALE, renderScale * 1.07); resize(); framesSinceScale = 0;
+    }
+  }
+  last = now;
 
   // time-based easing so behaviour is identical at any frame rate
   const ease = rate => 1 - Math.exp(-dt * rate);
@@ -822,8 +926,11 @@ function frame(now){
   // chasing the cursor in a line; proximity is the point there
   if(touching && now - mouse.lastMove < 100 && lineW < 0.3) lastTouch = now;
 
-  // broken: snaps open on touch, mends slowly once left alone
-  const bt = now - lastTouch < 3000 ? 1 : 0;
+  // broken: they open the page dancing solo and only gather into the
+  // ring once the visitor has lingered ~30s; after that it snaps open
+  // again on touch and mends slowly once left alone
+  const intro = now - bornAt < INTRO_MS;
+  const bt = (intro || now - lastTouch < 3000) ? 1 : 0;
   broken += (bt - broken) * ease(bt > broken ? 9 : 1.4);
 
   // from time to time (never while broken) they snake off in a
@@ -837,10 +944,10 @@ function frame(now){
   // into a line behind it — as long as it keeps leading, they keep
   // following. A cursor moving too fast broke them above; a cursor
   // that goes still lets everything decay back to the circle dance.
-  if(m && now - mouse.lastMove < 2500 && broken < 0.25 && energy < 0.6
+  if(m && now - mouse.lastMove < 3500 && broken < 0.25 && energy < 0.68
      && (lineW > 0.3 || !touching)){
     if(!beckonSince) beckonSince = now;
-    if(now - beckonSince > 350) lineUntil = Math.max(lineUntil, now + 2600);
+    if(now - beckonSince > 150) lineUntil = Math.max(lineUntil, now + 3800);
   } else {
     beckonSince = 0;
   }
@@ -858,7 +965,7 @@ function frame(now){
 
   // where the leader is headed: the cursor if it's around, else a wander
   let lead;
-  if(m && now - mouse.lastMove < 3000){
+  if(m && now - mouse.lastMove < 3800){
     const l = Math.hypot(m[0], m[1]);
     lead = l > 1.5 ? [m[0]*1.5/l, m[1]*1.5/l] : [m[0], m[1]];
   } else {
@@ -869,14 +976,14 @@ function frame(now){
   // solo dancers hold their own ground). Left alone, the whole
   // troupe promenades slowly about the floor instead of holding
   // the centre of the stage
-  const followed = m && now - mouse.lastMove < 2500 && broken < 0.5 && lineW < 0.5;
+  const followed = m && now - mouse.lastMove < 3500 && broken < 0.5;
   let goal = [n1(620, t*0.20) * 2.3 * MOTION.roam,
               n1(660, t*0.16) * 1.5 * MOTION.roam];
   if(followed){
     const l = Math.hypot(m[0], m[1]);
-    goal = l > 0.55 ? [m[0]*0.55/l, m[1]*0.55/l] : [m[0], m[1]];
+    goal = l > 0.78 ? [m[0]*0.78/l, m[1]*0.78/l] : [m[0], m[1]];
   }
-  const follow = ease(1.4) * (1 - broken);
+  const follow = ease(2.3) * (1 - broken);
   center[0] += (goal[0] - center[0]) * follow;
   center[1] += (goal[1] - center[1]) * follow;
 
@@ -951,6 +1058,9 @@ function frame(now){
   gl.uniform4fv(uFaceB, faceB);
   gl.uniform1f(uEyeDark, EYES.dark);
   gl.uniform1f(uEyeBlur, EYES.blur);
+  gl.uniform3fv(uTint, TINTS);
+  gl.uniform1f(uTintAmt, FIGURE.tint);
+  gl.uniform1f(uEdge, FIGURE.edge);
   gl.drawArrays(gl.TRIANGLES, 0, 3);
   raf = requestAnimationFrame(frame);
 }
