@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Namer — Name the next Claude</title>
+    <meta name="description" content="A tiny toy that dreams up Anthropic-style names for the language models Anthropic hasn't shipped yet.">
+
+    <link rel="canonical" href="https://freqz.rafacastello.com/llm-namer.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Frequencies">
+    <meta property="og:title" content="LLM Namer — Name the next Claude">
+    <meta property="og:description" content="A tiny toy that dreams up Anthropic-style names for the models that don't exist yet.">
+    <meta property="og:url" content="https://freqz.rafacastello.com/llm-namer.html">
+    <meta property="og:image" content="https://freqz.rafacastello.com/share-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Rafa Castelló">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="LLM Namer — Name the next Claude">
+    <meta name="twitter:description" content="A tiny toy that dreams up Anthropic-style names for the models that don't exist yet.">
+    <meta name="twitter:image" content="https://freqz.rafacastello.com/share-image.jpg">
+    <meta name="twitter:image:alt" content="Rafa Castelló">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=EB+Garamond:wght@400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared/site-chrome.css">
+    <link rel="stylesheet" href="llm-namer.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="top-bar">
+            <span class="top-bar__issue">LLM NAMER / TOY·01</span>
+            <div class="top-bar__links">
+                <a href="/" class="top-bar__link">HOME</a>
+                <a href="network.html" class="top-bar__link">NETWORK</a>
+            </div>
+        </div>
+        <div class="brand">
+            <a href="/" class="brand__logo">Frequencies</a>
+        </div>
+    </header>
+
+    <main class="namer">
+        <div class="namer__intro">
+            <p class="namer__eyebrow">A toy</p>
+            <h1 class="namer__heading">Name the next Claude</h1>
+            <p class="namer__lede">
+                Anthropic names its models after literary and musical forms &mdash;
+                <em>Haiku</em>, <em>Sonnet</em>, <em>Opus</em>, <em>Fable</em>. This little machine
+                keeps the tradition going and invents names for the models that don't exist yet.
+            </p>
+        </div>
+
+        <section class="stage" aria-live="polite">
+            <div class="card" id="card">
+                <div class="card__meta">
+                    <span class="card__tier" id="tier-badge">Frontier</span>
+                    <span class="card__version" id="version-label">v&mdash;</span>
+                </div>
+                <div class="card__name" id="name">Claude&nbsp;&mdash;</div>
+                <div class="card__tagline" id="tagline">Press <em>Generate</em> to summon a model from the future.</div>
+                <button class="card__copy" id="copy" type="button" title="Copy name">Copy</button>
+            </div>
+        </section>
+
+        <section class="controls" aria-label="Controls">
+            <div class="controls__row">
+                <label class="field">
+                    <span class="field__label">Tier</span>
+                    <select id="tier" class="field__select">
+                        <option value="any">Surprise me</option>
+                        <option value="nano">Nano &middot; tiny &amp; instant</option>
+                        <option value="fast">Fast &middot; light &amp; quick</option>
+                        <option value="balanced">Balanced &middot; everyday workhorse</option>
+                        <option value="flagship">Flagship &middot; heavy reasoning</option>
+                        <option value="frontier" selected>Frontier &middot; brand-new capability</option>
+                    </select>
+                </label>
+
+                <label class="field field--check">
+                    <input type="checkbox" id="lock-form">
+                    <span class="field__label">Keep the form</span>
+                </label>
+
+                <label class="field field--check">
+                    <input type="checkbox" id="lock-version">
+                    <span class="field__label">Keep the version</span>
+                </label>
+            </div>
+
+            <div class="controls__row controls__row--buttons">
+                <button id="generate" class="btn btn--primary" type="button">Generate</button>
+                <button id="shuffle" class="btn" type="button" title="Roll everything, ignore locks">Shuffle all</button>
+            </div>
+        </section>
+
+        <section class="history" id="history-wrap" hidden>
+            <h2 class="history__heading">Recently summoned</h2>
+            <ul class="history__list" id="history"></ul>
+            <button id="clear-history" class="btn btn--ghost" type="button">Clear</button>
+        </section>
+
+        <p class="disclaimer">
+            Not affiliated with Anthropic. These names are invented for fun and are almost
+            certainly not what ships next.
+        </p>
+    </main>
+
+    <script src="llm-namer.js"></script>
+</body>
+</html>
