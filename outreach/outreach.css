@@ -1,0 +1,86 @@
+:root {
+    --bg: #f6f5f1;
+    --card: #ffffff;
+    --ink: #1a1a1a;
+    --muted: #6b6b6b;
+    --line: #e3e1da;
+    --accent: #2f6d4f;
+    --warn: #b4472b;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 6px 20px rgba(0,0,0,.04);
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.45;
+}
+
+.oh-header { padding: 32px 24px 20px; border-bottom: 1px solid var(--line); }
+.oh-header__inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+.oh-header h1 { margin: 0; font-size: 1.9rem; letter-spacing: -.02em; }
+.oh-subtitle { margin: 6px 0 0; color: var(--muted); max-width: 46ch; }
+
+.oh-stats { display: flex; gap: 18px; flex-wrap: wrap; }
+.oh-stat { text-align: center; }
+.oh-stat__num { font-size: 1.5rem; font-weight: 700; display: block; }
+.oh-stat__label { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+
+.oh-toolbar { max-width: 1100px; margin: 18px auto 0; padding: 0 24px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.oh-toolbar input[type="search"] { flex: 1 1 240px; }
+.oh-toolbar input, .oh-toolbar select {
+    padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--card);
+    font: inherit; color: var(--ink);
+}
+
+.oh-btn {
+    padding: 9px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--card);
+    font: inherit; cursor: pointer; color: var(--ink); text-decoration: none; display: inline-flex; align-items: center;
+}
+.oh-btn:hover { background: #f0efe9; }
+.oh-btn--primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.oh-btn--primary:hover { filter: brightness(1.05); background: var(--accent); }
+.oh-import { position: relative; }
+
+.oh-list { max-width: 1100px; margin: 22px auto 0; padding: 0 24px; display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+
+.oh-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px 16px 14px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 10px;
+}
+.oh-card__top { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.oh-card__name { font-weight: 700; margin: 0; font-size: 1.05rem; }
+.oh-card__name a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--line); }
+.oh-card__meta { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+
+.oh-chip { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: .68rem; font-weight: 600; letter-spacing: .03em; }
+.oh-chip--allowed { background: #e5f2ea; color: var(--accent); }
+.oh-chip--mods_approve { background: #fdf3e0; color: #9a6a12; }
+.oh-chip--submit_form { background: #e6eef7; color: #2a5b90; }
+.oh-chip--no_promo { background: #fbe7e1; color: var(--warn); }
+.oh-chip--unknown { background: #eee; color: #555; }
+
+.oh-card__notes { font-size: .88rem; color: #333; margin: 0; }
+.oh-card__approach { font-size: .82rem; color: var(--muted); margin: 0; }
+.oh-card__foot { display: flex; gap: 8px; align-items: center; margin-top: 2px; flex-wrap: wrap; }
+.oh-card__foot select { flex: 1 1 auto; padding: 7px 8px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); font: inherit; }
+
+.oh-note { max-width: 1100px; margin: 30px auto 60px; padding: 16px 24px; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); }
+.oh-note strong { color: var(--warn); }
+
+.oh-modal { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 50; }
+.oh-modal[hidden] { display: none; }
+.oh-modal__card { background: var(--card); border-radius: var(--radius); padding: 22px; max-width: 560px; width: 100%; position: relative; box-shadow: var(--shadow); }
+.oh-modal__card h2 { margin: 0 6px 2px 0; font-size: 1.2rem; }
+.oh-modal__approach { color: var(--muted); font-size: .85rem; margin: 0 0 12px; }
+.oh-modal__card textarea { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 12px; font: inherit; resize: vertical; }
+.oh-modal__actions { display: flex; gap: 10px; margin-top: 12px; }
+.oh-modal__close { position: absolute; top: 10px; right: 14px; background: none; border: none; font-size: 1.6rem; cursor: pointer; color: var(--muted); line-height: 1; }
+
+@media (max-width: 560px) {
+    .oh-header__inner { flex-direction: column; }
+}

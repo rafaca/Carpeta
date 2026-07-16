@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curbitas Outreach Tracker</title>
+    <meta name="description" content="A human-in-the-loop tracker for promoting curbitas.com across Brooklyn & Manhattan communities — the right way.">
+    <meta name="robots" content="noindex">
+
+    <link rel="stylesheet" href="outreach.css">
+</head>
+<body>
+    <header class="oh-header">
+        <div class="oh-header__inner">
+            <div>
+                <h1>Curbitas Outreach</h1>
+                <p class="oh-subtitle">Find the communities, respect their rules, track every touch. You post — this keeps you organized.</p>
+            </div>
+            <div class="oh-stats" id="stats"></div>
+        </div>
+    </header>
+
+    <div class="oh-toolbar">
+        <input type="search" id="search" placeholder="Search name, neighborhood, notes…" autocomplete="off">
+        <select id="filter-type"><option value="">All types</option></select>
+        <select id="filter-borough"><option value="">All boroughs</option></select>
+        <select id="filter-status"><option value="">All statuses</option></select>
+        <button id="export" class="oh-btn">Export progress</button>
+        <label class="oh-import oh-btn">Import<input type="file" id="import" accept="application/json" hidden></label>
+    </div>
+
+    <main id="list" class="oh-list"></main>
+
+    <div class="oh-note" id="ethics-note"></div>
+
+    <!-- Draft modal -->
+    <div id="modal" class="oh-modal" hidden>
+        <div class="oh-modal__card">
+            <button class="oh-modal__close" id="modal-close" aria-label="Close">&times;</button>
+            <h2 id="modal-title"></h2>
+            <p id="modal-approach" class="oh-modal__approach"></p>
+            <textarea id="modal-draft" rows="14" spellcheck="true"></textarea>
+            <div class="oh-modal__actions">
+                <button class="oh-btn oh-btn--primary" id="modal-copy">Copy draft</button>
+                <a class="oh-btn" id="modal-open" target="_blank" rel="noopener">Open channel ↗</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="outreach.js"></script>
+</body>
+</html>
