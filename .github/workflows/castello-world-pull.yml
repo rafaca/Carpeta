@@ -18,8 +18,8 @@ jobs:
 
       - name: Set up SSH
         env:
-          SSH_KEY: ${{ secrets.CASTELLO_DREAMHOST_SSH_KEY }}
-          RAW_HOST: ${{ secrets.CASTELLO_DREAMHOST_HOST }}
+          SSH_KEY: ${{ secrets.CASTELLO_DREAMHOST_SSH_KEY || secrets.DREAMHOST_SSH_KEY }}
+          RAW_HOST: ${{ secrets.CASTELLO_DREAMHOST_HOST || secrets.DREAMHOST_HOST || 'iad1-shared-b8-26.dreamhost.com' }}
         run: |
           mkdir -p ~/.ssh
           # Strip stray whitespace/CR that panel copy-paste tends to add
@@ -31,8 +31,8 @@ jobs:
 
       - name: Rsync site down
         env:
-          RAW_USER: ${{ secrets.CASTELLO_DREAMHOST_USER }}
-          RAW_PATH: ${{ secrets.CASTELLO_DREAMHOST_SITE_PATH }}
+          RAW_USER: ${{ secrets.CASTELLO_DREAMHOST_USER || 'rafacastello' }}
+          RAW_PATH: ${{ secrets.CASTELLO_DREAMHOST_SITE_PATH || '/home/rafacastello/castello.world' }}
         run: |
           DH_USER="$(printf '%s' "$RAW_USER" | tr -d '[:space:]')"
           DH_PATH="$(printf '%s' "$RAW_PATH" | tr -d '[:space:]')"

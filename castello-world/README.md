@@ -9,13 +9,16 @@ Working copy of the castello.world site on DreamHost.
   "Deploy castello.world" workflow, which rsyncs it up to the server. It never
   deletes server-side files.
 
-Both workflows need these repository secrets (Settings → Secrets and variables → Actions):
+Both workflows default to the repo's existing DreamHost secrets and known values:
 
-| Secret | Value |
+| Setting | Default |
 | --- | --- |
-| `CASTELLO_DREAMHOST_HOST` | `iad1-shared-b8-26.dreamhost.com` |
-| `CASTELLO_DREAMHOST_USER` | the shell user that owns castello.world |
-| `CASTELLO_DREAMHOST_SSH_KEY` | private key whose public half is in that user's `~/.ssh/authorized_keys` |
-| `CASTELLO_DREAMHOST_SITE_PATH` | e.g. `/home/<user>/castello.world` |
+| SSH key | existing `DREAMHOST_SSH_KEY` secret |
+| Host | existing `DREAMHOST_HOST` secret, else `iad1-shared-b8-26.dreamhost.com` |
+| User | `rafacastello` |
+| Site path | `/home/rafacastello/castello.world` |
+
+Each can be overridden with an optional `CASTELLO_DREAMHOST_*` repository secret
+(`_SSH_KEY`, `_HOST`, `_USER`, `_SITE_PATH`) — no new secrets are required otherwise.
 
 This README is excluded from deployment.

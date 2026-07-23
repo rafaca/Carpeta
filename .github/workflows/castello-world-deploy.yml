@@ -19,8 +19,8 @@ jobs:
 
       - name: Set up SSH
         env:
-          SSH_KEY: ${{ secrets.CASTELLO_DREAMHOST_SSH_KEY }}
-          RAW_HOST: ${{ secrets.CASTELLO_DREAMHOST_HOST }}
+          SSH_KEY: ${{ secrets.CASTELLO_DREAMHOST_SSH_KEY || secrets.DREAMHOST_SSH_KEY }}
+          RAW_HOST: ${{ secrets.CASTELLO_DREAMHOST_HOST || secrets.DREAMHOST_HOST || 'iad1-shared-b8-26.dreamhost.com' }}
         run: |
           mkdir -p ~/.ssh
           # Strip stray whitespace/CR that panel copy-paste tends to add
@@ -32,8 +32,8 @@ jobs:
 
       - name: Rsync site up
         env:
-          RAW_USER: ${{ secrets.CASTELLO_DREAMHOST_USER }}
-          RAW_PATH: ${{ secrets.CASTELLO_DREAMHOST_SITE_PATH }}
+          RAW_USER: ${{ secrets.CASTELLO_DREAMHOST_USER || 'rafacastello' }}
+          RAW_PATH: ${{ secrets.CASTELLO_DREAMHOST_SITE_PATH || '/home/rafacastello/castello.world' }}
         run: |
           if [ ! -d castello-world ]; then
             echo "castello-world/ does not exist on this branch; nothing to deploy."
