@@ -1,0 +1,56 @@
+name: Pull castello.world from DreamHost
+
+# Manually triggered. Copies the current contents of the castello.world web
+# directory on DreamHost into the `castello-world-import` branch so the site
+# can be inspected and edited from this repo.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up SSH
+        env:
+          SSH_KEY: ${{ secrets.CASTELLO_DREAMHOST_SSH_KEY }}
+          RAW_HOST: ${{ secrets.CASTELLO_DREAMHOST_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          # Strip stray whitespace/CR that panel copy-paste tends to add
+          HOST="$(printf '%s' "$RAW_HOST" | tr -d '[:space:]')"
+          printf '%s\n' "$SSH_KEY" | sed 's/\r$//' > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          echo "DH_HOST=$HOST" >> "$GITHUB_ENV"
+
+      - name: Rsync site down
+        env:
+          RAW_USER: ${{ secrets.CASTELLO_DREAMHOST_USER }}
+          RAW_PATH: ${{ secrets.CASTELLO_DREAMHOST_SITE_PATH }}
+        run: |
+          DH_USER="$(printf '%s' "$RAW_USER" | tr -d '[:space:]')"
+          DH_PATH="$(printf '%s' "$RAW_PATH" | tr -d '[:space:]')"
+          mkdir -p castello-world
+          rsync -avz --no-perms --no-owner --no-group \
+            --exclude '.well-known' --exclude 'logs' \
+            -e "ssh -i ~/.ssh/id_deploy -o IdentitiesOnly=yes" \
+            "$DH_USER@$DH_HOST:$DH_PATH/" castello-world/
+
+      - name: Commit to import branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -B castello-world-import
+          git add -A castello-world
+          if git diff --cached --quiet; then
+            echo "No changes since last import."
+            exit 0
+          fi
+          git commit -m "Import castello.world from DreamHost"
+          git push -f origin castello-world-import
