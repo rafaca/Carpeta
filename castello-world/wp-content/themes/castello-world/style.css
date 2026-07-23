@@ -1,0 +1,191 @@
+/*
+Theme Name: Castello World
+Theme URI: https://castello.world
+Author: Castello
+Author URI: https://castello.world
+Description: A minimal, elegant theme for castello.world - a research practice in service of culture and people.
+Version: 1.0
+Requires at least: 5.0
+Tested up to: 6.4
+Requires PHP: 7.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: castello-world
+*/
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    font-family: 'alverata', Georgia, serif;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+/* Landing page container */
+.landing {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+/* Navigation bar */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 163px;
+    padding-top: 47px;
+    width: 100%;
+    max-width: 1440px;
+}
+
+.nav-link {
+    font-family: 'itc-franklin-gothic-pro', 'Franklin Gothic Medium', 'Arial Narrow', sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 36px;
+    text-align: center;
+    color: #ffffff;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: opacity 0.3s ease;
+}
+
+.nav-link:hover {
+    opacity: 0.7;
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+
+.logo:hover {
+    opacity: 0.7;
+}
+
+.logo svg {
+    width: 19px;
+    height: 35px;
+}
+
+/* Hero section */
+.hero {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+/* Tagline */
+.tagline {
+    font-family: 'alverata', Georgia, serif;
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 36px;
+    text-align: center;
+    color: #ffffff;
+    max-width: 469px;
+}
+
+/* WordPress specific - hide admin bar styling conflicts */
+body.admin-bar .landing {
+    min-height: calc(100vh - 32px);
+}
+
+/* Page content styling */
+.page-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 100px 20px;
+}
+
+.page-content h1 {
+    font-family: 'alverata', Georgia, serif;
+    font-weight: 300;
+    font-size: 32px;
+    line-height: 44px;
+    margin-bottom: 40px;
+}
+
+.page-content p {
+    font-family: 'alverata', Georgia, serif;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 32px;
+    margin-bottom: 20px;
+}
+
+.page-content a {
+    color: #ffffff;
+    text-decoration: underline;
+    transition: opacity 0.3s ease;
+}
+
+.page-content a:hover {
+    opacity: 0.7;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+    .navbar {
+        gap: 80px;
+    }
+}
+
+@media (max-width: 900px) {
+    .navbar {
+        gap: 40px;
+        padding: 30px 20px;
+    }
+
+    .nav-link {
+        font-size: 15px;
+    }
+
+    .logo svg {
+        width: 30px;
+        height: 52px;
+    }
+}
+
+@media (max-width: 600px) {
+    .navbar {
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .logo {
+        order: -1;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .nav-link {
+        font-size: 14px;
+    }
+
+    .tagline {
+        font-size: 18px;
+        line-height: 28px;
+        padding: 0 20px;
+    }
+}
