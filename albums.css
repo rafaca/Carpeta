@@ -1,0 +1,238 @@
+/*
+ * Album Cover Archive
+ * 100×100 thumbnails in a full-width grid, grouped by year,
+ * color-coded by genre. Rides on shared/site-chrome.css.
+ */
+
+body {
+    margin: 0;
+    color: var(--site-fg);
+}
+
+/* Fixed site header is 29px top bar + 66px brand band */
+#archive {
+    padding: calc(var(--top-bar-height) + var(--brand-height) + 24px) 16px 96px;
+}
+
+.archive-bar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-bottom: 16px;
+}
+
+.archive-bar__title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 28px;
+    margin: 0;
+}
+
+.archive-bar__meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+#sort-toggle {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+    color: var(--site-fg);
+    font: inherit;
+    padding: 5px 14px;
+    cursor: pointer;
+}
+
+#sort-toggle:hover { border-color: var(--site-accent); color: var(--site-accent); }
+
+/* ---- Genre legend / filter ---- */
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+}
+
+.legend__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid transparent;
+    border-radius: 999px;
+    color: var(--site-fg);
+    font-family: var(--font-body);
+    font-size: 12px;
+    padding: 5px 12px 5px 8px;
+    cursor: pointer;
+}
+
+.legend__chip:hover { background: rgba(255, 255, 255, 0.12); }
+
+.legend__chip[aria-pressed="true"] {
+    border-color: var(--chip-color, var(--site-accent));
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.legend__swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    background: var(--chip-color, #888);
+    flex: none;
+}
+
+.legend__count { color: rgba(255, 255, 255, 0.45); }
+
+/* ---- Year sections ---- */
+
+.year-section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 400px;
+    margin-bottom: 36px;
+}
+
+.year-section.is-empty { display: none; }
+
+.year-heading {
+    position: sticky;
+    top: calc(var(--top-bar-height) + var(--brand-height));
+    z-index: 10;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    background: var(--site-bg);
+    padding: 10px 0 8px;
+    margin: 0 0 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.year-heading__year {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 22px;
+}
+
+.year-heading__count {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+/* ---- The grid: ~100×100 tiles spanning the full browser width ---- */
+
+.album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 6px;
+}
+
+.album {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* the color code: a bar in the album's genre color, over the artwork */
+.album::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: var(--album-color, #555);
+}
+
+.album.is-filtered-out { display: none; }
+
+.album img,
+.album svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.album:hover {
+    outline: 2px solid var(--album-color, var(--site-accent));
+    outline-offset: -2px;
+}
+
+.album__info {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 22px 6px 8px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.88));
+    font-size: 10px;
+    line-height: 1.35;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+}
+
+.album:hover .album__info,
+.album:focus-visible .album__info { opacity: 1; }
+
+.album__title {
+    font-weight: 700;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.album__artist { color: rgba(255, 255, 255, 0.7); }
+
+/* ---- Misc ---- */
+
+#empty-state {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 14px;
+}
+
+#empty-state code {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    padding: 1px 5px;
+}
+
+.hidden { display: none; }
+
+#page-nav {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    z-index: 40;
+    display: flex;
+    gap: 14px;
+}
+
+#page-nav a {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    background: rgba(10, 10, 10, 0.8);
+    padding: 6px 10px;
+    border-radius: 999px;
+}
+
+#page-nav a:hover { color: var(--site-accent); }
+
+@media (max-width: 768px) {
+    #archive { padding-left: 10px; padding-right: 10px; }
+    .album-grid { gap: 4px; }
+}
