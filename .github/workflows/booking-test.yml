@@ -1,0 +1,65 @@
+name: Booking Worker probe + one-shot test booking
+
+# Runs when this file is pushed (sandbox cannot reach *.workers.dev) and
+# on manual dispatch. DO_BOOK gates the real booking so later edits to
+# this file don't silently create more calendar events.
+
+on:
+  push:
+    paths:
+      - .github/workflows/booking-test.yml
+  workflow_dispatch:
+
+env:
+  DO_BOOK: "true"
+  BOOK_NAME: "TWP build-day test (safe to cancel)"
+  BOOK_EMAIL: "rafacastello@gmail.com"
+  BOOK_TITLE: "〰️ TEST — Intro with Those Who Play (automated; please cancel)"
+
+jobs:
+  probe-and-book:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe both Workers for availability
+        id: probe
+        run: |
+          set -uo pipefail
+          DATE=$(date -u -d "next monday" +%F)
+          WORKING=""
+          for W in rc-booking.rafacastello.workers.dev rc-booking.thosewhoplay.workers.dev; do
+            echo "== $W (date=$DATE) =="
+            BODY=$(curl -sS -m 20 "https://$W/api/availability?date=$DATE" || echo CURL_FAIL)
+            echo "$BODY" | head -c 600; echo
+            if echo "$BODY" | jq -e '.slots' >/dev/null 2>&1; then
+              COUNT=$(echo "$BODY" | jq '.slots | length')
+              echo "--> $W responds with $COUNT slots"
+              if [ -z "$WORKING" ]; then WORKING="$W"; fi
+            fi
+          done
+          echo "working=$WORKING" >> "$GITHUB_OUTPUT"
+          echo "date=$DATE" >> "$GITHUB_OUTPUT"
+          [ -n "$WORKING" ] || { echo "::warning::No Worker responded with slots"; }
+
+      - name: One-shot real booking (earliest slot, marked TEST)
+        if: env.DO_BOOK == 'true' && steps.probe.outputs.working != ''
+        run: |
+          set -euo pipefail
+          W="${{ steps.probe.outputs.working }}"
+          DATE="${{ steps.probe.outputs.date }}"
+          SLOT=$(curl -sS -m 20 "https://$W/api/availability?date=$DATE" | jq -r '.slots[0] // empty')
+          if [ -z "$SLOT" ]; then
+            for i in 1 2 3 4; do
+              DATE=$(date -u -d "$DATE + $i day" +%F)
+              SLOT=$(curl -sS -m 20 "https://$W/api/availability?date=$DATE" | jq -r '.slots[0] // empty')
+              [ -n "$SLOT" ] && break
+            done
+          fi
+          [ -n "$SLOT" ] || { echo "::error::No open slot found in the probe window"; exit 1; }
+          echo "Booking $SLOT on $W"
+          RES=$(curl -sS -m 30 -X POST "https://$W/api/book" \
+            -H 'Content-Type: application/json' \
+            -d "$(jq -n --arg start "$SLOT" --arg name "$BOOK_NAME" --arg email "$BOOK_EMAIL" --arg title "$BOOK_TITLE" \
+                  '{start:$start, name:$name, email:$email, note:"Automated end-to-end test from the TWP build-day workflow. Cancel freely.", title:$title}')")
+          echo "RESPONSE: $RES"
+          echo "$RES" | jq -e '.ok == true' >/dev/null || { echo "::error::Booking failed"; exit 1; }
+          echo "::notice::Test booking created at $SLOT via $W — cancel it from Google Calendar"

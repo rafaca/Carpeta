@@ -1,0 +1,74 @@
+[
+  {
+    "type": "essay",
+    "title": "Play is the oldest form of human intelligence",
+    "dek": "Why the instinct we outgrow first is the one we need most.",
+    "date": "2026-07-04",
+    "image": "/assets/img/ph-mint.svg",
+    "href": "/research/play-as-intelligence.html",
+    "source": "Those Who Play"
+  },
+  {
+    "type": "news",
+    "title": "Those Who Play opens its New York studio",
+    "dek": "News from us \u2014 a room built for rehearsal, prototyping and long tables.",
+    "date": "2026-06-20",
+    "image": "/assets/img/ph-cream.svg",
+    "href": "/paper.html?p=studio-news",
+    "source": "Those Who Play"
+  },
+  {
+    "type": "external",
+    "title": "The neuroscience of pretend play",
+    "dek": "Aeon \u2014 why simulated worlds teach real skills.",
+    "date": "2026-06-11",
+    "image": "/assets/img/ph-blue.svg",
+    "href": "https://aeon.co",
+    "source": "Aeon"
+  },
+  {
+    "type": "image",
+    "title": "Field notes: a circle dance, observed",
+    "dek": "One frame from our motion studies.",
+    "date": "2026-05-30",
+    "image": "/assets/img/ph-aqua.svg",
+    "href": "/assets/img/ph-aqua.svg",
+    "source": "Those Who Play"
+  },
+  {
+    "type": "essay",
+    "title": "Worlds that live rent-free",
+    "dek": "On designing stories people re-tell without being asked.",
+    "date": "2026-05-16",
+    "image": "/assets/img/ph-gray.svg",
+    "href": "/paper.html?p=rent-free",
+    "source": "Those Who Play"
+  },
+  {
+    "type": "external",
+    "title": "Game design is the new civic infrastructure",
+    "dek": "MIT Technology Review \u2014 participation as a public utility.",
+    "date": "2026-04-28",
+    "image": "/assets/img/ph-mint2.svg",
+    "href": "https://www.technologyreview.com",
+    "source": "MIT Technology Review"
+  },
+  {
+    "type": "news",
+    "title": "FREQZ: our research radio, season two",
+    "dek": "News from us \u2014 transmissions on play, culture and systems.",
+    "date": "2026-04-09",
+    "image": "/assets/img/ph-cream2.svg",
+    "href": "/paper.html?p=freqz-s2",
+    "source": "Those Who Play"
+  },
+  {
+    "type": "image",
+    "title": "Prototype bench, week 12",
+    "dek": "The table state before the playtest.",
+    "date": "2026-03-21",
+    "image": "/assets/img/ph-blue2.svg",
+    "href": "/assets/img/ph-blue2.svg",
+    "source": "Those Who Play"
+  }
+]

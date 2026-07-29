@@ -1,0 +1,134 @@
+name: Deploy staging.thosewhoplay.com
+
+on:
+  push:
+    branches:
+      - claude/redesign-website-iubYk
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://staging.thosewhoplay.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static site
+        run: npm run build
+
+      - name: Write IP allowlist .htaccess
+        env:
+          STAGING_ALLOWED_IP: ${{ secrets.STAGING_ALLOWED_IP }}
+        run: |
+          if [ -n "$STAGING_ALLOWED_IP" ]; then
+            ips=$(echo "$STAGING_ALLOWED_IP" | tr ',' ' ')
+            cat > out/.htaccess <<EOF
+          # Staging IP allowlist — managed by .github/workflows/deploy-staging.yml
+          Require ip $ips
+          EOF
+            echo "Wrote out/.htaccess restricting access to: $ips"
+          else
+            echo "STAGING_ALLOWED_IP not set; deploying without IP restriction"
+          fi
+
+      - name: Configure SSH
+        env:
+          DREAMHOST_SSH_KEY: ${{ secrets.DREAMHOST_SSH_KEY }}
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$DREAMHOST_SSH_KEY" > ~/.ssh/dreamhost
+          chmod 600 ~/.ssh/dreamhost
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          # Dreamhost SSH is intermittently slow from GitHub runners; retry
+          # the keyscan instead of dying on the first 5s timeout.
+          for i in 1 2 3 4 5; do
+            ssh-keyscan -T 15 -p "$PORT" -H "$DREAMHOST_SSH_HOST" >> ~/.ssh/known_hosts && break
+            echo "ssh-keyscan attempt $i failed; retrying in $((i*5))s"
+            sleep $((i*5))
+          done
+          grep -q . ~/.ssh/known_hosts || { echo "ssh-keyscan never reached $DREAMHOST_SSH_HOST"; exit 1; }
+
+      - name: Deploy via rsync
+        env:
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+          DREAMHOST_DEPLOY_PATH: ${{ secrets.DREAMHOST_DEPLOY_PATH }}
+        run: |
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          rsync -avz --delete \
+            --exclude='.well-known' \
+            -e "ssh -i ~/.ssh/dreamhost -p $PORT -o StrictHostKeyChecking=yes" \
+            ./out/ \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:$DREAMHOST_DEPLOY_PATH"
+
+      - name: Mirror mockups to dev.thosewhoplay.com (basic-auth site)
+        env:
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          # the whole static site: every page at the public root plus the
+          # asset tree and the per-section page directories
+          files=(public/*.html)
+          echo "Mirroring pages to dev.thosewhoplay.com: ${files[*]}"
+          scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
+            "${files[@]}" \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/"
+          for d in assets projects research; do
+            if [ -d "public/$d" ]; then
+              scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes -r \
+                "public/$d" \
+                "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/"
+            fi
+          done
+
+      - name: Publish twp-homepage.html as the dev index (approved 2026-07-11)
+        env:
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          [ -f public/twp-homepage.html ] || { echo "No twp-homepage.html; skipping"; exit 0; }
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          # the pre-twp original stays recoverable at archive/index-pre-twp-*
+          scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
+            public/twp-homepage.html \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/index.html"
+          echo "dev.thosewhoplay.com/ now serves the new site"
+
+      - name: Verify the deployed files landed
+        env:
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          ssh -i ~/.ssh/dreamhost -p "$PORT" -o StrictHostKeyChecking=yes \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" \
+            "cd ~/dev.thosewhoplay.com && ls *.html && ls projects research assets/css assets/js assets/data"

@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-serif: "EB Garamond", Georgia, serif;
+  --font-script: "Pinyon Script", "Snell Roundhand", cursive;
+}
+
+html,
+body {
+  background: #0a0a0a;
+  color: #f4ede1;
+}
+
+::selection {
+  background: #fef189;
+  color: #101733;
+}
+
+::-moz-selection {
+  background: #fef189;
+  color: #101733;
+}

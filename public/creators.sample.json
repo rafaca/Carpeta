@@ -1,0 +1,202 @@
+{
+  "_schema": {
+    "description": "Sample data for the Creator Network visualization. Replace this file with your own creators.json (same structure) to see your Notion database rendered as a force-directed graph.",
+    "creator_fields": {
+      "id": "Unique string id. Usually the Instagram handle without @.",
+      "name": "Display name shown on the node.",
+      "handle": "Instagram handle without @. Used to link out to instagram.com.",
+      "categories": "Array of tags / niches. Edges are drawn between creators that share categories.",
+      "followers": "Optional integer. Used when 'node size = followers' is selected.",
+      "bio": "Optional short description, shown in the details panel.",
+      "follows": "Optional array of other creator ids this creator follows.",
+      "collaborations": "Optional array of other creator ids this creator has collaborated with."
+    },
+    "edge_types": {
+      "category": "Two creators share one or more categories.",
+      "follow": "Directional 'follows' relationships (mutual follows are weighted 2x).",
+      "collab": "Explicit collaboration between two creators (strongest weight)."
+    }
+  },
+  "creators": [
+    {
+      "id": "nina_food",
+      "name": "Nina Rodríguez",
+      "handle": "nina_food",
+      "categories": ["food", "travel"],
+      "followers": 42000,
+      "bio": "Food stories from small kitchens around the world.",
+      "follows": ["bakehouse_alex", "coffee_mika", "wanderlust_jo"],
+      "collaborations": ["bakehouse_alex", "coffee_mika"]
+    },
+    {
+      "id": "bakehouse_alex",
+      "name": "Alex Bakehouse",
+      "handle": "bakehouse_alex",
+      "categories": ["food"],
+      "followers": 120000,
+      "bio": "Sourdough, pastry, and sunlight.",
+      "follows": ["nina_food", "coffee_mika"],
+      "collaborations": ["nina_food", "coffee_mika"]
+    },
+    {
+      "id": "coffee_mika",
+      "name": "Mika Tanaka",
+      "handle": "coffee_mika",
+      "categories": ["food", "travel"],
+      "followers": 78000,
+      "bio": "Third-wave coffee and the places it comes from.",
+      "follows": ["bakehouse_alex", "nina_food", "wanderlust_jo"],
+      "collaborations": ["bakehouse_alex", "wanderlust_jo"]
+    },
+    {
+      "id": "wanderlust_jo",
+      "name": "Jo Halvorsen",
+      "handle": "wanderlust_jo",
+      "categories": ["travel"],
+      "followers": 210000,
+      "bio": "Slow travel in cold places.",
+      "follows": ["cityhopper_tom", "coffee_mika", "nina_food"],
+      "collaborations": ["cityhopper_tom", "coffee_mika"]
+    },
+    {
+      "id": "cityhopper_tom",
+      "name": "Tom Okafor",
+      "handle": "cityhopper_tom",
+      "categories": ["travel", "architecture"],
+      "followers": 64000,
+      "bio": "City guides, transit stories, concrete love.",
+      "follows": ["wanderlust_jo", "brush_hiro"],
+      "collaborations": ["wanderlust_jo"]
+    },
+    {
+      "id": "sarah_styles",
+      "name": "Sarah Aldana",
+      "handle": "sarah_styles",
+      "categories": ["fashion"],
+      "followers": 310000,
+      "bio": "Quiet luxury, loud colors.",
+      "follows": ["vintage_rue", "streetwear_kai"],
+      "collaborations": ["vintage_rue", "streetwear_kai"]
+    },
+    {
+      "id": "vintage_rue",
+      "name": "Rue Beaumont",
+      "handle": "vintage_rue",
+      "categories": ["fashion", "art"],
+      "followers": 95000,
+      "bio": "Second-hand, first love.",
+      "follows": ["sarah_styles", "inked_luna"],
+      "collaborations": ["sarah_styles", "inked_luna"]
+    },
+    {
+      "id": "streetwear_kai",
+      "name": "Kai Moreno",
+      "handle": "streetwear_kai",
+      "categories": ["fashion", "music"],
+      "followers": 185000,
+      "bio": "Streetwear & underground beats.",
+      "follows": ["sarah_styles", "beat_jules", "synth_liv"],
+      "collaborations": ["sarah_styles", "beat_jules"]
+    },
+    {
+      "id": "maya_moves",
+      "name": "Maya Chen",
+      "handle": "maya_moves",
+      "categories": ["fitness", "wellness"],
+      "followers": 430000,
+      "bio": "Mobility, strength, and being outside.",
+      "follows": ["iron_dani"],
+      "collaborations": ["iron_dani"]
+    },
+    {
+      "id": "iron_dani",
+      "name": "Dani Reyes",
+      "handle": "iron_dani",
+      "categories": ["fitness"],
+      "followers": 88000,
+      "bio": "Powerlifting coach. Cat lover.",
+      "follows": ["maya_moves"],
+      "collaborations": ["maya_moves"]
+    },
+    {
+      "id": "pen_pedro",
+      "name": "Pedro Álvarez",
+      "handle": "pen_pedro",
+      "categories": ["art", "illustration"],
+      "followers": 52000,
+      "bio": "Ink drawings of imaginary cities.",
+      "follows": ["inked_luna", "brush_hiro"],
+      "collaborations": ["inked_luna"]
+    },
+    {
+      "id": "inked_luna",
+      "name": "Luna Park",
+      "handle": "inked_luna",
+      "categories": ["art", "tattoo"],
+      "followers": 140000,
+      "bio": "Neo-traditional tattoos & botanical studies.",
+      "follows": ["pen_pedro", "vintage_rue", "brush_hiro"],
+      "collaborations": ["pen_pedro", "vintage_rue"]
+    },
+    {
+      "id": "brush_hiro",
+      "name": "Hiro Nakamura",
+      "handle": "brush_hiro",
+      "categories": ["art", "architecture"],
+      "followers": 37000,
+      "bio": "Architectural watercolors, one building a day.",
+      "follows": ["pen_pedro", "inked_luna", "cityhopper_tom"],
+      "collaborations": ["cityhopper_tom"]
+    },
+    {
+      "id": "code_carla",
+      "name": "Carla Svensson",
+      "handle": "code_carla",
+      "categories": ["tech", "education"],
+      "followers": 96000,
+      "bio": "Explaining systems with diagrams.",
+      "follows": ["devlog_omar"],
+      "collaborations": ["devlog_omar"]
+    },
+    {
+      "id": "devlog_omar",
+      "name": "Omar Haddad",
+      "handle": "devlog_omar",
+      "categories": ["tech"],
+      "followers": 54000,
+      "bio": "Daily devlogs of a solo founder.",
+      "follows": ["code_carla"],
+      "collaborations": ["code_carla"]
+    },
+    {
+      "id": "synth_liv",
+      "name": "Liv Osei",
+      "handle": "synth_liv",
+      "categories": ["music"],
+      "followers": 73000,
+      "bio": "Modular synth & ambient soundscapes.",
+      "follows": ["beat_jules", "streetwear_kai"],
+      "collaborations": ["beat_jules"]
+    },
+    {
+      "id": "beat_jules",
+      "name": "Jules Marchetti",
+      "handle": "beat_jules",
+      "categories": ["music", "fashion"],
+      "followers": 162000,
+      "bio": "Producer. Crate digger. Sample hunter.",
+      "follows": ["synth_liv", "streetwear_kai"],
+      "collaborations": ["synth_liv", "streetwear_kai"]
+    },
+    {
+      "id": "wellness_ari",
+      "name": "Ari Bloom",
+      "handle": "wellness_ari",
+      "categories": ["wellness", "food"],
+      "followers": 118000,
+      "bio": "Plants on plates, plants in pots.",
+      "follows": ["maya_moves", "nina_food"],
+      "collaborations": ["maya_moves"]
+    }
+  ]
+}
