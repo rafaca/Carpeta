@@ -4,9 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Frequencies — Infinite Canvas</title>
+    <meta name="description" content="Frequencies: an infinite canvas of photos you can pan and zoom through forever.">
+
+    <link rel="canonical" href="https://freqz.rafacastello.com/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Frequencies">
+    <meta property="og:title" content="Frequencies — Infinite Canvas">
+    <meta property="og:description" content="An infinite canvas of photos you can pan and zoom through forever.">
+    <meta property="og:url" content="https://freqz.rafacastello.com/">
+    <meta property="og:image" content="https://freqz.rafacastello.com/share-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Rafa Castelló">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Frequencies — Infinite Canvas">
+    <meta name="twitter:description" content="An infinite canvas of photos you can pan and zoom through forever.">
+    <meta name="twitter:image" content="https://freqz.rafacastello.com/share-image.jpg">
+    <meta name="twitter:image:alt" content="Rafa Castelló">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=EB+Garamond:wght@400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared/site-chrome.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -19,7 +40,7 @@
             </div>
         </div>
         <div class="brand">
-            <a href="#" class="brand__logo">Frequencies</a>
+            <a href="/" class="brand__logo">Frequencies</a>
         </div>
     </header>
 
@@ -41,7 +62,19 @@
         <p>Loading photos...</p>
     </div>
 
-    <nav id="page-nav"><a href="network.html">Creator network →</a></nav>
+    <nav id="page-nav"><a href="network.html">Creator network</a></nav>
+
+    <!-- Admin drag-and-drop (revealed by ?admin=1) -->
+    <div id="admin-panel" class="hidden" aria-hidden="true">
+        <div id="admin-status">Drop an image anywhere to publish</div>
+        <button id="admin-signout" type="button" title="Sign out of admin">×</button>
+    </div>
+    <div id="admin-dropzone" class="hidden" aria-hidden="true">
+        <div class="admin-dropzone__inner">
+            <div class="admin-dropzone__title">Drop to publish</div>
+            <div class="admin-dropzone__sub">Image will be committed to the repo</div>
+        </div>
+    </div>
 
     <figure class="callout">
         <blockquote class="callout__quote">&ldquo;Generally AI companies distill other AI companies.&rdquo;</blockquote>
@@ -61,5 +94,6 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="admin.js"></script>
 </body>
 </html>

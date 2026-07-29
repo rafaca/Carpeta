@@ -1,0 +1,26 @@
+<!--
+  Shared site header — rafacastello.com family
+  Paste this as the first child of <body> on every domain in the family.
+  shared/site-chrome.css must be linked in <head> for the styling to apply.
+
+  Per-site bits (only these may change between domains; structure, classes,
+  and ordering must stay byte-identical so the header doesn't jump when
+  switching browser tabs):
+    1. .top-bar__issue  — text content (e.g. "20260504 / Vol·20" on freqz,
+                          omit or replace on other sites).
+    2. .top-bar__links  — set of <a> link labels (keep text-only, no icons).
+    3. .brand__logo     — site name in the logo (e.g. "Frequencies",
+                          "Playtime", "Rafa Castello"). href points home.
+-->
+<header class="site-header">
+    <div class="top-bar">
+        <span class="top-bar__issue">20260504 / Vol·20</span>
+        <div class="top-bar__links">
+            <a href="#subscribe" class="top-bar__link">SUBSCRIBE</a>
+            <a href="#rss" class="top-bar__link">RSS</a>
+        </div>
+    </div>
+    <div class="brand">
+        <a href="/" class="brand__logo">Frequencies</a>
+    </div>
+</header>
