@@ -1,0 +1,115 @@
+name: Deploy thosewhoplay.com (production)
+
+# Manual ship button: mirrors the same static site that dev.thosewhoplay.com
+# serves into the production docroot. Deliberately additive — no --delete, and
+# WordPress files already living there are left untouched (our index.html takes
+# precedence over index.php; remove the mirrored files to roll back).
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://thosewhoplay.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        env:
+          DREAMHOST_SSH_KEY: ${{ secrets.DREAMHOST_SSH_KEY }}
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$DREAMHOST_SSH_KEY" > ~/.ssh/dreamhost
+          chmod 600 ~/.ssh/dreamhost
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          ssh-keyscan -p "$PORT" -H "$DREAMHOST_SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Preflight — docroot exists, archive any current index.html
+        env:
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          ssh -i ~/.ssh/dreamhost -p "$PORT" -o StrictHostKeyChecking=yes \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" '
+              test -d ~/thosewhoplay.com || { echo "~/thosewhoplay.com does not exist on this server — is production hosted under this SSH user?"; exit 1; }
+              cd ~/thosewhoplay.com
+              if [ -f index.html ]; then
+                cp index.html "archive-index-$(date +%Y%m%d-%H%M%S).html"
+                echo "Archived the existing index.html"
+              fi
+            '
+
+      - name: Mirror the static site (additive; WordPress left in place)
+        env:
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          files=(public/*.html)
+          echo "Shipping pages: ${files[*]}"
+          scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
+            "${files[@]}" \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/thosewhoplay.com/"
+          for d in assets projects research; do
+            if [ -d "public/$d" ]; then
+              scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes -r \
+                "public/$d" \
+                "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/thosewhoplay.com/"
+            fi
+          done
+
+      - name: Publish the homepage as the production index
+        env:
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
+            public/twp-homepage.html \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/thosewhoplay.com/index.html"
+
+      - name: Verify the live homepage (fix DirectoryIndex if WordPress still wins)
+        env:
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          check() { curl -sL --max-time 30 https://thosewhoplay.com/ | grep -q "roaring world"; }
+          if check; then
+            echo "thosewhoplay.com serves the new homepage"
+          else
+            echo "WordPress index.php still wins — putting index.html first in DirectoryIndex"
+            ssh -i ~/.ssh/dreamhost -p "$PORT" -o StrictHostKeyChecking=yes \
+              "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" '
+                cd ~/thosewhoplay.com
+                [ -f .htaccess ] && cp .htaccess ".htaccess.bak-pre-twp" || true
+                printf "\n# TWP static site serves the index (WordPress remains for other routes)\nDirectoryIndex index.html index.php\n" >> .htaccess
+              '
+            sleep 5
+            check && echo "Fixed — new homepage is live" || { echo "Homepage still not serving the new site; inspect manually"; exit 1; }
+          fi
+          for p in projects.html store.html research.html about.html book.html; do
+            curl -sL --max-time 30 -o /dev/null -w "%{http_code} /$p\n" "https://thosewhoplay.com/$p"
+          done
