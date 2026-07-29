@@ -5,7 +5,16 @@ name: Deploy thosewhoplay.com (production)
 # WordPress files already living there are left untouched (our index.html takes
 # precedence over index.php; remove the mirrored files to roll back).
 
+# Ship = push a change to this file (bump the counter below), or dispatch
+# manually once the workflow reaches the default branch.
+# ship: 1
+
 on:
+  push:
+    branches:
+      - claude/redesign-website-iubYk
+    paths:
+      - .github/workflows/deploy-production.yml
   workflow_dispatch:
 
 concurrency:
