@@ -25,9 +25,20 @@ html, body {
     width: 100%;
 }
 
+:root {
+    --bg: #000000;
+    --ink: #ffffff;
+}
+
 body {
-    background-color: #000000;
-    color: #ffffff;
+    background-color: var(--bg);
+    color: var(--ink);
+    transition: background-color 2s linear;
+}
+
+.logo svg path {
+    fill: var(--ink);
+    transition: fill 2s linear;
 }
 
 /* Logo-only landing: the mark, large and centered on black */
