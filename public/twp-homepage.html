@@ -64,12 +64,17 @@ try{
   <div class="copy">
     <p>We are a creative agency designing experiences that invite curiosity and transformation. By uniting game design and immersive storytelling, we conceive worlds and tell stories forged to live rent-free in people’s minds.</p>
   </div>
+  <!-- Book a Call hidden for now (2026-07-29): the booking Worker's CORS
+       allowlist doesn't include thosewhoplay.com yet. Restore this button
+       once the Worker is redeployed with the new origins.
   <button class="book-call" type="button" id="bookToggle" aria-expanded="false" aria-controls="bookPanel">
     Book a Call
     <span class="star" aria-hidden="true">
       <svg viewBox="0 0 13 13" fill="none"><path d="M6.5 0 L7.6 4.4 L11.7 2.5 L8.9 6.5 L13 8.2 L8.6 8.6 L9.8 13 L6.5 9.6 L3.2 13 L4.4 8.6 L0 8.2 L4.1 6.5 L1.3 2.5 L5.4 4.4 Z" fill="#0D3B2E"/></svg>
     </span>
   </button>
+  -->
+
       <div class="rc-collapse" id="bookPanel" aria-hidden="true">
         <div class="rc-collapse-in">
 <div class="rc-sched">
@@ -272,6 +277,18 @@ BubbleDancers.mount('#dancers-stage', {
   backgroundTop: '#FFFFFF',
   backgroundStop: 0.61,
   pointer: 'window',
+  /* New-look preset (lab editor, 2026-07-29) — full version saved at
+     /assets/data/dancers-preset-dark.json. figureColour + softening and
+     the #211d2e background wait for the newer engine (colours are
+     ignored by this build, and the dark ground needs light page text). */
+  figure: { size:0.597, head:0.092, neckLift:0.12, torso:0.183, torsoR:0.074,
+            hip:0.376, armR:0.046, armLen:0.225, armH:0.471, hand:0.057,
+            elbow:0.197, legR:0.063, stance:0.12, handH:0.396, blend:0.064,
+            tint:0, edge:2.679 },
+  motion: { tempo:1.026, circle:2.33, bounce:1.371, jump:0.769, sway:0.507,
+            lines:1.024, roam:1.885, multiply:1.079, artic:0 },
+  eyes:   { dark:0.9, size:0.188, blur:0.05, stretch:0.331, sep:0.395,
+            up:0.412, mouth:0.109, mouthUp:-0.115 },
 });
 </script>
 </body>
