@@ -59,7 +59,14 @@ jobs:
           printf '%s\n' "$DREAMHOST_SSH_KEY" > ~/.ssh/dreamhost
           chmod 600 ~/.ssh/dreamhost
           PORT="${DREAMHOST_SSH_PORT:-22}"
-          ssh-keyscan -p "$PORT" -H "$DREAMHOST_SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          # Dreamhost SSH is intermittently slow from GitHub runners; retry
+          # the keyscan instead of dying on the first 5s timeout.
+          for i in 1 2 3 4 5; do
+            ssh-keyscan -T 15 -p "$PORT" -H "$DREAMHOST_SSH_HOST" >> ~/.ssh/known_hosts && break
+            echo "ssh-keyscan attempt $i failed; retrying in $((i*5))s"
+            sleep $((i*5))
+          done
+          grep -q . ~/.ssh/known_hosts || { echo "ssh-keyscan never reached $DREAMHOST_SSH_HOST"; exit 1; }
 
       - name: Deploy via rsync
         env:
