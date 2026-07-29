@@ -1,0 +1,52 @@
+{
+  "_note": "New-look dancers preset from the lab editor (2026-07-29). Carries the dev.thosewhoplay.com cadence. figureColour + softening need the newer lab engine; the currently shipped dancers-embed.js supports figure/motion/eyes/background only.",
+  "size": 0.597,
+  "head": 0.092,
+  "neckLift": 0.12,
+  "torso": 0.183,
+  "torsoR": 0.074,
+  "hip": 0.376,
+  "armR": 0.046,
+  "armLen": 0.225,
+  "armH": 0.471,
+  "hand": 0.057,
+  "elbow": 0.197,
+  "legR": 0.063,
+  "stance": 0.12,
+  "handH": 0.396,
+  "blend": 0.064,
+  "tint": 0,
+  "edge": 2.679,
+  "background": "#211d2e",
+  "figureColour": {
+    "a": "#5960f9",
+    "b": "#f160e7",
+    "c": "#ffc0f5"
+  },
+  "softening": {
+    "edge": 6.5,
+    "amount": 0.77,
+    "core": 0
+  },
+  "motion": {
+    "tempo": 1.026,
+    "circle": 2.33,
+    "bounce": 1.371,
+    "jump": 0.769,
+    "sway": 0.507,
+    "lines": 1.024,
+    "roam": 1.885,
+    "multiply": 1.079,
+    "artic": 0
+  },
+  "eyes": {
+    "dark": 0.9,
+    "size": 0.188,
+    "blur": 0.05,
+    "stretch": 0.331,
+    "sep": 0.395,
+    "up": 0.412,
+    "mouth": 0.109,
+    "mouthUp": -0.115
+  }
+}

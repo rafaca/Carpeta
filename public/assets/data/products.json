@@ -1,0 +1,99 @@
+[
+  {
+    "slug": "twp-cap",
+    "name": "TWP Cap",
+    "price": 50,
+    "currency": "usd",
+    "tag": "NEW",
+    "featured": true,
+    "description": "A six-panel cap in heavy cream twill with the asterisk mark embroidered front and center. One size fits most heads full of ideas.",
+    "images": ["/assets/img/prod-cap.svg"],
+    "options": {"Size": ["S/M", "L/XL"], "Color": ["Cream", "Aqua"]},
+    "keywords": ["spring", "smart", "modern"],
+    "rating": 0,
+    "stripePaymentLink": "",
+    "faq": [
+      {"q": "When does it ship?", "a": "Orders leave the studio within 5 business days."},
+      {"q": "What is it made of?", "a": "100% heavy cotton twill, embroidered in New York."}
+    ]
+  },
+  {
+    "slug": "roaring-world-tee",
+    "name": "Roaring World Tee",
+    "price": 45,
+    "currency": "usd",
+    "tag": "NEW",
+    "featured": true,
+    "description": "Heavyweight tee with the question that started it all across the back: how do you find your people in a roaring world?",
+    "images": ["/assets/img/prod-tee.svg"],
+    "options": {"Size": ["S", "M", "L", "XL"], "Color": ["Cream", "Black"]},
+    "keywords": ["spring", "modern"],
+    "rating": 0,
+    "stripePaymentLink": "",
+    "faq": [
+      {"q": "How does it fit?", "a": "Boxy and generous. Size down for a closer fit."}
+    ]
+  },
+  {
+    "slug": "play-deck",
+    "name": "PLAY Deck",
+    "price": 35,
+    "currency": "usd",
+    "tag": "",
+    "description": "54 prompts for turning any meeting into a game. Our own facilitation deck, foil-stamped, in a mint tuck box.",
+    "images": ["/assets/img/prod-deck.svg"],
+    "options": {"Color": ["Mint"]},
+    "keywords": ["smart", "tools"],
+    "rating": 0,
+    "stripePaymentLink": "",
+    "faq": [
+      {"q": "Is there a digital version?", "a": "Not yet — the physical constraint is the point."}
+    ]
+  },
+  {
+    "slug": "bubble-dancers-print",
+    "name": "Bubble Dancers Print",
+    "price": 80,
+    "currency": "usd",
+    "tag": "LIMITED",
+    "description": "A2 giclée print of the circle dance from our homepage — six droplet figures holding hands, numbered edition of 50.",
+    "images": ["/assets/img/prod-print.svg"],
+    "options": {"Size": ["A3", "A2"]},
+    "keywords": ["art", "modern"],
+    "rating": 0,
+    "stripePaymentLink": "",
+    "faq": [
+      {"q": "Is it signed?", "a": "Each print is numbered and stamped by the studio."}
+    ]
+  },
+  {
+    "slug": "freqz-sticker-set",
+    "name": "FREQZ Sticker Set",
+    "price": 12,
+    "currency": "usd",
+    "tag": "",
+    "description": "Eight die-cut vinyl stickers from our research radio — waves, stars and one very calm ghost.",
+    "images": ["/assets/img/prod-stickers.svg"],
+    "options": {},
+    "keywords": ["spring", "small"],
+    "rating": 0,
+    "stripePaymentLink": "",
+    "faq": []
+  },
+  {
+    "slug": "field-notes-notebook",
+    "name": "Field Notes Notebook",
+    "price": 18,
+    "currency": "usd",
+    "tag": "",
+    "description": "A5 dot-grid notebook with a foil asterisk and a ribbon the color of the page ground. For rules, maps and lies.",
+    "images": ["/assets/img/prod-notebook.svg"],
+    "options": {"Color": ["Cream", "Mint"]},
+    "keywords": ["smart", "tools", "small"],
+    "rating": 0,
+    "stripePaymentLink": "",
+    "faq": [
+      {"q": "Paper weight?", "a": "120gsm, fountain-pen friendly."}
+    ]
+  }
+]
