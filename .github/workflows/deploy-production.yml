@@ -7,7 +7,7 @@ name: Deploy thosewhoplay.com (production)
 
 # Ship = push a change to this file (bump the counter below), or dispatch
 # manually once the workflow reaches the default branch.
-# ship: 9 — engine cache-buster bump so browsers fetch the colour build
+# ship: 10 — dark stage: #211d2e ground, white text, inverted marks
 
 on:
   push:

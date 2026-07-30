@@ -34,6 +34,18 @@ try{
   .twp-intro .hero h1{ animation:fadeIn 1.2s var(--ease) both 1.1s }
   .twp-intro .site-head{ animation:riseIn .9s var(--ease) both 2s }
 }
+
+/* Dark stage (2026-07-30): the dancers paint #211d2e; text goes white
+   and the black logo/icon artwork inverts. Page-scoped — sub-pages
+   keep the light theme. */
+body{ background:#211d2e; color:#fff }
+.hero h1,
+.bigtext .copy, .bigtext .copy p,
+.newsletter h2,
+.head-nav .nav-link,
+.foot-nav, .foot-nav a, .foot-nav span,
+.foot-meta, .foot-meta a, .foot-meta .copy{ color:#fff }
+.head-logo img, .foot-wordmark img, .foot-socials img{ filter:invert(1) }
 </style>
 </head>
 <body>
@@ -265,9 +277,7 @@ try{
 <script src="/assets/js/dancers-embed.js?v=20260730b"></script>
 <script>
 BubbleDancers.mount('#dancers-stage', {
-  background: '#E4FFFE',
-  backgroundTop: '#FFFFFF',
-  backgroundStop: 0.61,
+  background: '#211d2e',
   pointer: 'window',
   /* New-look preset (lab editor, 2026-07-29) — full version saved at
      /assets/data/dancers-preset-dark.json. figureColour + softening
