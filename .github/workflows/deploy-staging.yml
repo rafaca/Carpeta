@@ -98,13 +98,19 @@ jobs:
           scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
             "${files[@]}" \
             "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/"
+          # rsync with trailing slashes updates directories in place;
+          # scp -r nested them (assets/assets) on re-deploys
           for d in assets projects research; do
             if [ -d "public/$d" ]; then
-              scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes -r \
-                "public/$d" \
-                "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/"
+              rsync -az \
+                -e "ssh -i ~/.ssh/dreamhost -p $PORT -o StrictHostKeyChecking=yes" \
+                "public/$d/" \
+                "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/$d/"
             fi
           done
+          ssh -i ~/.ssh/dreamhost -p "$PORT" -o StrictHostKeyChecking=yes \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" \
+            'rm -rf ~/dev.thosewhoplay.com/assets/assets ~/dev.thosewhoplay.com/projects/projects ~/dev.thosewhoplay.com/research/research'
 
       - name: Publish twp-homepage.html as the dev index (approved 2026-07-11)
         env:

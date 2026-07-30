@@ -84,13 +84,20 @@ jobs:
           scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
             "${files[@]}" \
             "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/thosewhoplay.com/"
+          # rsync with trailing slashes updates directories in place;
+          # scp -r nested them (assets/assets) on re-deploys
           for d in assets projects research; do
             if [ -d "public/$d" ]; then
-              scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes -r \
-                "public/$d" \
-                "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/thosewhoplay.com/"
+              rsync -az \
+                -e "ssh -i ~/.ssh/dreamhost -p $PORT -o StrictHostKeyChecking=yes" \
+                "public/$d/" \
+                "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/thosewhoplay.com/$d/"
             fi
           done
+          # clean up any nested copies earlier scp deploys left behind
+          ssh -i ~/.ssh/dreamhost -p "$PORT" -o StrictHostKeyChecking=yes \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" \
+            'rm -rf ~/thosewhoplay.com/assets/assets ~/thosewhoplay.com/projects/projects ~/thosewhoplay.com/research/research'
 
       - name: Publish the homepage as the production index
         env:
@@ -129,3 +136,21 @@ jobs:
           for p in projects.html store.html research.html about.html book.html; do
             curl -sL --max-time 30 -o /dev/null -w "%{http_code} /$p\n" "https://thosewhoplay.com/$p"
           done
+
+      - name: Diagnostics — what the browser actually receives
+        run: |
+          set -uo pipefail
+          echo "=== stylesheet status ==="
+          curl -sL --max-time 30 -o /tmp/twp.css -w "%{http_code} %{size_download} bytes\n" https://thosewhoplay.com/assets/css/twp.css
+          echo "=== foot-wordmark rules in served CSS ==="
+          grep -A4 "foot-wordmark" /tmp/twp.css || echo "!! no foot-wordmark rules in served CSS"
+          echo "=== footer markup in served HTML ==="
+          curl -sL --max-time 30 https://thosewhoplay.com/ -o /tmp/home.html
+          grep -B1 -A3 "foot-wordmark" /tmp/home.html || echo "!! no foot-wordmark in served HTML"
+          echo "=== dancers mount in served HTML ==="
+          grep -A12 "BubbleDancers.mount" /tmp/home.html || echo "!! no mount call found"
+          echo "=== wordmark asset ==="
+          curl -sL --max-time 30 -o /tmp/wm.svg -w "%{http_code} %{size_download} bytes\n" https://thosewhoplay.com/assets/logo-twp-wordmark.svg
+          head -c 200 /tmp/wm.svg; echo
+          echo "=== engine version check (0 = old engine, no figureColour) ==="
+          curl -sL --max-time 30 https://thosewhoplay.com/assets/js/dancers-embed.js | grep -c "figureColour" || true
