@@ -24,6 +24,10 @@
 }
 *,*::before,*::after{ box-sizing:border-box }
 html,body{ margin:0 }
+/* text selection — TWP yellow. Two rules, not one list: an unknown
+   selector would invalidate the whole declaration in either engine. */
+::selection{ background:#F9F862; color:#211D2E }
+::-moz-selection{ background:#F9F862; color:#211D2E }
 #dancers-stage{ position:fixed; inset:0; z-index:0; pointer-events:none }
 body > :not(#dancers-stage){ position:relative; z-index:1 }
 body{
