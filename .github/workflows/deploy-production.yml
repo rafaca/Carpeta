@@ -7,7 +7,7 @@ name: Deploy thosewhoplay.com (production)
 
 # Ship = push a change to this file (bump the counter below), or dispatch
 # manually once the workflow reaches the default branch.
-# ship: 14 — real share image from the dancers; newsletter no longer fakes success
+# ship: 15 — newsletter heading nudged up 30px
 
 on:
   push:
