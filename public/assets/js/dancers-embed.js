@@ -1,24 +1,15 @@
 /* ============================================================
-   Bubble Dancers — embeddable build
+   Bubble Dancers — embeddable build (colour-capable)
+   Ported 2026-07-30 from the lab colour studio (figurecolors.html):
+   figureColour {a,b,c} chrome gradient, edge-only softening
+   {edge,amount,core}, transparent-canvas rendering over the host
+   background. Choreography, ring and mount API preserved from the
+   previous embed build.
    Usage:
-     <div id="dancers" style="height:70vh"></div>
-     <script src="dancers-embed.js"></script>
-     <script>
-       BubbleDancers.mount('#dancers', {
-         background: '#E4FFFE',          // any hex — the whole scene derives from it
-         figure: { size: 0.8 },          // optional FIGURE overrides
-         motion: { tempo: 0.705 },       // optional MOTION overrides
-         backgroundTop: '#FFFFFF',       // optional: vertical gradient top colour
-         backgroundStop: 0.61,           // optional: where the gradient settles
-         pointer: 'window',              // for click-through full-page background layers
-       });
-     </script>
-   The instance returned has .destroy(), .setBackground(hex),
-   .figure and .motion (live-editable objects).
-   Interaction: hover calmly and the troupe follows the cursor
-   pied-piper style; move fast and they scatter into freestyle;
-   go still and they reform the circle dance; touching the ring
-   breaks it. Pure WebGL, no dependencies.
+     BubbleDancers.mount('#dancers', { background:'#E4FFFE',
+       figure:{...}, motion:{...}, eyes:{...},
+       figureColour:{a,b,c}, softening:{edge,amount,core},
+       pointer:'window' });
    ============================================================ */
 (function(global){
 'use strict';
@@ -75,9 +66,7 @@ uniform vec4  uSegA[${SEGS}];    // limb start xyz + start radius in w
 uniform vec4  uSegB[${SEGS}];    // limb end xyz + end radius in w
 uniform vec4  uBnd[${MAXD}];  // per-dancer bounding sphere, xyz + radius
 uniform float uK;                // goop: how eagerly limbs melt together
-uniform vec3  uBg;               // base colour, bottom of the gradient (linearised)
-uniform vec3  uBgTop;            // top-of-page colour (linearised)
-uniform float uBgStop;           // where the gradient settles (0..1 of canvas height)
+uniform vec3  uBg;               // background colour (linearised)
 uniform vec4  uFaceA[${MAXD*3}]; // face feature: capsule start xyz + radius w
 uniform vec4  uFaceB[${MAXD*3}]; // face feature: capsule end xyz + type w (0 eye, 1 mouth)
 uniform float uEyeDark;          // how dark the face reads
@@ -85,6 +74,9 @@ uniform float uEyeBlur;          // feature edge: crisp -> frosted haze
 uniform vec3  uTint[${MAXD}];    // per-dancer interior colour (linearised)
 uniform float uTintAmt;          // 0 = droplet (ground colour) .. 1 = full tint
 uniform float uEdge;             // edge softness — higher blurs the silhouette
+uniform vec3  uColA;             // figure colour — deep tone
+uniform vec3  uColB;             // figure colour — bright tone
+uniform vec3  uColC;             // figure colour — highlight
 
 /* tapered capsule (round cone) — limbs slim toward wrists and
    ankles instead of reading as constant-width pegs */
@@ -146,6 +138,13 @@ vec3 calcNormal(vec3 p, float t){
 vec3 pal(float t){
   return 0.5 + 0.5*cos(6.28318*(t + vec3(0.0, 0.33, 0.67)));
 }
+// chrome iridescence between two editable tones + a highlight
+vec3 chromePal(float t){
+  float k = 0.5 + 0.5*cos(6.28318*t);
+  vec3 c = mix(uColA, uColB, k);
+  c = mix(c, uColC, smoothstep(0.7, 1.0, k) * 0.5);
+  return c;
+}
 
 /* the stage floor: pool of light, contact shadows, fog to the sky.
    shAmt scales the contact shadows — the floor takes them fully,
@@ -153,7 +152,7 @@ vec3 pal(float t){
 vec3 floorColor(vec3 p, float t, vec3 bg, float shAmt){
   vec3 fl = uBg * 0.86 + vec3(0.004);
   float dc = length(p.xz - uCenter);
-  fl += (uBg * 0.11 + vec3(0.02, 0.02, 0.03)) * smoothstep(2.0, 0.3, dc);
+  fl += (uBg * 0.05 + vec3(0.006, 0.006, 0.012)) * smoothstep(2.0, 0.3, dc);
   float sh = 1.0;
   for(int i = 0; i < ${MAXD}; i++){
     float R = uBnd[i].w;                        // the figure's own radius
@@ -188,38 +187,26 @@ vec3 figureTint(vec3 p){
    only the rim, a whisper of iridescence and the speculars reveal
    the form, like drops of the page itself */
 vec3 shadeFigure(vec3 p, vec3 n, vec3 v, vec3 base){
-  float ndv = max(dot(n, v), 0.0);
-  float fre = pow(1.0 - ndv, 3.0);
-  float lum = dot(base, vec3(0.333));
+  float ndv = clamp(dot(n, v), 0.0, 1.0);
+  float fre = pow(1.0 - ndv, 2.4);
 
-  float lightness = smoothstep(0.10, 0.30, lum);
-  vec3 body = base * (0.96 + 0.04*ndv);
-  // rim reads darker on light grounds, brighter on dark ones
-  vec3 rim = mix(base + vec3(0.40), base * 0.5, lightness);
-  body = mix(body, rim, fre * 0.6);
-  // thin-film iridescence, full range: the phase cycles the palette
-  // several times across the edge gradient, so the rim shows
-  // CONCENTRIC rainbow bands like a real soap bubble. On dark
-  // grounds the bands ADD light; on light grounds added light
-  // washes out, so the rim absorbs like a film — colour by tinting
-  // a wider falloff than the fresnel keeps the bands visible on
-  // figures this small — the colour reaches into the body, not just
-  // the outermost pixels
-  float freW = pow(1.0 - ndv, 1.5);
-  // fewer, wider bands when edge softness is up — less rainbow confetti
-  // the normal-driven phase term is halved: finite-difference normals
-  // are noisy, and feeding that noise into the palette turned it into
-  // coloured speckle across the rim
-  float film = (2.2/uEdge)*freW + 0.12*n.x + 0.09*n.y + 0.05*uTime;
-  vec3 irid = pal(film);
-  body += irid * freW * (1.35/uEdge) * (1.0 - lightness);
-  // gentler band contrast on light grounds — the wide rainbow swing is
-  // what aliased into dither; a narrow swing keeps a whisper of sheen
-  body = mix(body, body * (0.72 + 0.5*irid), min(freW * 1.3, 1.0) * lightness);
-  vec3 l1 = normalize(vec3(0.55, 0.75, 0.55));
-  vec3 l2 = normalize(vec3(-0.6, -0.3, 0.7));
-  body += vec3(1.0) * pow(max(dot(reflect(-l1, n), v), 0.0), 90.0) * 1.2;
-  body += vec3(0.25, 0.3, 0.4) * pow(max(dot(reflect(-l2, n), v), 0.0), 24.0) * 0.15;
+  // hue separates across the form (deep tone on one flank, bright on
+  // the other) as the surface normal turns
+  float ph = 0.05 + 0.85*(1.0 - ndv) + 0.55*n.y + 0.40*n.x + 0.04*uTime;
+  vec3 irid = chromePal(ph);
+
+  // deep saturated core, bright toward the viewer; a strong fresnel rim
+  // carries the film to the silhouette like light wrapping wet metal
+  vec3 body = irid * (0.12 + 1.25*ndv*ndv);
+  body += irid * fre * 1.4;
+
+  // sharp speculars — hot white, cool, warm — the wet-chrome highlights
+  vec3 l1 = normalize(vec3( 0.50, 0.85, 0.55));
+  vec3 l2 = normalize(vec3(-0.55, 0.15, 0.80));
+  vec3 l3 = normalize(vec3( 0.15,-0.50, 0.85));
+  body += vec3(1.00, 1.00, 1.00) * pow(max(dot(reflect(-l1, n), v), 0.0), 80.0) * 2.2;
+  body += vec3(0.55, 0.75, 1.00) * pow(max(dot(reflect(-l2, n), v), 0.0), 38.0) * 1.2;
+  body += vec3(1.00, 0.55, 0.85) * pow(max(dot(reflect(-l3, n), v), 0.0), 22.0) * 0.7;
   // eyes: two soft frosted dots on each face — they sit on the head
   // surface facing the dancer's way, so they only read when the
   // dancer faces you
@@ -260,12 +247,11 @@ void main(){
   vec3 u = cross(r, f);
   vec3 rd = normalize(r*uv.x + u*uv.y + f*${FL.toFixed(2)});
 
-  // background: vertical gradient (top colour settling into the base
-  // by uBgStop) with a faint radial breath
-  float vy = 1.0 - gl_FragCoord.y / uRes.y;
-  vec3 bg = mix(uBgTop, uBg, smoothstep(0.0, max(uBgStop, 1e-3), vy));
-  bg *= 1.0 - 0.06*length(uv);
-  vec3 col = bg;
+  // background: the chosen colour with a faint radial breath
+  float vig = length(uv * vec2(0.85, 1.0));
+  vec3 bg = uBg * (1.0 + 0.55*smoothstep(1.4, 0.0, vig)) * (1.0 - 0.45*smoothstep(0.5, 1.7, vig));
+  vec3 col = vec3(0.0);
+  float alpha = 0.0;
 
   float t = 0.0, glow = 1e5, tGlow = 0.0;
   bool hit = false;
@@ -285,35 +271,28 @@ void main(){
     vec3 n = calcNormal(p, t);
     vec3 v = -rd;
     float dFig = mapFigures(p);
-
-    vec3 fl = floorColor(p, t, bg, 1.0);
-    // the drop takes the colour of the ground directly beneath it
-    vec3 gnd = floorColor(vec3(p.x, 0.0, p.z), t, bg, 0.25);
-    // each drop tints toward its own colour, so they read differently inside
-    vec3 body = shadeFigure(p, n, v, uTintAmt > 0.001 ? mix(gnd, figureTint(p), uTintAmt) : gnd);
-
-    // blend across the foot meniscus so contacts stay goopy
-    col = mix(body, fl, smoothstep(0.0, 0.05, dFig));
+    vec3 body = shadeFigure(p, n, v, vec3(0.0));
+    // the figure is opaque; the floor (dFig large) stays transparent so
+    // the CSS vignette shows through — only the figure carries alpha.
+    // feather the very silhouette (grazing rim) in the alpha channel so
+    // the edge isn't a hard cut against the soft halo — interior stays
+    // fully opaque, so this softens edges only, never the detail
+    float ndv = clamp(dot(n, v), 0.0, 1.0);
+    alpha = (1.0 - smoothstep(0.0, 0.05, dFig)) * (0.5 + 0.5 * smoothstep(0.0, 0.16, ndv));
+    col = body;
   } else {
-    // faint iridescent halo hugging the silhouettes — additive light,
-    // so it fades out automatically on bright backgrounds
-    float darkness = clamp(1.0 - dot(uBg, vec3(0.4)), 0.0, 1.0);
-    col += vec3(0.05, 0.03, 0.09) * exp(-glow*24.0) * 0.35 * darkness;
-
-    // silhouette anti-aliasing: rays that grazed a figure by less
-    // than a pixel's footprint get a share of its rim colour
+    // silhouette anti-aliasing: grazing rays get partial coverage, so
+    // the transparent edge stays smooth
     float fw = tGlow * (2.8 * uEdge) / (uRes.y * ${FL.toFixed(2)});
     if(glow < fw && tGlow > 0.0){
       vec3 pe = ro + rd*tGlow;
-      float cov = 1.0 - glow/fw;
-      vec3 eBase = floorColor(vec3(pe.x, 0.0, pe.z), tGlow, bg, 0.25);
-      if(uTintAmt > 0.001) eBase = mix(eBase, figureTint(pe), uTintAmt);
-      col = mix(col, shadeFigure(pe, calcNormal(pe, tGlow), -rd, eBase), cov);
+      alpha = 1.0 - glow/fw;
+      col = shadeFigure(pe, calcNormal(pe, tGlow), -rd, vec3(0.0));
     }
   }
 
   col = pow(col, vec3(0.4545)); // gamma
-  gl_FragColor = vec4(col, 1.0);
+  gl_FragColor = vec4(col, alpha);
 }`;
 
 /* ---------- tiny seeded value noise (for motion) ---------- */
@@ -345,22 +324,22 @@ const rnd = (i, j) => noise(i * 13.7 + 3.1, j * 27.9 + 9.4) - 0.5; // per-dancer
 // so the look is preserved at any scale (0.8 = the 20% smaller ask)
 const FIGURE = {
   size:    0.624,  // overall scale of the troupe
-  head:    0.105,  // head radius
-  neckLift:0.061,  // how far the head floats above the shoulders
-  torso:   0.265,  // hip-to-shoulder length
-  torsoR:  0.110,  // torso thickness
-  hip:     0.399,  // hip height off the floor
-  armR:    0.052,  // arm thickness
-  armLen:  0.220,  // arm reach — how far hands stretch from the shoulders
-  armH:    0.531,  // free-arm height — how high the hands ride (low = arms hang)
-  hand:    0.040,  // hand thickness — the round tip at the end of the arm
-  elbow:   0.973,  // how much the arms fold at the joint (0 = straight reach)
-  legR:    0.085,  // leg thickness
-  stance:  0.080,  // how far apart the feet stand
-  handH:   0.424,  // height where neighbours' hands meet
-  blend:   0.036,  // goop: how eagerly limbs melt together
+  head:    0.084,  // head radius
+  neckLift:0.114,  // how far the head floats above the shoulders
+  torso:   0.267,  // hip-to-shoulder length
+  torsoR:  0.118,  // torso thickness
+  hip:     0.309,  // hip height off the floor
+  armR:    0.059,  // arm thickness
+  armLen:  0.120,  // arm reach — how far hands stretch from the shoulders
+  armH:    0.525,  // free-arm height — how high the hands ride (low = arms hang)
+  hand:    0.048,  // hand thickness — the round tip at the end of the arm
+  elbow:   0.581,  // how much the arms fold at the joint (0 = straight reach)
+  legR:    0.063,  // leg thickness
+  stance:  0.120,  // how far apart the feet stand
+  handH:   0.503,  // height where neighbours' hands meet
+  blend:   0.064,  // goop: how eagerly limbs melt together
   tint:    0.0,    // per-figure interior colour (0 = transparent drop, matches ground)
-  edge:    1.8,    // edge softness — higher blurs the silhouette, less dither
+  edge:    2.679,    // edge softness — higher blurs the silhouette, less dither
 };
 const FIGURE_DEFAULTS = { ...FIGURE };
 
@@ -369,7 +348,7 @@ const EYES = {
   dark:    0.900, // how dark the dots read
   size:    0.188, // eye dot size
   blur:    0.050, // edge blur: low = crisp print, high = frosted haze
-  stretch: 0.304, // eye elongation - 0 = round dot, 0.81 = the reference pill
+  stretch: 0.331, // eye elongation - 0 = round dot, 0.81 = the reference pill
   sep:     0.395, // eye distance apart
   up:      0.412, // eye height on the face
   mouth:   0.109, // mouth size (0 = no mouth)
@@ -402,6 +381,17 @@ const MPARAMS = [
   ['articulation','artic',   0.0, 2.5],
 ];
 
+const EPARAMS = [
+  ['darkness',     'dark',    0.0,  0.9],
+  ['size',         'size',    0.06, 0.45],
+  ['blur',         'blur',    0.05, 1.5],
+  ['stretch',      'stretch', 0.0,  2.0],
+  ['separation',   'sep',     0.15, 1.1],
+  ['height',       'up',     -0.35, 0.55],
+  ['mouth size',   'mouth',   0.0,  0.35],
+  ['mouth height', 'mouthUp',-0.55, 0.15],
+];
+
 // the editor panel: label, key, min, max
 const PARAMS = [
   ['size',            'size',     0.5,  1.3],
@@ -411,20 +401,25 @@ const PARAMS = [
   ['torso thickness', 'torsoR',   0.03, 0.13],
   ['hip height',      'hip',      0.28, 0.62],
   ['arm thickness',   'armR',     0.018, 0.09],
-  ['arm length',      'armLen',   0.15,  0.50],
+  ['arm length',      'armLen',   0.10,  1.20],
+  ['hand size',       'hand',     0.02,  0.14],
+  ['arm height',      'armH',     0.05,  1.30],
+  ['elbow bend',      'elbow',    0.0,   1.0],
   ['leg thickness',   'legR',     0.022, 0.10],
   ['stance width',    'stance',   0.03, 0.20],
   ['hand height',     'handH',    0.38, 0.80],
   ['goopiness',       'blend',    0.02, 0.12],
+  ['edge softness',   'edge',     0.5,  3.5],
 ];
 
 /* ---------- WebGL plumbing ---------- */
+const edgeCanvas = document.createElement('canvas');
+edgeCanvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none';
+host.appendChild(edgeCanvas);
 const canvas = document.createElement('canvas');
-canvas.style.cssText = 'display:block;width:100%;height:100%';
+canvas.style.cssText = 'position:relative;display:block;width:100%;height:100%';
 host.appendChild(canvas);
-// no MSAA/depth/stencil: it's a single fullscreen triangle whose shader
-// does its own edge softening, so the default buffers are pure cost
-const gl = canvas.getContext('webgl', { antialias: false, depth: false, stencil: false });
+const gl = canvas.getContext('webgl', { preserveDrawingBuffer:true, alpha:true, premultipliedAlpha:false, antialias:false, depth:false, stencil:false });
 function sh(type, src){
   const h = gl.createShader(type);
   gl.shaderSource(h, src); gl.compileShader(h);
@@ -448,10 +443,10 @@ gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
 const U = n => gl.getUniformLocation(prog, n);
 const uRes = U('uRes'), uTime = U('uTime'), uCenter = U('uCenter');
 const uSegA = U('uSegA'), uSegB = U('uSegB'), uBnd = U('uBnd'), uK = U('uK');
-const uBg = U('uBg'), uBgTop = U('uBgTop'), uBgStop = U('uBgStop');
-const uFaceA = U('uFaceA'), uFaceB = U('uFaceB'), uEyeDark = U('uEyeDark');
+const uBg = U('uBg'), uFaceA = U('uFaceA'), uFaceB = U('uFaceB'), uEyeDark = U('uEyeDark');
 const uEyeBlur = U('uEyeBlur');
 const uTint = U('uTint'), uTintAmt = U('uTintAmt'), uEdge = U('uEdge');
+const uColA = U('uColA'), uColB = U('uColB'), uColC = U('uColC');
 // each dancer a soft pastel of its own — golden-angle hue spacing, low
 // saturation so they still read as translucent drops; linearised to
 // match uBg (the shader gammas at the end)
@@ -477,31 +472,68 @@ const TINTS = (function(){
 /* ---------- background colour ---------- */
 const BG_DEFAULT = '#E4FFFE';
 let bgHex = BG_DEFAULT;
-let bgLin = [0, 0, 0], bgTopLin = [0, 0, 0], bgStop = 0.61;
+let bgLin = [0, 0, 0], bgStop = 0.61;
 const linHex = hex => {
   const r = parseInt(hex.slice(1,3), 16) / 255;
   const g = parseInt(hex.slice(3,5), 16) / 255;
   const b = parseInt(hex.slice(5,7), 16) / 255;
-  // linearise: the shader gammas at the end, returning the exact hex
   return [Math.pow(r, 2.2), Math.pow(g, 2.2), Math.pow(b, 2.2)];
 };
 function applyBg(hex, topHex, stop){
   bgHex = hex;
   bgLin = linHex(hex);
-  bgTopLin = linHex(topHex || hex);
   bgStop = stop == null ? (topHex ? 0.61 : 1.0) : stop;
   host.style.background = topHex
     ? `linear-gradient(180deg, ${topHex} 0%, ${hex} ${Math.round(bgStop*100)}%)`
     : hex;
 }
+
+/* ---------- figure colours (editable) ---------- */
+const FIGCOL = { a:'#5960f9', b:'#f160e7', c:'#ffc0f5' };  // deep / bright / highlight (the original chrome)
+const FIGCOL_DEFAULTS = { ...FIGCOL };
+let colALin=[0,0,0], colBLin=[0,0,0], colCLin=[0,0,0];
+function _hexLin(hex){
+  const r=parseInt(hex.slice(1,3),16)/255, g=parseInt(hex.slice(3,5),16)/255, b=parseInt(hex.slice(5,7),16)/255;
+  return [Math.pow(r,2.2), Math.pow(g,2.2), Math.pow(b,2.2)];
+}
+function applyFigCol(){ colALin=_hexLin(FIGCOL.a); colBLin=_hexLin(FIGCOL.b); colCLin=_hexLin(FIGCOL.c); }
+applyFigCol();
+
+/* ---------- softening: an EDGE-ONLY blur ----------
+   The figure renders on a transparent background; a blurred copy of it
+   sits BEHIND the sharp one, so the crisp interior covers itself and
+   only the silhouette gets a soft, colour-matched halo. 'core blur'
+   optionally softens the whole figure too. */
+const SOFT_DEFAULT = { edge:3.0, amount:0.9, core:0.0 };
+const SOFT = { ...SOFT_DEFAULT };
+const edgeCtx = edgeCanvas.getContext('2d');
+function applySoften(){
+  edgeCanvas.style.filter = 'blur('+SOFT.edge.toFixed(1)+'px)';
+  edgeCanvas.style.opacity = SOFT.amount;
+  canvas.style.filter = SOFT.core>0 ? 'blur('+SOFT.core.toFixed(2)+'px)' : 'none';
+}
+function drawEdge(){
+  const w=canvas.clientWidth, h=canvas.clientHeight;
+  if(!w||!h) return;
+  if(edgeCanvas.width!==w) edgeCanvas.width=w;
+  if(edgeCanvas.height!==h) edgeCanvas.height=h;
+  edgeCtx.clearRect(0,0,w,h);
+  if(SOFT.amount>0.001 && SOFT.edge>0.001){ try{ edgeCtx.drawImage(canvas,0,0,w,h); }catch(e){} }
+}
+applySoften();
+
+/* ---------- mount options ---------- */
 if(opts.figure) Object.assign(FIGURE, opts.figure);
 if(opts.motion) Object.assign(MOTION, opts.motion);
 if(opts.eyes) Object.assign(EYES, opts.eyes);
+if(opts.figureColour) Object.assign(FIGCOL, opts.figureColour);
+if(opts.softening) Object.assign(SOFT, opts.softening);
+applyFigCol();
+applySoften();
 applyBg(opts.background || BG_DEFAULT, opts.backgroundTop, opts.backgroundStop);
 
-// as a fullscreen background this is all soft gradients, so it upscales
-// invisibly: render at 1x CSS pixels (not retina) and let the governor
-// degrade to a low floor — resolution is the whole cost of an SDF shader
+// full resolution (up to 1.5x on retina) — bounding spheres in the
+// shader keep the per-pixel cost down, and edges stay crisp
 const BASE_SCALE = Math.min(window.devicePixelRatio || 1, 1);
 const MIN_SCALE = 0.55;
 let renderScale = BASE_SCALE;      // adaptive — drops when frames run slow
@@ -543,10 +575,10 @@ const mouse = { x: -1e4, y: -1e4, lastMove: -1e9 };
 let px = 0, py = 0;
 let center = [0, 0];    // where the troupe gathers
 let energy = 0;         // cursor speed → wilder moves
-let broken = 1;         // 0 = hands held, 1 = circle broken, all solo — START scattered
+let broken = 0;         // 0 = hands held, 1 = circle broken, all solo
 let lastTouch = -1e9;
-const bornAt = performance.now();  // the round only joins hands after a dwell
-let INTRO_MS = 5000;               // ~5s of freestyle before they hold hands
+const bornAt = performance.now();
+const INTRO_MS = 5000;               // ~5s of freestyle before they hold hands
 let ringA = 0;          // the circling
 let last = performance.now();
 const anchors = Array.from({length: BASE}, () => [0, 0]); // last frame's feet spots
@@ -761,7 +793,8 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
     const swayT = n1(i*5+2, t) * (0.08 + 0.25*wild + 0.15*loose) * MOTION.sway * S;
     const leanO = n1(i*5+62, t) * (0.05 + 0.18*wild + 0.12*loose) * MOTION.sway * S;
 
-    const hip  = [ax + T[0]*(swayT + wShift), F.hip + bob + jump + rnd(i,4)*0.02*S, az + T[2]*(swayT + wShift)];
+    const floatY = Math.sin(t*0.8 + i*1.7) * 0.05 * S;   // gentle hover — the whole figure drifts up and down
+    const hip  = [ax + T[0]*(swayT + wShift), F.hip + bob + jump + floatY + rnd(i,4)*0.02*S, az + T[2]*(swayT + wShift)];
     const neck = [hip[0] + T[0]*swayT*0.8 + O[0]*leanO,
                   hip[1] + F.torso,
                   hip[2] + T[2]*swayT*0.8 + O[2]*leanO];
@@ -806,11 +839,18 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
 
     // arms: in the round they reach to the shared held hands;
     // solo they pump and wave to their own beat
-    const shoulder = lerp3(hip, neck, 0.85);
+    // shoulders sit out at the sides of the torso (not on the centre
+    // spine) so a raised upper arm clears the head instead of welding
+    // into it through the smooth-min goop
+    const shoulderMid = lerp3(hip, neck, 0.82);
     const armPairs = [[held[i], 1], [held[(i + N - 1) % N], -1]];
     for(const [heldHand, side] of armPairs){
+      const shoulder = [
+        shoulderMid[0] + T[0]*side*F.torsoR*0.95,
+        shoulderMid[1],
+        shoulderMid[2] + T[2]*side*F.torsoR*0.95];
       const wave = face + side * (1.3 + n1(i*6 + side*3 + 30, tA) * 1.2 * MOTION.sway);
-      const raise = F.armH + 0.4 * Math.max(0, Math.sin(phase[i]*0.5 + side*1.8)) * S;
+      const raise = F.armH + 0.08 * Math.max(0, Math.sin(phase[i]*0.5 + side*1.8)) * S;  // arm height ~ the slider, whisper of drift
       // free hands reach to ~80% of the arm's length, so the arm
       // always has slack to fold at the elbow
       const free = [
@@ -831,21 +871,27 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
       // ring pull further than the arm's rest length) so the joint
       // never collapses flat — a modest bend in the round, a full
       // fold when the arms are free
-      const half = Math.max(F.armLen * 0.52, cd * 0.53);
+      const half = Math.max(F.armLen * 0.56, cd * 0.55);
       const hMax = Math.sqrt(Math.max(0, half*half - cd*cd*0.25));
       const adx = hand[0]-shoulder[0], adz = hand[2]-shoulder[2];
       const adl = Math.hypot(adx, adz) || 1;
-      const p1 = [-adz/adl, 0, adx/adl];       // horizontal perp to the arm
+      let p1 = [-adz/adl, 0, adx/adl];         // horizontal perp to the arm
+      // keep the elbow on the OUTSIDE: align p1 with this arm's side so
+      // the forearm fans away from the head/torso, never folds across it
+      if(p1[0]*T[0]*side + p1[2]*T[2]*side < 0){ p1 = [-p1[0], 0, -p1[2]]; }
       const bendA = n1(i*6 + side*4 + 70, tA*0.9) * 1.6;
       // beat accent: elbows snap into their bend on the hit, per arm
       const hitS = Math.pow(Math.max(0, Math.sin(phase[i]*0.5 + side*1.57)), 3);
       const bend = hMax * Math.min(1, (0.4 + 0.6 * F.elbow / Math.max(S, 1e-6)) * (1 + 0.5 * artic * hitS));
+      const swing = Math.abs(Math.sin(bendA));         // fan out, then droop
       const elbow = [
-        mid[0] + p1[0]*Math.sin(bendA)*bend,
+        mid[0] + p1[0]*swing*bend,
         mid[1] - Math.abs(Math.cos(bendA))*bend*0.9,   // elbows mostly droop
-        mid[2] + p1[2]*Math.sin(bendA)*bend];
-      seg(shoulder, elbow, F.armR, F.armR*0.85);
-      seg(elbow, hand, F.armR*0.85, F.hand); // rounds out into the hand
+        mid[2] + p1[2]*swing*bend];
+      // taper the whole arm — thick where it meets the shoulder, slimming
+      // to the wrist — so it reads as a fleshy limb, not a uniform tube
+      seg(shoulder, elbow, F.armR*1.4, F.armR*0.9);
+      seg(elbow, hand, F.armR*0.9, F.hand); // slims into the rounded hand
     }
 
     // legs: alternate stepping; solo kicks fly higher and wider,
@@ -859,7 +905,7 @@ function buildSkeleton(t, wild, brk, lnW, lead, m, dt, fIn){
       // into it — a buried tip read as a thin stem in a wide puddle
       const foot = [
         ax + T[0]*(side*F.stance + swayT*0.5) + O[0]*kickO,
-        lift + F.legR*0.82,
+        lift + F.legR*0.82 + floatY,   // feet rise with the body, so it floats as one
         az + T[2]*(side*F.stance + swayT*0.5) + O[2]*kickO];
       // each leg roots at its OWN point beside the hip, slimmer at
       // the top — two fat thighs sharing one origin plus the torso
@@ -926,9 +972,8 @@ function frame(now){
   // chasing the cursor in a line; proximity is the point there
   if(touching && now - mouse.lastMove < 100 && lineW < 0.3) lastTouch = now;
 
-  // broken: they open the page dancing solo and only gather into the
-  // ring once the visitor has lingered ~30s; after that it snaps open
-  // again on touch and mends slowly once left alone
+  // broken: they open the page dancing solo, gather into the ring,
+  // snap open again on touch and mend slowly once left alone
   const intro = now - bornAt < INTRO_MS;
   const bt = (intro || now - lastTouch < 3000) ? 1 : 0;
   broken += (bt - broken) * ease(bt > broken ? 9 : 1.4);
@@ -1052,8 +1097,6 @@ function frame(now){
   gl.uniform4fv(uBnd, bnd);
   gl.uniform1f(uK, FIGURE.blend * FIGURE.size);
   gl.uniform3f(uBg, bgLin[0], bgLin[1], bgLin[2]);
-  gl.uniform3f(uBgTop, bgTopLin[0], bgTopLin[1], bgTopLin[2]);
-  gl.uniform1f(uBgStop, bgStop);
   gl.uniform4fv(uFaceA, faceA);
   gl.uniform4fv(uFaceB, faceB);
   gl.uniform1f(uEyeDark, EYES.dark);
@@ -1061,12 +1104,14 @@ function frame(now){
   gl.uniform3fv(uTint, TINTS);
   gl.uniform1f(uTintAmt, FIGURE.tint);
   gl.uniform1f(uEdge, FIGURE.edge);
+  gl.uniform3f(uColA, colALin[0], colALin[1], colALin[2]);
+  gl.uniform3f(uColB, colBLin[0], colBLin[1], colBLin[2]);
+  gl.uniform3f(uColC, colCLin[0], colCLin[1], colCLin[2]);
   gl.drawArrays(gl.TRIANGLES, 0, 3);
+  drawEdge();
   raf = requestAnimationFrame(frame);
 }
 let raf = requestAnimationFrame(frame);
-
-
 
 function destroy(){
   cancelAnimationFrame(raf);
@@ -1074,9 +1119,13 @@ function destroy(){
   window.removeEventListener('resize', resize);
   ptr.removeEventListener('pointermove', trackPointer);
   ptr.removeEventListener('pointerdown', trackPointer);
+  edgeCanvas.remove();
   canvas.remove();
 }
-return { destroy, canvas, figure: FIGURE, motion: MOTION, setBackground: applyBg };
+return { destroy, canvas, figure: FIGURE, motion: MOTION,
+         figureColour: FIGCOL, softening: SOFT, setBackground: applyBg };
+
+
 }
 global.BubbleDancers = { mount };
 })(typeof window !== 'undefined' ? window : this);
