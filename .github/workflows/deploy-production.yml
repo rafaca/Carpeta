@@ -7,7 +7,7 @@ name: Deploy thosewhoplay.com (production)
 
 # Ship = push a change to this file (bump the counter below), or dispatch
 # manually once the workflow reaches the default branch.
-# ship: 17 — accept either Adobe family name for Firelli
+# ship: 18 — resilient deploy verification (slow Dreamhost caused false failures)
 
 on:
   push:
@@ -147,7 +147,16 @@ jobs:
         run: |
           set -euo pipefail
           PORT="${DREAMHOST_SSH_PORT:-22}"
-          check() { curl -sL --max-time 30 https://thosewhoplay.com/ | grep -q "roaring world"; }
+          # Fetch first, test second: piping curl into grep under pipefail
+          # turns a slow/timed-out download into a false "not deployed"
+          # (Dreamhost gets sluggish, and a truncated body fails the grep).
+          check() {
+            local body
+            body=$(curl -sL --max-time 60 --retry 4 --retry-delay 5 --retry-all-errors \
+                     https://thosewhoplay.com/ 2>/dev/null) || return 1
+            echo "fetched ${#body} bytes" >&2
+            [ ${#body} -gt 2000 ] && printf '%s' "$body" | grep -q "roaring world"
+          }
           if check; then
             echo "thosewhoplay.com serves the new homepage"
           else
