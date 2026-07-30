@@ -60,3 +60,42 @@
     }
   });
 })();
+
+/* Newsletter signup.
+   Set NEWSLETTER_ENDPOINT to the hosted list's form action (Buttondown,
+   Mailchimp, ConvertKit …) and submissions POST straight to it. Until
+   that exists, the form must not pretend: it hands the address to email
+   so a signup reaches a person instead of being silently discarded. */
+(function(){
+  var NEWSLETTER_ENDPOINT = '';        // e.g. 'https://buttondown.email/api/emails/embed-subscribe/thosewhoplay'
+  var NEWSLETTER_FIELD    = 'email';   // Mailchimp uses 'EMAIL'
+  var INBOX = 'info@thosewhoplay.com';
+
+  document.querySelectorAll('.news-form').forEach(function(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var input = form.querySelector('input[type=email]');
+      var btn = form.querySelector('button');
+      var email = ((input && input.value) || '').trim();
+      if(!email || !btn) return;
+      var said = btn.textContent;
+
+      if(NEWSLETTER_ENDPOINT){
+        btn.textContent = 'Sending';
+        var body = new FormData();
+        body.append(NEWSLETTER_FIELD, email);
+        fetch(NEWSLETTER_ENDPOINT, { method:'POST', body:body, mode:'no-cors' })
+          .then(function(){ btn.textContent = 'Subscribed'; if(input) input.value = ''; })
+          .catch(function(){ btn.textContent = 'Try again'; setTimeout(function(){ btn.textContent = said; }, 2500); });
+        return;
+      }
+
+      // no backend: open the visitor's mail client with the signup ready
+      btn.textContent = 'Opening email';
+      window.location.href = 'mailto:' + INBOX
+        + '?subject=' + encodeURIComponent('Newsletter signup')
+        + '&body=' + encodeURIComponent('Please add this address to the Those Who Play list:\n\n' + email + '\n');
+      setTimeout(function(){ btn.textContent = said; }, 4000);
+    });
+  });
+})();

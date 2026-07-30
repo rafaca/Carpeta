@@ -70,7 +70,9 @@
   <h2 id="nl-h">Subscribe to receive early access to our latest research papers exploring new and emerging futures.</h2>
   <div class="news-form-wrap">
     <!-- TODO: no newsletter backend exists yet — button acknowledges locally (same as homepage) -->
-    <form class="news-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Thanks';">
+    <!-- No list backend yet: submitting hands the address to email so a
+         signup reaches a person instead of vanishing (see twp.js). -->
+    <form class="news-form">
       <input type="email" placeholder="you@email.com" required aria-label="Email address">
       <button type="submit">Subscribe</button>
     </form>
@@ -118,6 +120,6 @@
     </div>
   </div>
 </footer>
-<script src="/assets/js/twp.js?v=20260730"></script>
+<script src="/assets/js/twp.js?v=20260730d"></script>
 </body>
 </html>
