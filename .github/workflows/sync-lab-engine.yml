@@ -1,0 +1,92 @@
+name: Sync dancers engine from the rafacastello.com lab
+
+# One-shot: pulls the newest colour-capable (figureColour) dancers-embed.js
+# from the rafacastello.com side of the Dreamhost account and commits it to
+# this repo. Re-runs when this file changes or on manual dispatch.
+
+on:
+  push:
+    branches:
+      - claude/redesign-website-iubYk
+    paths:
+      - .github/workflows/sync-lab-engine.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-lab-engine
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: claude/redesign-website-iubYk
+
+      - name: Configure SSH
+        env:
+          DREAMHOST_SSH_KEY: ${{ secrets.DREAMHOST_SSH_KEY }}
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$DREAMHOST_SSH_KEY" > ~/.ssh/dreamhost
+          chmod 600 ~/.ssh/dreamhost
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          for i in 1 2 3 4 5; do
+            ssh-keyscan -T 15 -p "$PORT" -H "$DREAMHOST_SSH_HOST" >> ~/.ssh/known_hosts && break
+            echo "ssh-keyscan attempt $i failed; retrying in $((i*5))s"
+            sleep $((i*5))
+          done
+          grep -q . ~/.ssh/known_hosts || { echo "ssh-keyscan never reached the host"; exit 1; }
+
+      - name: Locate and fetch the newest colour-capable engine
+        env:
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          SSH="ssh -i ~/.ssh/dreamhost -p $PORT -o StrictHostKeyChecking=yes $DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST"
+          $SSH 'bash -s' <<'REMOTE' > /tmp/engine-path
+          best=""; bestts=0
+          for dir in ~/rafacastello.com ~/www.rafacastello.com ~/staging.rafacastello.com ~/dev.rafacastello.com; do
+            [ -d "$dir" ] || continue
+            while IFS= read -r f; do
+              if grep -q "figureColour" "$f" 2>/dev/null; then
+                ts=$(stat -c %Y "$f")
+                if [ "$ts" -gt "$bestts" ]; then bestts=$ts; best=$f; fi
+              fi
+            done < <(find "$dir" -maxdepth 4 -name "dancers-embed.js" 2>/dev/null)
+          done
+          [ -n "$best" ] || { echo "NO colour-capable dancers-embed.js found on the server" >&2; exit 1; }
+          echo "$best"
+          REMOTE
+          ENGINE_PATH=$(cat /tmp/engine-path)
+          echo "Using engine: $ENGINE_PATH"
+          scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:$ENGINE_PATH" \
+            public/assets/js/dancers-embed.js
+          echo "figureColour occurrences: $(grep -c figureColour public/assets/js/dancers-embed.js)"
+          echo "softening occurrences: $(grep -c softening public/assets/js/dancers-embed.js || true)"
+          ls -la public/assets/js/dancers-embed.js
+
+      - name: Commit the engine
+        run: |
+          set -euo pipefail
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git add public/assets/js/dancers-embed.js
+          git diff --cached --quiet && { echo "Engine unchanged"; exit 0; }
+          git commit -m "Dancers: sync colour-capable engine from the rafacastello.com lab"
+          for i in 1 2 3; do
+            git push && break
+            git pull --rebase && sleep 3
+          done

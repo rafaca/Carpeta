@@ -7,7 +7,7 @@ name: Deploy thosewhoplay.com (production)
 
 # Ship = push a change to this file (bump the counter below), or dispatch
 # manually once the workflow reaches the default branch.
-# ship: 4 — wordmark intrinsic size + cache-busted assets
+# ship: 5 — intrinsic sizes on all svg assets, html no-cache, colour mount opts
 
 on:
   push:
@@ -110,6 +110,34 @@ jobs:
           scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
             public/twp-homepage.html \
             "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/thosewhoplay.com/index.html"
+
+      - name: Ensure browsers revalidate HTML (assets stay cached via ?v=)
+        env:
+          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
+          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
+          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
+        run: |
+          set -euo pipefail
+          PORT="${DREAMHOST_SSH_PORT:-22}"
+          ssh -i ~/.ssh/dreamhost -p "$PORT" -o StrictHostKeyChecking=yes \
+            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" 'bash -s' <<'REMOTE'
+          cd ~/thosewhoplay.com
+          if ! grep -q "TWP html no-cache" .htaccess 2>/dev/null; then
+            cat >> .htaccess <<'HT'
+
+          # TWP html no-cache — pages revalidate on every visit so deploys show
+          # immediately; fingerprinted assets (?v=) keep long-lived caching
+          <IfModule mod_headers.c>
+            <FilesMatch "\.html$">
+              Header set Cache-Control "no-cache, must-revalidate"
+            </FilesMatch>
+          </IfModule>
+          HT
+            echo "added html no-cache block"
+          else
+            echo "html no-cache block already present"
+          fi
+          REMOTE
 
       - name: Verify the live homepage (fix DirectoryIndex if WordPress still wins)
         env:

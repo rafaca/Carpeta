@@ -228,17 +228,19 @@ try{
   <div class="foot-main">
     <div class="foot-row">
       <nav class="foot-nav" aria-label="Footer left">
-        <a href="/research.html">Research</a>
-        <a href="/projects.html">Projects</a>
-        <a href="/about.html">Bio</a>
+        <!-- kept visible, not clickable until section content is ready -->
+        <span>Research</span>
+        <span>Projects</span>
+        <span>Bio</span>
       </nav>
       <div class="foot-wordmark">
         <img src="/assets/logo-twp-wordmark.svg?v=20260730" alt="Those Who Play" width="862" height="80">
       </div>
       <nav class="foot-nav" aria-label="Footer right">
-        <a href="/research.html">Research</a>
-        <a href="/about.html">Bio</a>
-        <a href="/projects.html">Projects</a>
+        <!-- kept visible, not clickable until section content is ready -->
+        <span>Research</span>
+        <span>Bio</span>
+        <span>Projects</span>
       </nav>
     </div>
 
@@ -282,13 +284,16 @@ BubbleDancers.mount('#dancers-stage', {
   backgroundStop: 0.61,
   pointer: 'window',
   /* New-look preset (lab editor, 2026-07-29) — full version saved at
-     /assets/data/dancers-preset-dark.json. figureColour + softening and
-     the #211d2e background wait for the newer engine (colours are
-     ignored by this build, and the dark ground needs light page text). */
+     /assets/data/dancers-preset-dark.json. figureColour + softening
+     activate once the colour-capable lab engine is synced (older builds
+     ignore them). The #211d2e dark ground stays off until the page text
+     flips light with it. */
   figure: { size:0.597, head:0.092, neckLift:0.12, torso:0.183, torsoR:0.074,
             hip:0.376, armR:0.046, armLen:0.225, armH:0.471, hand:0.057,
             elbow:0.197, legR:0.063, stance:0.12, handH:0.396, blend:0.064,
             tint:0, edge:2.679 },
+  figureColour: { a:'#5960f9', b:'#f160e7', c:'#ffc0f5' },
+  softening: { edge:6.5, amount:0.77, core:0 },
   motion: { tempo:1.026, circle:2.33, bounce:1.371, jump:0.769, sway:0.507,
             lines:1.024, roam:1.885, multiply:1.079, artic:0 },
   eyes:   { dark:0.9, size:0.188, blur:0.05, stretch:0.331, sep:0.395,
