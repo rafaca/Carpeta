@@ -507,18 +507,26 @@ applyFigCol();
 const SOFT_DEFAULT = { edge:3.0, amount:0.9, core:0.0 };
 const SOFT = { ...SOFT_DEFAULT };
 const edgeCtx = edgeCanvas.getContext('2d');
+// Blur inside the canvas raster, never with a CSS filter on the element:
+// iOS/iPadOS composites a filtered full-screen layer at a low raster
+// scale and stretches it, which turned the halo into a giant pixelated
+// dome over the page. ctx.filter keeps it in our own pixels.
+const CAN_BLUR = (function(){
+  try{ edgeCtx.filter = 'blur(1px)'; const ok = edgeCtx.filter !== 'none'; edgeCtx.filter = 'none'; return ok; }
+  catch(e){ return false; }
+})();
 function applySoften(){
-  edgeCanvas.style.filter = 'blur('+SOFT.edge.toFixed(1)+'px)';
-  edgeCanvas.style.opacity = SOFT.amount;
+  edgeCanvas.style.opacity = CAN_BLUR ? SOFT.amount : 0;
   canvas.style.filter = SOFT.core>0 ? 'blur('+SOFT.core.toFixed(2)+'px)' : 'none';
 }
 function drawEdge(){
-  const w=canvas.clientWidth, h=canvas.clientHeight;
-  if(!w||!h) return;
-  if(edgeCanvas.width!==w) edgeCanvas.width=w;
-  if(edgeCanvas.height!==h) edgeCanvas.height=h;
-  edgeCtx.clearRect(0,0,w,h);
-  if(SOFT.amount>0.001 && SOFT.edge>0.001){ try{ edgeCtx.drawImage(canvas,0,0,w,h); }catch(e){} }
+  if(!CAN_BLUR || !(SOFT.amount>0.001 && SOFT.edge>0.001)) return;
+  // the overlay shares the GL buffer's dimensions (set in resize), so the
+  // copy is 1:1 — no scaling maths that can drift out of sync
+  edgeCtx.clearRect(0, 0, edgeCanvas.width, edgeCanvas.height);
+  edgeCtx.filter = 'blur(' + (SOFT.edge * renderScale).toFixed(2) + 'px)';
+  try{ edgeCtx.drawImage(canvas, 0, 0); }catch(e){}
+  edgeCtx.filter = 'none';
 }
 applySoften();
 
@@ -542,6 +550,9 @@ let W, H;
 function resize(){
   W = canvas.width = Math.max(1, Math.round(host.clientWidth * renderScale));
   H = canvas.height = Math.max(1, Math.round(host.clientHeight * renderScale));
+  // keep the softening overlay on exactly the same pixel grid
+  if(edgeCanvas.width !== W) edgeCanvas.width = W;
+  if(edgeCanvas.height !== H) edgeCanvas.height = H;
   gl.viewport(0, 0, W, H);
 }
 const ro = new ResizeObserver(resize);
