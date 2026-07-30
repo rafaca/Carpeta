@@ -7,7 +7,7 @@ name: Deploy thosewhoplay.com (production)
 
 # Ship = push a change to this file (bump the counter below), or dispatch
 # manually once the workflow reaches the default branch.
-# ship: 3 — footer wordmark asset + header nav hidden until content is ready
+# ship: 4 — wordmark intrinsic size + cache-busted assets
 
 on:
   push:
