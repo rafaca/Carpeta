@@ -56,18 +56,23 @@ jobs:
           PORT="${DREAMHOST_SSH_PORT:-22}"
           SSH="ssh -i ~/.ssh/dreamhost -p $PORT -o StrictHostKeyChecking=yes $DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST"
           $SSH 'bash -s' <<'REMOTE' > /tmp/engine-path
+          echo "docroots under ~:" >&2
+          ls -d ~/*/ >&2 || true
           best=""; bestts=0
-          for dir in ~/rafacastello.com ~/www.rafacastello.com ~/staging.rafacastello.com ~/dev.rafacastello.com; do
-            [ -d "$dir" ] || continue
+          for dir in ~/*/; do
             while IFS= read -r f; do
               if grep -q "figureColour" "$f" 2>/dev/null; then
+                echo "candidate: $f" >&2
                 ts=$(stat -c %Y "$f")
                 if [ "$ts" -gt "$bestts" ]; then bestts=$ts; best=$f; fi
               fi
-            done < <(find "$dir" -maxdepth 4 -name "dancers-embed.js" 2>/dev/null)
+            done < <(find "$dir" -maxdepth 6 \( -name "*.js" -o -name "*.html" \) -size -3M 2>/dev/null)
           done
-          [ -n "$best" ] || { echo "NO colour-capable dancers-embed.js found on the server" >&2; exit 1; }
-          echo "$best"
+          [ -n "$best" ] || { echo "NO file containing figureColour found in any docroot — the newer engine has not been uploaded to the server" >&2; exit 1; }
+          case "$best" in
+            *.js) echo "$best" ;;
+            *) echo "figureColour found only inside an HTML page: $best — needs manual extraction, not auto-synced" >&2; exit 1 ;;
+          esac
           REMOTE
           ENGINE_PATH=$(cat /tmp/engine-path)
           echo "Using engine: $ENGINE_PATH"
