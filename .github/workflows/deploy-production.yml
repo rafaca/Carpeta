@@ -7,7 +7,7 @@ name: Deploy thosewhoplay.com (production)
 
 # Ship = push a change to this file (bump the counter below), or dispatch
 # manually once the workflow reaches the default branch.
-# ship: 5 — intrinsic sizes on all svg assets, html no-cache, colour mount opts
+# ship: 6 — calm/ambient dancers preset (2026-07-30 revision)
 
 on:
   push:
