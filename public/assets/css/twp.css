@@ -16,7 +16,11 @@
   --placeholder:#C5C1B0;
   --ease:cubic-bezier(.22,1,.36,1);
 
-  --firelli:"firelli-variable","Firelli Variable","decoy","Iowan Old Style","Palatino Linotype",Georgia,serif;
+  /* Adobe names variable families either "firelli-variable" or plain
+     "firelli" depending on how the web project was set up — list both
+     so the kit resolves whichever it published. decoy onward is the
+     fallback chain if the kit fails to load at all. */
+  --firelli:"firelli-variable","Firelli Variable","firelli","decoy","Iowan Old Style","Palatino Linotype",Georgia,serif;
   --magari:"magari-variable","Magari Variable","Magari","Helvetica Neue",Arial,sans-serif;
   --gothic:"Gothic A1","gothic-a1",sans-serif;
   --franklin:"Libre Franklin","libre-franklin","Helvetica Neue",Arial,sans-serif;
