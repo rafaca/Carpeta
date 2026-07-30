@@ -76,6 +76,10 @@ a:focus-visible{ outline:2px solid var(--cyan); outline-offset:3px; border-radiu
   font-weight:400;
   font-size:12px;
   letter-spacing:2px;
+  /* letter-spacing adds a trailing gap after the last letter, so a
+     centred word sits half a space left of true centre — this puts
+     CONTACT back on the pill's optical axis */
+  padding-left:2px;
   text-transform:uppercase;
   color:var(--cyan);
   transition:background .25s var(--ease), color .25s var(--ease);
