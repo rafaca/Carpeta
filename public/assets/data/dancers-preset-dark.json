@@ -1,5 +1,5 @@
 {
-  "_note": "New-look dancers preset (lab editor, 2026-07-30 revision \u2014 calm/ambient motion). Carries figureColour + softening for the newer engine; figure/motion/eyes work on the current one.",
+  "_note": "Dancers preset: 2026-07-30 figure shape + colour + softening, with the original dev cadence kept per Rafa (movement presets must not change).",
   "size": 0.624,
   "head": 0.084,
   "neckLift": 0.114,
@@ -29,14 +29,14 @@
     "core": 0
   },
   "motion": {
-    "tempo": 0.3,
-    "circle": 0,
-    "bounce": 0,
-    "jump": 0,
-    "sway": 0.2,
-    "lines": 0,
-    "roam": 0,
-    "multiply": 0,
+    "tempo": 1.026,
+    "circle": 2.33,
+    "bounce": 1.371,
+    "jump": 0.769,
+    "sway": 0.507,
+    "lines": 1.024,
+    "roam": 1.885,
+    "multiply": 1.079,
     "artic": 0
   },
   "eyes": {
