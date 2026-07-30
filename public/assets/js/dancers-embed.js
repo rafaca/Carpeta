@@ -17,6 +17,13 @@ function mount(target, opts){
 opts = opts || {};
 const host = typeof target === 'string' ? document.querySelector(target) : target;
 if(!host) throw new Error('BubbleDancers: container not found');
+// ?dancers=0 skips the canvas entirely — for isolating whether a visual
+// problem comes from this layer or from the page around it
+try{
+  if(new URLSearchParams(location.search).get('dancers') === '0'){
+    return { destroy(){}, canvas:null, figure:{}, motion:{}, setBackground(){} };
+  }
+}catch(e){}
 
 /* ============================================================
    Six dancers holding hands in a circle dance on one floor.
@@ -511,9 +518,31 @@ const edgeCtx = edgeCanvas.getContext('2d');
 // iOS/iPadOS composites a filtered full-screen layer at a low raster
 // scale and stretches it, which turned the halo into a giant pixelated
 // dome over the page. ctx.filter keeps it in our own pixels.
-const CAN_BLUR = (function(){
-  try{ edgeCtx.filter = 'blur(1px)'; const ok = edgeCtx.filter !== 'none'; edgeCtx.filter = 'none'; return ok; }
-  catch(e){ return false; }
+// Diagnostics/escape hatches, settable per-visit:
+//   ?soft=0  halo off      ?soft=1  halo on (even on iOS)
+// iOS/iPadOS WebKit has repeatedly mis-composited this overlay (a giant
+// blurred "glare" over the page), so it is off there by default until
+// the cause is pinned down on a real device.
+const Q = (function(){ try{ return new URLSearchParams(location.search); }catch(e){ return null; } })();
+const qSoft = Q && Q.get('soft');
+const IS_APPLE_TOUCH = (function(){
+  try{
+    const ua = navigator.userAgent || '';
+    return /iPad|iPhone|iPod/.test(ua) ||
+           (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);   // iPadOS desktop-mode
+  }catch(e){ return false; }
+})();
+const SOFT_ALLOWED = qSoft === '1' ? true : (qSoft === '0' ? false : !IS_APPLE_TOUCH);
+const CAN_BLUR = SOFT_ALLOWED && (function(){
+  try{
+    // an unsupported property reads back undefined — `!== 'none'` alone
+    // would call that success and silently draw an unblurred duplicate
+    if(typeof edgeCtx.filter !== 'string') return false;
+    edgeCtx.filter = 'blur(1px)';
+    const ok = edgeCtx.filter !== 'none';
+    edgeCtx.filter = 'none';
+    return ok;
+  }catch(e){ return false; }
 })();
 function applySoften(){
   edgeCanvas.style.opacity = CAN_BLUR ? SOFT.amount : 0;
