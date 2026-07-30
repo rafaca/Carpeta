@@ -151,15 +151,31 @@ jobs:
           if check; then
             echo "thosewhoplay.com serves the new homepage"
           else
-            echo "WordPress index.php still wins — putting index.html first in DirectoryIndex"
+            echo "=== homepage check failed — gathering evidence ==="
+            curl -sIL --max-time 30 https://thosewhoplay.com/ | head -40 || true
+            echo "=== what / actually returns (first 600 bytes) ==="
+            curl -sL --max-time 30 https://thosewhoplay.com/ | head -c 600 || true; echo
             ssh -i ~/.ssh/dreamhost -p "$PORT" -o StrictHostKeyChecking=yes \
               "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" '
                 cd ~/thosewhoplay.com
-                [ -f .htaccess ] && cp .htaccess ".htaccess.bak-pre-twp" || true
-                printf "\n# TWP static site serves the index (WordPress remains for other routes)\nDirectoryIndex index.html index.php\n" >> .htaccess
+                echo "=== index files on disk ==="
+                ls -la index.* 2>/dev/null || echo "NO index files"
+                echo "=== index.html head ==="
+                head -c 300 index.html 2>/dev/null; echo
+                echo "=== .htaccess (last 60 lines) ==="
+                tail -60 .htaccess 2>/dev/null || echo "NO .htaccess"
+              '
+            echo "=== appending DirectoryIndex (once) and retrying ==="
+            ssh -i ~/.ssh/dreamhost -p "$PORT" -o StrictHostKeyChecking=yes \
+              "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" '
+                cd ~/thosewhoplay.com
+                grep -q "TWP static site serves the index" .htaccess 2>/dev/null || {
+                  [ -f .htaccess ] && cp .htaccess ".htaccess.bak-pre-twp" || true
+                  printf "\n# TWP static site serves the index (WordPress remains for other routes)\nDirectoryIndex index.html index.php\n" >> .htaccess
+                }
               '
             sleep 5
-            check && echo "Fixed — new homepage is live" || { echo "Homepage still not serving the new site; inspect manually"; exit 1; }
+            check && echo "Fixed — new homepage is live" || { echo "Homepage still not serving the new site — see evidence above"; exit 1; }
           fi
           for p in projects.html store.html research.html about.html book.html; do
             curl -sL --max-time 30 -o /dev/null -w "%{http_code} /$p\n" "https://thosewhoplay.com/$p"
