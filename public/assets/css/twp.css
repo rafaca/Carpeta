@@ -1023,6 +1023,12 @@ body.twp-sub{
   .head-logo{ order:-1; flex-basis:100%; display:flex; justify-content:center; margin-bottom:6px }
   .head-logo img{ margin:0 auto }
   .contact-btn{ position:static; transform:none; margin-top:4px }
+  /* the hamburger takes over: header links and the pill move into the
+     panel, so the bar stays a single tidy row with the logo */
+  body.has-menu .menu-btn{ display:flex }
+  body.has-menu .site-head{ padding:14px 16px 8px }
+  body.has-menu .head-nav .nav-link,
+  body.has-menu .site-head > .contact-btn{ display:none }
   /* forms and rows give up their fixed widths */
   .news-form{ flex-wrap:wrap; justify-content:center }
   .news-form input{ width:100%; max-width:100%; flex:1 1 220px }
@@ -1036,4 +1042,60 @@ body.twp-sub{
   .caps .col{ padding:0 10px; white-space:normal }
   .bigtext{ padding:40px 20px }
   .tiles-wrap, .video-band, .twp-store-module{ padding-left:16px; padding-right:16px }
+}
+
+/* ============ MOBILE MENU (hamburger) ============ */
+/* The button and panel are built by twp.js from the header's own links,
+   so a page gains menu items the moment its nav links are un-hidden. */
+.menu-btn{
+  display:none;                      /* shown by the mobile query below */
+  position:absolute; right:16px; top:14px;
+  width:44px; height:44px;           /* full touch target */
+  align-items:center; justify-content:center;
+  background:none; border:0; padding:0; cursor:pointer;
+  color:var(--cyan);
+  z-index:3;
+}
+.menu-btn span{
+  display:block; position:relative;
+  width:22px; height:2px; border-radius:2px;
+  background:currentColor;
+  transition:transform .28s var(--ease), background-color .1s linear;
+}
+.menu-btn span::before,
+.menu-btn span::after{
+  content:""; position:absolute; left:0;
+  width:22px; height:2px; border-radius:2px;
+  background:currentColor;
+  transition:transform .28s var(--ease), top .28s var(--ease);
+}
+.menu-btn span::before{ top:-7px }
+.menu-btn span::after{ top:7px }
+/* open: the bars cross into an X */
+.menu-btn[aria-expanded="true"] span{ background:transparent }
+.menu-btn[aria-expanded="true"] span::before{ top:0; transform:rotate(45deg) }
+.menu-btn[aria-expanded="true"] span::after{ top:0; transform:rotate(-45deg) }
+
+.mobile-menu{
+  display:none;
+  overflow:hidden;
+  width:100%;
+  /* animate on a grid row so the panel measures its own content */
+  display:grid; grid-template-rows:0fr;
+  transition:grid-template-rows .32s var(--ease);
+}
+.mobile-menu > div{ min-height:0; overflow:hidden }
+.mobile-menu.open{ grid-template-rows:1fr }
+.mobile-menu .inner{
+  display:flex; flex-direction:column; align-items:center; gap:18px;
+  padding:18px 16px 22px;
+}
+.mobile-menu a{
+  font-family:var(--magari);
+  font-size:22px; text-transform:uppercase;
+  color:var(--ink); line-height:1;
+}
+.mobile-menu .contact-btn{
+  position:static; transform:none;
+  font-family:var(--gothic); font-size:12px;
 }

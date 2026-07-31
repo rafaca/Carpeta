@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com/">
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;500;600&family=Libre+Franklin:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/twp.css?v=20260730d">
+<link rel="stylesheet" href="/assets/css/twp.css?v=20260731a">
 <script>
 /* The staged intro plays once per tab session; repeat visits are instant. */
 try{
@@ -44,7 +44,9 @@ body{ background:#211d2e; color:#fff }
 .newsletter h2,
 .head-nav .nav-link,
 .foot-nav, .foot-nav a, .foot-nav span,
-.foot-meta, .foot-meta a, .foot-meta .copy{ color:#fff }
+.foot-meta, .foot-meta a, .foot-meta .copy,
+.mobile-menu a{ color:#fff }
+.mobile-menu .contact-btn{ color:var(--cyan) }
 .head-logo img, .foot-wordmark img, .foot-socials img{ filter:invert(1) }
 
 /* newsletter heading sits 30px higher; relative so the form below
@@ -265,7 +267,7 @@ body{ background:#211d2e; color:#fff }
 </footer>
 
 <script src="/assets/js/booking.js?v=20260730"></script>
-<script src="/assets/js/twp.js?v=20260730d"></script>
+<script src="/assets/js/twp.js?v=20260731a"></script>
 
 <!-- ============ BUBBLE DANCERS (full-page layer) ============
      Raymarched droplet figures in a circle dance, living UNDER the
@@ -273,7 +275,7 @@ body{ background:#211d2e; color:#fff }
      they follow the cursor pied-piper style; move fast and they
      scatter into freestyle; go still and the circle dance resumes.
      Source of truth: rafacastello.com repo, lab/dancers-embed.js. -->
-<script src="/assets/js/dancers-embed.js?v=20260730f"></script>
+<script src="/assets/js/dancers-embed.js?v=20260731a"></script>
 <script>
 BubbleDancers.mount('#dancers-stage', {
   background: '#211d2e',

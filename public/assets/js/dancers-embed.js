@@ -531,14 +531,10 @@ const edgeCtx = edgeCanvas.getContext('2d');
 // the cause is pinned down on a real device.
 const Q = (function(){ try{ return new URLSearchParams(location.search); }catch(e){ return null; } })();
 const qSoft = Q && Q.get('soft');
-const IS_APPLE_TOUCH = (function(){
-  try{
-    const ua = navigator.userAgent || '';
-    return /iPad|iPhone|iPod/.test(ua) ||
-           (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);   // iPadOS desktop-mode
-  }catch(e){ return false; }
-})();
-const SOFT_ALLOWED = qSoft === '1' ? true : (qSoft === '0' ? false : !IS_APPLE_TOUCH);
+// The iOS glare turned out to be the straight-alpha canvas, not this
+// overlay (fixed by the premultiplied output), so the halo is on
+// everywhere again — verified on iPhone with ?soft=1.
+const SOFT_ALLOWED = qSoft !== '0';
 const CAN_BLUR = SOFT_ALLOWED && (function(){
   try{
     // an unsupported property reads back undefined — `!== 'none'` alone

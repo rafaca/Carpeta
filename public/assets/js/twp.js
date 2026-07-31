@@ -99,3 +99,61 @@
     });
   });
 })();
+
+/* Mobile menu.
+   Built from the header's own markup rather than hard-coded, so the
+   panel gains items automatically whenever the nav links (currently
+   hidden pending section content) are un-hidden. No markup changes
+   needed on any page. */
+(function(){
+  var head = document.querySelector('.site-head');
+  if(!head) return;
+  var nav = head.querySelector('.head-nav');
+  var contact = head.querySelector(':scope > .contact-btn');
+  var links = nav ? nav.querySelectorAll('.nav-link') : [];
+  if(!links.length && !contact) return;          // nothing to put in a menu
+
+  var btn = document.createElement('button');
+  btn.className = 'menu-btn';
+  btn.type = 'button';
+  btn.setAttribute('aria-label', 'Menu');
+  btn.setAttribute('aria-expanded', 'false');
+  btn.setAttribute('aria-controls', 'mobile-menu');
+  btn.appendChild(document.createElement('span'));   // the three bars are CSS
+
+  var panel = document.createElement('nav');
+  panel.className = 'mobile-menu';
+  panel.id = 'mobile-menu';
+  panel.setAttribute('aria-label', 'Menu');
+  var scroller = document.createElement('div');
+  var inner = document.createElement('div');
+  inner.className = 'inner';
+  Array.prototype.forEach.call(links, function(a){ inner.appendChild(a.cloneNode(true)); });
+  if(contact) inner.appendChild(contact.cloneNode(true));
+  scroller.appendChild(inner);
+  panel.appendChild(scroller);
+
+  head.appendChild(btn);
+  head.parentNode.insertBefore(panel, head.nextSibling);
+  document.body.classList.add('has-menu');
+
+  function setOpen(open){
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    panel.classList.toggle('open', open);
+  }
+  btn.addEventListener('click', function(){
+    setOpen(btn.getAttribute('aria-expanded') !== 'true');
+  });
+  panel.addEventListener('click', function(e){
+    if(e.target.closest('a')) setOpen(false);      // navigating closes it
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true'){
+      setOpen(false); btn.focus();
+    }
+  });
+  // leaving the mobile breakpoint must not strand it open
+  matchMedia('(min-width:769px)').addEventListener('change', function(e){
+    if(e.matches) setOpen(false);
+  });
+})();
