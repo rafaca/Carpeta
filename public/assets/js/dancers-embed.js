@@ -299,7 +299,11 @@ void main(){
   }
 
   col = pow(col, vec3(0.4545)); // gamma
-  gl_FragColor = vec4(col, alpha);
+  // premultiplied output: colour scaled by its own coverage. The straight
+  // (non-premultiplied) path is mis-composited by WebKit, which paints the
+  // figures' wide low-alpha glow at full strength — a giant washed dome
+  // over the page on iOS/iPadOS.
+  gl_FragColor = vec4(col * alpha, alpha);
 }`;
 
 /* ---------- tiny seeded value noise (for motion) ---------- */
@@ -426,7 +430,9 @@ host.appendChild(edgeCanvas);
 const canvas = document.createElement('canvas');
 canvas.style.cssText = 'position:relative;display:block;width:100%;height:100%';
 host.appendChild(canvas);
-const gl = canvas.getContext('webgl', { preserveDrawingBuffer:true, alpha:true, premultipliedAlpha:false, antialias:false, depth:false, stencil:false });
+// premultipliedAlpha stays at its default (true) — see the shader's final
+// line; the straight-alpha path is the one WebKit gets wrong
+const gl = canvas.getContext('webgl', { preserveDrawingBuffer:true, alpha:true, antialias:false, depth:false, stencil:false });
 function sh(type, src){
   const h = gl.createShader(type);
   gl.shaderSource(h, src); gl.compileShader(h);
