@@ -7,7 +7,7 @@ name: Deploy thosewhoplay.com (production)
 
 # Ship = push a change to this file (bump the counter below), or dispatch
 # manually once the workflow reaches the default branch.
-# ship: 21 — hamburger menu on mobile; halo back on for iOS
+# ship: 22 — new manifesto copy
 
 on:
   push:
