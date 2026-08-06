@@ -16,7 +16,11 @@
   --placeholder:#C5C1B0;
   --ease:cubic-bezier(.22,1,.36,1);
 
-  --firelli:"firelli-variable","Firelli Variable","decoy","Iowan Old Style","Palatino Linotype",Georgia,serif;
+  /* Adobe names variable families either "firelli-variable" or plain
+     "firelli" depending on how the web project was set up — list both
+     so the kit resolves whichever it published. decoy onward is the
+     fallback chain if the kit fails to load at all. */
+  --firelli:"firelli-variable","Firelli Variable","firelli","decoy","Iowan Old Style","Palatino Linotype",Georgia,serif;
   --magari:"magari-variable","Magari Variable","Magari","Helvetica Neue",Arial,sans-serif;
   --gothic:"Gothic A1","gothic-a1",sans-serif;
   --franklin:"Libre Franklin","libre-franklin","Helvetica Neue",Arial,sans-serif;
@@ -24,6 +28,10 @@
 }
 *,*::before,*::after{ box-sizing:border-box }
 html,body{ margin:0 }
+/* text selection — TWP yellow. Two rules, not one list: an unknown
+   selector would invalidate the whole declaration in either engine. */
+::selection{ background:#F9F862; color:#211D2E }
+::-moz-selection{ background:#F9F862; color:#211D2E }
 #dancers-stage{ position:fixed; inset:0; z-index:0; pointer-events:none }
 body > :not(#dancers-stage){ position:relative; z-index:1 }
 body{
@@ -76,6 +84,10 @@ a:focus-visible{ outline:2px solid var(--cyan); outline-offset:3px; border-radiu
   font-weight:400;
   font-size:12px;
   letter-spacing:2px;
+  /* letter-spacing adds a trailing gap after the last letter, so a
+     centred word sits half a space left of true centre — this puts
+     CONTACT back on the pill's optical axis */
+  padding-left:2px;
   text-transform:uppercase;
   color:var(--cyan);
   transition:background .25s var(--ease), color .25s var(--ease);
@@ -207,16 +219,18 @@ a:focus-visible{ outline:2px solid var(--cyan); outline-offset:3px; border-radiu
   line-height:1.36;
   text-align:center;
   color:var(--ink);
-  width:520px;
+  width:442px;                     /* 15% narrower than 520px */
   max-width:100%;
   margin:0;
 }
 .news-form-wrap{ padding-top:8px }
 .news-form{
-  display:flex; align-items:center; gap:8px;
+  /* stretch, not center: the button matches the input's height whatever
+     its own font/padding work out to. gap doubled from 8px. */
+  display:flex; align-items:stretch; gap:16px;
 }
 .news-form input{
-  width:330px;
+  width:231px;                     /* 30% narrower than the 330px capture */
   background:#FFFFFF;
   border:1px solid var(--input-border);
   border-radius:9px;
@@ -239,6 +253,9 @@ a:focus-visible{ outline:2px solid var(--cyan); outline-offset:3px; border-radiu
   text-transform:uppercase;
   color:var(--btn-ink);
   cursor:pointer;
+  /* matches the input's line box (14px Franklin) so the two stay the
+     same height once the row wraps on mobile and stretch no longer applies */
+  line-height:19px;
   transition:filter .25s var(--ease);
 }
 .news-form button:hover{ filter:brightness(1.04) }
@@ -293,6 +310,9 @@ a:focus-visible{ outline:2px solid var(--cyan); outline-offset:3px; border-radiu
 .foot-wordmark img{ width:100%; height:100%; object-fit:contain }
 .foot-socials{
   display:flex; align-items:center; justify-content:center; gap:24px;
+  /* grouped with the meta line below rather than floating mid-footer
+     (the column's own gap is 30px) */
+  margin-top:30px; margin-bottom:-16px;
 }
 .foot-socials a{
   display:inline-flex; color:var(--ink);
@@ -1011,6 +1031,15 @@ body.twp-sub{
   .head-logo{ order:-1; flex-basis:100%; display:flex; justify-content:center; margin-bottom:6px }
   .head-logo img{ margin:0 auto }
   .contact-btn{ position:static; transform:none; margin-top:4px }
+  /* the hamburger takes over: header links and the pill move into the
+     panel, so the bar stays a single tidy row with the logo */
+  body.has-menu .menu-btn{ display:flex }
+  body.has-menu .site-head{ padding:14px 16px 8px }
+  body.has-menu .head-nav .nav-link,
+  body.has-menu .site-head > .contact-btn{ display:none }
+  /* the two Systems/For/Joy columns are desktop-only: stacked on a
+     phone they push the wordmark and meta line far down the page */
+  .foot-nav{ display:none }
   /* forms and rows give up their fixed widths */
   .news-form{ flex-wrap:wrap; justify-content:center }
   .news-form input{ width:100%; max-width:100%; flex:1 1 220px }
@@ -1024,4 +1053,60 @@ body.twp-sub{
   .caps .col{ padding:0 10px; white-space:normal }
   .bigtext{ padding:40px 20px }
   .tiles-wrap, .video-band, .twp-store-module{ padding-left:16px; padding-right:16px }
+}
+
+/* ============ MOBILE MENU (hamburger) ============ */
+/* The button and panel are built by twp.js from the header's own links,
+   so a page gains menu items the moment its nav links are un-hidden. */
+.menu-btn{
+  display:none;                      /* shown by the mobile query below */
+  position:absolute; right:16px; top:14px;
+  width:44px; height:44px;           /* full touch target */
+  align-items:center; justify-content:center;
+  background:none; border:0; padding:0; cursor:pointer;
+  color:var(--cyan);
+  z-index:3;
+}
+.menu-btn span{
+  display:block; position:relative;
+  width:22px; height:2px; border-radius:2px;
+  background:currentColor;
+  transition:transform .28s var(--ease), background-color .1s linear;
+}
+.menu-btn span::before,
+.menu-btn span::after{
+  content:""; position:absolute; left:0;
+  width:22px; height:2px; border-radius:2px;
+  background:currentColor;
+  transition:transform .28s var(--ease), top .28s var(--ease);
+}
+.menu-btn span::before{ top:-7px }
+.menu-btn span::after{ top:7px }
+/* open: the bars cross into an X */
+.menu-btn[aria-expanded="true"] span{ background:transparent }
+.menu-btn[aria-expanded="true"] span::before{ top:0; transform:rotate(45deg) }
+.menu-btn[aria-expanded="true"] span::after{ top:0; transform:rotate(-45deg) }
+
+.mobile-menu{
+  display:none;
+  overflow:hidden;
+  width:100%;
+  /* animate on a grid row so the panel measures its own content */
+  display:grid; grid-template-rows:0fr;
+  transition:grid-template-rows .32s var(--ease);
+}
+.mobile-menu > div{ min-height:0; overflow:hidden }
+.mobile-menu.open{ grid-template-rows:1fr }
+.mobile-menu .inner{
+  display:flex; flex-direction:column; align-items:center; gap:18px;
+  padding:18px 16px 22px;
+}
+.mobile-menu a{
+  font-family:var(--magari);
+  font-size:22px; text-transform:uppercase;
+  color:var(--ink); line-height:1;
+}
+.mobile-menu .contact-btn{
+  position:static; transform:none;
+  font-family:var(--gothic); font-size:12px;
 }

@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:#211d2e;overflow:hidden}#stage{position:fixed;inset:0}
+</style></head><body><div id="stage"></div>
+<script>
+/* Capture harness: same engine, but with the lab studio's low, close
+   camera so the figures are seen at eye level (the site's camera looks
+   down at the ring, which smears the eyes across the top of the head). */
+fetch('/assets/js/dancers-embed.js').then(r=>r.text()).then(src=>{
+  src = src.replace('const RO = [0, 2.8, 4.2];', 'const RO = [0, 1.30, 2.30];')
+           .replace('const TA = [0, 0.35, 0];',  'const TA = [0, 0.40, 0];');
+  (0,eval)(src);
+  BubbleDancers.mount('#stage', {
+    background: '#211d2e',
+    figure: { size:0.624, head:0.084, neckLift:0.114, torso:0.267, torsoR:0.118,
+              hip:0.309, armR:0.059, armLen:0.12, armH:0.525, hand:0.048,
+              elbow:0.581, legR:0.063, stance:0.12, handH:0.503, blend:0.064,
+              tint:0, edge:2.679 },
+    figureColour: { a:'#5960f9', b:'#f160e7', c:'#ffc0f5' },
+    softening: { edge:3, amount:0.9, core:0 },
+    motion: { tempo:1.026, circle:2.33, bounce:1.371, jump:0.769, sway:0.507,
+              lines:1.024, roam:1.885, multiply:1.079, artic:0 },
+    eyes:   { dark:0.9, size:0.188, blur:0.05, stretch:0.331, sep:0.395,
+              up:0.412, mouth:0.109, mouthUp:-0.115 },
+  });
+});
+</script></body></html>

@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Those Who Play</title>
-<meta name="description" content="Those Who Play is a creative agency uniting game design and immersive storytelling — worlds and stories built to live rent-free in people's minds.">
+<meta name="description" content="An ideas lab designing transformative brands and products. We build immersive worlds and tell stories that live rent-free in people’s minds.">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
 <meta property="og:title" content="Those Who Play">
-<meta property="og:description" content="A creative agency uniting game design and immersive storytelling.">
+<meta property="og:description" content="An ideas lab designing transformative brands and products. We build immersive worlds and tell stories that live rent-free in people’s minds.">
 <meta property="og:image" content="https://thosewhoplay.com/assets/img/og-twp.png">
 <meta property="og:type" content="website">
 <!-- Adobe Fonts kit fua3jud (Firelli Variable, Magari Variable, Decoy, Montecatini, TGN) -->
@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com/">
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;500;600&family=Libre+Franklin:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/twp.css">
+<link rel="stylesheet" href="/assets/css/twp.css?v=20260806a">
 <script>
 /* The staged intro plays once per tab session; repeat visits are instant. */
 try{
@@ -34,6 +34,24 @@ try{
   .twp-intro .hero h1{ animation:fadeIn 1.2s var(--ease) both 1.1s }
   .twp-intro .site-head{ animation:riseIn .9s var(--ease) both 2s }
 }
+
+/* Dark stage (2026-07-30): the dancers paint #211d2e; text goes white
+   and the black logo/icon artwork inverts. Page-scoped — sub-pages
+   keep the light theme. */
+body{ background:#211d2e; color:#fff }
+.hero h1,
+.bigtext .copy, .bigtext .copy p,
+.newsletter h2,
+.head-nav .nav-link,
+.foot-nav, .foot-nav a, .foot-nav span,
+.foot-meta, .foot-meta a, .foot-meta .copy,
+.mobile-menu a{ color:#fff }
+.mobile-menu .contact-btn{ color:var(--cyan) }
+.head-logo img, .foot-wordmark img, .foot-socials img{ filter:invert(1) }
+
+/* newsletter heading sits 30px higher; relative so the form below
+   keeps its position */
+.newsletter h2{ position:relative; top:-30px }
 </style>
 </head>
 <body>
@@ -66,7 +84,7 @@ try{
 <!-- ============ MANIFESTO ============ -->
 <section class="bigtext" aria-label="What we do">
   <div class="copy">
-    <p>We are a creative agency designing experiences that invite curiosity and transformation. By uniting game design and immersive storytelling, we conceive worlds and tell stories forged to live rent-free in people’s minds.</p>
+    <p>An ideas lab designing transformative brands and products.<br>We build immersive worlds and tell stories that live rent-free in people’s minds.</p>
   </div>
   <!-- Book a Call hidden for now (2026-07-29): the booking Worker's CORS
        allowlist doesn't include thosewhoplay.com yet. Restore this button
@@ -185,33 +203,21 @@ try{
 
 </section>
 
-<!-- ============ CAPABILITIES ============ -->
-<section class="caps" id="capabilities" aria-label="Capabilities">
-  <div class="col">
-    <p>Communications</p><p>Creative</p><p>Product Strategy</p>
-  </div>
-  <div class="col">
-    <p>Identity</p><p>Art Direction</p><p>Go-To-Market</p>
-  </div>
-  <div class="col">
-    <p>Systems</p><p>Stills &amp; Motion</p><p>Roadmapping</p>
-  </div>
-  <div class="col">
-    <p>Prototyping</p><p>UI, UX</p><p>Content Production</p>
-  </div>
-</section>
+<!-- CAPABILITIES section removed 2026-07-30 per request -->
 
 
 <!-- ============ STORE MODULE (toggle: uncomment to show) ============
 <section class="twp-store-module" data-count="4" data-title="From the store"></section>
-<script src="/assets/js/store-module.js" defer></script>
+<script src="/assets/js/store-module.js?v=20260730" defer></script>
      ============ /STORE MODULE ============ -->
 
 <!-- ============ NEWSLETTER ============ -->
 <section class="newsletter" id="research" aria-labelledby="nl-h">
   <h2 id="nl-h">Subscribe to receive early access to our research.</h2>
   <div class="news-form-wrap">
-    <form class="news-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Thanks';">
+    <!-- No list backend yet: submitting hands the address to email so a
+         signup reaches a person instead of vanishing (see twp.js). -->
+    <form class="news-form">
       <input type="email" placeholder="you@example.com" required aria-label="Email address">
       <button type="submit">Subscribe</button>
     </form>
@@ -220,26 +226,24 @@ try{
 
 <!-- ============ FOOTER ============ -->
 <footer class="foot" id="bio">
-  <!-- Hand-drawn script echo, exported from the Figma footer -->
-  <div class="foot-script" aria-hidden="true">
-    <img src="/assets/foot-script.svg?v=2" alt="" loading="lazy">
-  </div>
+  <!-- script lettering removed 2026-07-30 (collided with the wordmark); restore by
+       re-adding <div class="foot-script"><img src="/assets/foot-script.svg"></div> -->
 
   <div class="foot-main">
     <div class="foot-row">
-      <nav class="foot-nav" aria-label="Footer left">
-        <a href="/research.html">Research</a>
-        <a href="/projects.html">Projects</a>
-        <a href="/about.html">Bio</a>
-      </nav>
-      <div class="foot-wordmark">
-        <img src="/assets/logo-twp-wordmark.svg" alt="Those Who Play">
+      <div class="foot-nav">
+        <span>Systems</span>
+        <span>For</span>
+        <span>Joy</span>
       </div>
-      <nav class="foot-nav" aria-label="Footer right">
-        <a href="/research.html">Research</a>
-        <a href="/about.html">Bio</a>
-        <a href="/projects.html">Projects</a>
-      </nav>
+      <div class="foot-wordmark">
+        <img src="/assets/logo-twp-wordmark.svg?v=20260730" alt="Those Who Play" width="862" height="80">
+      </div>
+      <div class="foot-nav">
+        <span>Systems</span>
+        <span>For</span>
+        <span>Joy</span>
+      </div>
     </div>
 
     <div class="foot-socials" aria-label="Social">
@@ -252,21 +256,17 @@ try{
       <a href="https://substack.com/@thosewhoplay" aria-label="Substack">
         <img src="/assets/icon-substack.svg" alt="" width="18" height="18">
       </a>
-      <a href="#freqz" aria-label="Freqz">
-        <img src="/assets/icon-freqz.svg" alt="" width="21.9" height="18">
-      </a>
     </div>
 
     <div class="foot-meta">
       <a href="mailto:info@thosewhoplay.com">info@thosewhoplay.com</a>
       <span class="copy">© 2026 thosewhoplay. All rights reserved.</span>
-      <a href="mailto:careers@thosewhoplay.com">careers@thosewhoplay.com</a>
     </div>
   </div>
 </footer>
 
-<script src="/assets/js/booking.js"></script>
-<script src="/assets/js/twp.js"></script>
+<script src="/assets/js/booking.js?v=20260730"></script>
+<script src="/assets/js/twp.js?v=20260731a"></script>
 
 <!-- ============ BUBBLE DANCERS (full-page layer) ============
      Raymarched droplet figures in a circle dance, living UNDER the
@@ -274,21 +274,22 @@ try{
      they follow the cursor pied-piper style; move fast and they
      scatter into freestyle; go still and the circle dance resumes.
      Source of truth: rafacastello.com repo, lab/dancers-embed.js. -->
-<script src="/assets/js/dancers-embed.js"></script>
+<script src="/assets/js/dancers-embed.js?v=20260731a"></script>
 <script>
 BubbleDancers.mount('#dancers-stage', {
-  background: '#E4FFFE',
-  backgroundTop: '#FFFFFF',
-  backgroundStop: 0.61,
+  background: '#211d2e',
   pointer: 'window',
   /* New-look preset (lab editor, 2026-07-29) — full version saved at
-     /assets/data/dancers-preset-dark.json. figureColour + softening and
-     the #211d2e background wait for the newer engine (colours are
-     ignored by this build, and the dark ground needs light page text). */
-  figure: { size:0.597, head:0.092, neckLift:0.12, torso:0.183, torsoR:0.074,
-            hip:0.376, armR:0.046, armLen:0.225, armH:0.471, hand:0.057,
-            elbow:0.197, legR:0.063, stance:0.12, handH:0.396, blend:0.064,
+     /assets/data/dancers-preset-dark.json. figureColour + softening
+     activate once the colour-capable lab engine is synced (older builds
+     ignore them). The #211d2e dark ground stays off until the page text
+     flips light with it. */
+  figure: { size:0.624, head:0.084, neckLift:0.114, torso:0.267, torsoR:0.118,
+            hip:0.309, armR:0.059, armLen:0.12, armH:0.525, hand:0.048,
+            elbow:0.581, legR:0.063, stance:0.12, handH:0.503, blend:0.064,
             tint:0, edge:2.679 },
+  figureColour: { a:'#5960f9', b:'#f160e7', c:'#ffc0f5' },
+  softening: { edge:3, amount:0.9, core:0 },
   motion: { tempo:1.026, circle:2.33, bounce:1.371, jump:0.769, sway:0.507,
             lines:1.024, roam:1.885, multiply:1.079, artic:0 },
   eyes:   { dark:0.9, size:0.188, blur:0.05, stretch:0.331, sep:0.395,

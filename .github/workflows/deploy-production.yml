@@ -7,7 +7,7 @@ name: Deploy thosewhoplay.com (production)
 
 # Ship = push a change to this file (bump the counter below), or dispatch
 # manually once the workflow reaches the default branch.
-# ship: 3 — footer wordmark asset + header nav hidden until content is ready
+# ship: 25 — consolidate deploy to one rsync + one ssh (Dreamhost throttling)
 
 on:
   push:
@@ -18,7 +18,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: deploy-production
+  # shared with staging — see the note there
+  group: dreamhost-deploy
   cancel-in-progress: false
 
 jobs:
@@ -70,39 +71,52 @@ jobs:
               fi
             '
 
-      - name: Mirror the static site (additive; WordPress left in place)
+      - name: Mirror the site and publish the index (one rsync, one ssh)
         env:
           DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
           DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
           DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
         run: |
           set -euo pipefail
-          shopt -s nullglob
           PORT="${DREAMHOST_SSH_PORT:-22}"
-          files=(public/*.html)
-          echo "Shipping pages: ${files[*]}"
-          scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
-            "${files[@]}" \
-            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/thosewhoplay.com/"
-          for d in assets projects research; do
-            if [ -d "public/$d" ]; then
-              scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes -r \
-                "public/$d" \
-                "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/thosewhoplay.com/"
-            fi
+          SSHCMD="ssh -i ~/.ssh/dreamhost -p $PORT -o StrictHostKeyChecking=yes"
+          # One transfer for the whole tree. The old flow opened ~9 SSH
+          # connections (scp + 3 rsyncs + 3 sshs + keyscan); Dreamhost
+          # throttles that and reset us mid-deploy, leaving the pages
+          # updated but the stylesheet stale. Still additive — no
+          # --delete — so the WordPress files stay put.
+          for i in 1 2 3; do
+            rsync -az --timeout=120 -e "$SSHCMD" \
+              public/ "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/thosewhoplay.com/" && break
+            echo "rsync attempt $i failed; backing off $((i*20))s"
+            sleep $((i*20))
           done
+          # everything else happens server-side in a single session
+          for i in 1 2 3; do
+            $SSHCMD "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" 'bash -s' <<'REMOTE' && break
+          set -e
+          cd ~/thosewhoplay.com
+          # archive the outgoing index before the homepage replaces it
+          [ -f index.html ] && cp index.html "archive-index-$(date +%Y%m%d-%H%M%S).html" || true
+          cp twp-homepage.html index.html
+          rm -rf assets/assets projects/projects research/research
+          if ! grep -q "TWP html no-cache" .htaccess 2>/dev/null; then
+            cat >> .htaccess <<'HT'
 
-      - name: Publish the homepage as the production index
-        env:
-          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
-          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
-          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
-        run: |
-          set -euo pipefail
-          PORT="${DREAMHOST_SSH_PORT:-22}"
-          scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
-            public/twp-homepage.html \
-            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/thosewhoplay.com/index.html"
+          # TWP html no-cache — pages revalidate on every visit so deploys show
+          # immediately; fingerprinted assets (?v=) keep long-lived caching
+          <IfModule mod_headers.c>
+            <FilesMatch "\.html$">
+              Header set Cache-Control "no-cache, must-revalidate"
+            </FilesMatch>
+          </IfModule>
+          HT
+          fi
+          ls -la index.html assets/css/twp.css
+          REMOTE
+            echo "ssh attempt $i failed; backing off $((i*20))s"
+            sleep $((i*20))
+          done
 
       - name: Verify the live homepage (fix DirectoryIndex if WordPress still wins)
         env:
@@ -112,20 +126,63 @@ jobs:
         run: |
           set -euo pipefail
           PORT="${DREAMHOST_SSH_PORT:-22}"
-          check() { curl -sL --max-time 30 https://thosewhoplay.com/ | grep -q "roaring world"; }
+          # Fetch first, test second: piping curl into grep under pipefail
+          # turns a slow/timed-out download into a false "not deployed"
+          # (Dreamhost gets sluggish, and a truncated body fails the grep).
+          check() {
+            local body
+            body=$(curl -sL --max-time 60 --retry 4 --retry-delay 5 --retry-all-errors \
+                     https://thosewhoplay.com/ 2>/dev/null) || return 1
+            echo "fetched ${#body} bytes" >&2
+            [ ${#body} -gt 2000 ] && printf '%s' "$body" | grep -q "roaring world"
+          }
           if check; then
             echo "thosewhoplay.com serves the new homepage"
           else
-            echo "WordPress index.php still wins — putting index.html first in DirectoryIndex"
+            echo "=== homepage check failed — gathering evidence ==="
+            curl -sIL --max-time 30 https://thosewhoplay.com/ | head -40 || true
+            echo "=== what / actually returns (first 600 bytes) ==="
+            curl -sL --max-time 30 https://thosewhoplay.com/ | head -c 600 || true; echo
             ssh -i ~/.ssh/dreamhost -p "$PORT" -o StrictHostKeyChecking=yes \
               "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" '
                 cd ~/thosewhoplay.com
-                [ -f .htaccess ] && cp .htaccess ".htaccess.bak-pre-twp" || true
-                printf "\n# TWP static site serves the index (WordPress remains for other routes)\nDirectoryIndex index.html index.php\n" >> .htaccess
+                echo "=== index files on disk ==="
+                ls -la index.* 2>/dev/null || echo "NO index files"
+                echo "=== index.html head ==="
+                head -c 300 index.html 2>/dev/null; echo
+                echo "=== .htaccess (last 60 lines) ==="
+                tail -60 .htaccess 2>/dev/null || echo "NO .htaccess"
+              '
+            echo "=== appending DirectoryIndex (once) and retrying ==="
+            ssh -i ~/.ssh/dreamhost -p "$PORT" -o StrictHostKeyChecking=yes \
+              "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" '
+                cd ~/thosewhoplay.com
+                grep -q "TWP static site serves the index" .htaccess 2>/dev/null || {
+                  [ -f .htaccess ] && cp .htaccess ".htaccess.bak-pre-twp" || true
+                  printf "\n# TWP static site serves the index (WordPress remains for other routes)\nDirectoryIndex index.html index.php\n" >> .htaccess
+                }
               '
             sleep 5
-            check && echo "Fixed — new homepage is live" || { echo "Homepage still not serving the new site; inspect manually"; exit 1; }
+            check && echo "Fixed — new homepage is live" || { echo "Homepage still not serving the new site — see evidence above"; exit 1; }
           fi
           for p in projects.html store.html research.html about.html book.html; do
             curl -sL --max-time 30 -o /dev/null -w "%{http_code} /$p\n" "https://thosewhoplay.com/$p"
           done
+
+      - name: Diagnostics — what the browser actually receives
+        run: |
+          set -uo pipefail
+          echo "=== stylesheet status ==="
+          curl -sL --max-time 30 -o /tmp/twp.css -w "%{http_code} %{size_download} bytes\n" https://thosewhoplay.com/assets/css/twp.css
+          echo "=== foot-wordmark rules in served CSS ==="
+          grep -A4 "foot-wordmark" /tmp/twp.css || echo "!! no foot-wordmark rules in served CSS"
+          echo "=== footer markup in served HTML ==="
+          curl -sL --max-time 30 https://thosewhoplay.com/ -o /tmp/home.html
+          grep -B1 -A3 "foot-wordmark" /tmp/home.html || echo "!! no foot-wordmark in served HTML"
+          echo "=== dancers mount in served HTML ==="
+          grep -A12 "BubbleDancers.mount" /tmp/home.html || echo "!! no mount call found"
+          echo "=== wordmark asset ==="
+          curl -sL --max-time 30 -o /tmp/wm.svg -w "%{http_code} %{size_download} bytes\n" https://thosewhoplay.com/assets/logo-twp-wordmark.svg
+          head -c 200 /tmp/wm.svg; echo
+          echo "=== engine version check (0 = old engine, no figureColour) ==="
+          curl -sL --max-time 30 https://thosewhoplay.com/assets/js/dancers-embed.js | grep -c "figureColour" || true
