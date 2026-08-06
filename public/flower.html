@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Bloom Study — Animated Petal Geometry</title>
-<meta name="description" content="An animated eight-petal bloom built from the wireframe construction: circles on a rim, capsules tangent to the hub." />
+<meta name="description" content="An animated bloom built from the wireframe construction: every petal a teardrop tangent to a shared hub." />
 <style>*{box-sizing:border-box}html,body{margin:0;padding:0}</style>
 
 <style>
@@ -259,8 +259,8 @@
   <header class="masthead">
     <h1>Bloom&nbsp;Study&nbsp;<em>01</em></h1>
     <p class="spec">
-      <b id="specPetals">8</b> circles on a rim, <b id="specSpikes">8</b> capsules
-      tangent to the hub · petals pulse on a <b id="specMode">shared</b> phase
+      <b id="specPetals">8</b> petals and <b id="specSpikes">8</b> counter-cut spikes,
+      every one a teardrop off the same hub · pulsing on a <b id="specMode">shared</b> phase
     </p>
   </header>
 
@@ -277,8 +277,13 @@
       </div>
 
       <div class="field">
-        <div class="row"><label for="rim">Petal circle</label><output id="outRim">0.45</output></div>
-        <input id="rim" type="range" min="0.35" max="1.20" step="0.01" value="0.45" />
+        <div class="row"><label for="width">Petal width</label><output id="outWidth">0.34</output></div>
+        <input id="width" type="range" min="0.10" max="0.52" step="0.01" value="0.34" />
+      </div>
+
+      <div class="field">
+        <div class="row"><label for="hub">Hub</label><output id="outHub">0.10</output></div>
+        <input id="hub" type="range" min="0.02" max="0.20" step="0.005" value="0.10" />
       </div>
 
       <div class="field">
@@ -357,15 +362,19 @@
   /* ------------------------------------------------------------------ *
    * The construction, straight off the wireframe:
    *
-   *   OUTER  = union of N circles seated on a rim of radius d. Each petal
-   *            is a scaled copy of that circle about the shared centre, so
-   *            petals can differ in size while still radiating from one
-   *            point — and their angular span is unchanged by the scaling,
-   *            so neighbours always overlap and never leave a gap.
-   *   INNER  = union of N capsules, each the convex hull of the hub circle
-   *            (radius w0, at the centre) and a tip circle (radius w1 at
-   *            distance dt). Their flanks are the external tangents of that
-   *            pair — the long chords that cross the wireframe.
+   * Every petal — outer lobe and inner spike alike — is the same primitive:
+   * the convex hull of the hub circle (radius w0, at the centre) and a tip
+   * circle (radius w1 at distance dt). Its flanks are the two external
+   * tangents of that pair, which is where the wireframe's long chords come
+   * from, and its tip is the far arc.
+   *
+   *   OUTER  = union of N such teardrops, tips normalised to r = 1.
+   *   INNER  = union of N smaller ones, cut back out of the body.
+   *
+   * A petal's size is its tip circle scaled about the shared hub, so petals
+   * can differ freely while all still radiating from one point — and since
+   * the hub is common, neighbours always overlap and the outline never
+   * breaks apart.
    *
    * Both unions are taken as a p-norm rather than a hard max, which is what
    * rounds every join into the curvy fillet instead of a sharp cusp. Low p
@@ -376,7 +385,8 @@
 
   const P = {
     petals: 8,
-    rim: 0.45,    // petal circle radius as a fraction of the rim radius
+    width: 0.34,  // petal tip cap radius, as a fraction of its reach
+    hub: 0.10,    // hub circle every petal is tangent to
     vary: 0.30,   // spread of per-petal sizes
     join: 0.45,   // 0 = crisp corners, 1 = fully gooey
     core: 0.80,   // how far the star tips reach, as a fraction of r = 1
@@ -421,10 +431,12 @@
       P.mode === "ripple" ? TAU / n :
       P.mode === "alternate" ? Math.PI : 0;
 
-    const d = 1 / (1 + P.rim);          // d + rho = 1
-    const rho = 1 - d;
-    const dtTip = P.core * plate.coreMul;
-    const w1 = dtTip * P.spike * plate.spikeMul;
+    // outer teardrop: tip cap w1, seated so the tip lands at r = 1
+    const oW1 = P.width;
+    const oW0 = Math.min(P.hub, oW1 * 0.85);
+
+    const reach = P.core * plate.coreMul;
+    const w1 = reach * P.spike * plate.spikeMul;
 
     const sizes = [];
     for (let k = 0; k < Math.max(n, cn); k++) {
@@ -442,8 +454,8 @@
       corePhase: plate.phase + Math.PI,        // star closes as petals swell
       rot: ((P.spin * Math.PI) / 180) * t,
       exp: plate.squircle,
-      d, rho,
-      dt: dtTip - w1, w1, w0: w1 * HUB,
+      od: 1 - oW1, oW1, oW0,
+      dt: reach - w1, w1, w0: w1 * HUB,
     };
   }
 
@@ -460,15 +472,6 @@
   }
 
   /* ---------- polar radius of each primitive ---------- */
-
-  // Circle of radius rho centred at distance d, seen from the origin.
-  function circleRay(delta, d, rho) {
-    const s = d * Math.sin(delta);
-    const disc = rho * rho - s * s;
-    if (disc <= 0) return 0;
-    const hit = d * Math.cos(delta) + Math.sqrt(disc);
-    return hit > 0 ? hit : 0;
-  }
 
   // Convex hull of the hub circle (w0, at the origin) and a tip circle
   // (w1 at distance L): the tip arc where the ray reaches it, otherwise the
@@ -506,7 +509,10 @@
     let acc = 0;
     for (let k = 0; k < g.n; k++) {
       const s = petalScale(g, k, t);
-      const r = circleRay(wrap(theta - g.rot - (k * TAU) / g.n), g.d * s, g.rho * s);
+      const r = capsuleRay(
+        wrap(theta - g.rot - (k * TAU) / g.n),
+        g.od * s, g.oW0, g.oW1 * s
+      );
       if (r > 0) acc += Math.pow(r, g.p);
     }
     return acc > 0 ? Math.pow(acc, 1 / g.p) : 0;
@@ -580,6 +586,35 @@
     path.closePath();
   }
 
+  // One teardrop: its outline, plus the two external tangents run out to the
+  // bounding circle — the long chords that cross the reference wireframe.
+  function drawTeardrop(cx, cy, a, L, w0, w1, R) {
+    const px = cx + L * Math.cos(a), py = cy + L * Math.sin(a);
+
+    const cap = new Path2D();
+    capsuleOutline(cap, cx, cy, w0, px, py, w1);
+    ctx.stroke(cap);
+
+    if (L <= Math.abs(w1 - w0)) return;
+    const tt = Math.acos(clamp((w0 - w1) / L, -1, 1));
+    for (const sign of [1, -1]) {
+      const ang = a + sign * tt;
+      const t0x = cx + w0 * Math.cos(ang), t0y = cy + w0 * Math.sin(ang);
+      const t1x = px + w1 * Math.cos(ang), t1y = py + w1 * Math.sin(ang);
+      const len = Math.hypot(t1x - t0x, t1y - t0y) || 1;
+      const nx = (t1x - t0x) / len, ny = (t1y - t0y) / len;
+      const ox = t0x - cx, oy = t0y - cy;
+      const b = ox * nx + oy * ny;
+      const disc = b * b - (ox * ox + oy * oy - R * R);
+      if (disc <= 0) continue;
+      const rt = Math.sqrt(disc);
+      ctx.beginPath();
+      ctx.moveTo(t0x + nx * (-b - rt), t0y + ny * (-b - rt));
+      ctx.lineTo(t0x + nx * (-b + rt), t0y + ny * (-b + rt));
+      ctx.stroke();
+    }
+  }
+
   function drawWireframe(cx, cy, S, g, t) {
     const ink = getComputedStyle(document.documentElement)
       .getPropertyValue("--ink").trim() || "#17170F";
@@ -591,56 +626,27 @@
     ctx.lineWidth = 1;
     ctx.globalAlpha = 0.8;
 
-    // the generating circles
     for (let k = 0; k < g.n; k++) {
       const s = petalScale(g, k, t);
-      const a = g.rot + (k * TAU) / g.n;
-      const d = g.d * s * S;
-      ctx.beginPath();
-      ctx.arc(cx + d * Math.cos(a), cy + d * Math.sin(a), g.rho * s * S, 0, TAU);
-      ctx.stroke();
+      drawTeardrop(cx, cy, g.rot + (k * TAU) / g.n,
+        g.od * s * S, g.oW0 * S, g.oW1 * s * S, R);
     }
 
     if (g.w1 > 0.0008) {
-      const w0 = g.w0 * S;
       for (let k = 0; k < g.cn; k++) {
         const s = spikeScale(g, k, t);
-        const a = -g.rot * 0.55 + (k * TAU) / g.cn;
-        const L = g.dt * s * S;
-        const w1 = g.w1 * s * S;
-        const px = cx + L * Math.cos(a), py = cy + L * Math.sin(a);
-
-        const cap = new Path2D();
-        capsuleOutline(cap, cx, cy, w0, px, py, w1);
-        ctx.stroke(cap);
-
-        if (L <= Math.abs(w1 - w0)) continue;
-        const tt = Math.acos(clamp((w0 - w1) / L, -1, 1));
-        for (const sign of [1, -1]) {
-          const ang = a + sign * tt;
-          const t0x = cx + w0 * Math.cos(ang), t0y = cy + w0 * Math.sin(ang);
-          const t1x = px + w1 * Math.cos(ang), t1y = py + w1 * Math.sin(ang);
-          const len = Math.hypot(t1x - t0x, t1y - t0y) || 1;
-          const nx = (t1x - t0x) / len, ny = (t1y - t0y) / len;
-          const ox = t0x - cx, oy = t0y - cy;
-          const b = ox * nx + oy * ny;
-          const disc = b * b - (ox * ox + oy * oy - R * R);
-          if (disc <= 0) continue;
-          const rt = Math.sqrt(disc);
-          ctx.beginPath();
-          ctx.moveTo(t0x + nx * (-b - rt), t0y + ny * (-b - rt));
-          ctx.lineTo(t0x + nx * (-b + rt), t0y + ny * (-b + rt));
-          ctx.stroke();
-        }
+        drawTeardrop(cx, cy, -g.rot * 0.55 + (k * TAU) / g.cn,
+          g.dt * s * S, g.w0 * S, g.w1 * s * S, R);
       }
-
-      ctx.beginPath();
-      ctx.arc(cx, cy, w0, 0, TAU);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(cx, cy, 1.6, 0, TAU);
-      ctx.fill();
     }
+
+    // the hub every petal is tangent to, and the centre mark
+    ctx.beginPath();
+    ctx.arc(cx, cy, g.oW0 * S, 0, TAU);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 1.6, 0, TAU);
+    ctx.fill();
     ctx.restore();
   }
 
@@ -711,7 +717,8 @@
 
   const SLIDERS = [
     ["petals", "outPetals", (v) => String(Math.round(v))],
-    ["rim", "outRim", fmt2],
+    ["width", "outWidth", fmt2],
+    ["hub", "outHub", (v) => Number(v).toFixed(3)],
     ["vary", "outVary", fmt2],
     ["join", "outJoin", fmt2],
     ["core", "outCore", fmt2],
