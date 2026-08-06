@@ -7,7 +7,7 @@ name: Deploy thosewhoplay.com (production)
 
 # Ship = push a change to this file (bump the counter below), or dispatch
 # manually once the workflow reaches the default branch.
-# ship: 24 — annotation round: footer, form and copy tweaks
+# ship: 25 — consolidate deploy to one rsync + one ssh (Dreamhost throttling)
 
 on:
   push:
@@ -18,7 +18,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: deploy-production
+  # shared with staging — see the note there
+  group: dreamhost-deploy
   cancel-in-progress: false
 
 jobs:
@@ -70,58 +71,35 @@ jobs:
               fi
             '
 
-      - name: Mirror the static site (additive; WordPress left in place)
+      - name: Mirror the site and publish the index (one rsync, one ssh)
         env:
           DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
           DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
           DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
         run: |
           set -euo pipefail
-          shopt -s nullglob
           PORT="${DREAMHOST_SSH_PORT:-22}"
-          files=(public/*.html)
-          echo "Shipping pages: ${files[*]}"
-          scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
-            "${files[@]}" \
-            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/thosewhoplay.com/"
-          # rsync with trailing slashes updates directories in place;
-          # scp -r nested them (assets/assets) on re-deploys
-          for d in assets projects research; do
-            if [ -d "public/$d" ]; then
-              rsync -az \
-                -e "ssh -i ~/.ssh/dreamhost -p $PORT -o StrictHostKeyChecking=yes" \
-                "public/$d/" \
-                "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/thosewhoplay.com/$d/"
-            fi
+          SSHCMD="ssh -i ~/.ssh/dreamhost -p $PORT -o StrictHostKeyChecking=yes"
+          # One transfer for the whole tree. The old flow opened ~9 SSH
+          # connections (scp + 3 rsyncs + 3 sshs + keyscan); Dreamhost
+          # throttles that and reset us mid-deploy, leaving the pages
+          # updated but the stylesheet stale. Still additive — no
+          # --delete — so the WordPress files stay put.
+          for i in 1 2 3; do
+            rsync -az --timeout=120 -e "$SSHCMD" \
+              public/ "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/thosewhoplay.com/" && break
+            echo "rsync attempt $i failed; backing off $((i*20))s"
+            sleep $((i*20))
           done
-          # clean up any nested copies earlier scp deploys left behind
-          ssh -i ~/.ssh/dreamhost -p "$PORT" -o StrictHostKeyChecking=yes \
-            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" \
-            'rm -rf ~/thosewhoplay.com/assets/assets ~/thosewhoplay.com/projects/projects ~/thosewhoplay.com/research/research'
-
-      - name: Publish the homepage as the production index
-        env:
-          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
-          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
-          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
-        run: |
-          set -euo pipefail
-          PORT="${DREAMHOST_SSH_PORT:-22}"
-          scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
-            public/twp-homepage.html \
-            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/thosewhoplay.com/index.html"
-
-      - name: Ensure browsers revalidate HTML (assets stay cached via ?v=)
-        env:
-          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
-          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
-          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
-        run: |
-          set -euo pipefail
-          PORT="${DREAMHOST_SSH_PORT:-22}"
-          ssh -i ~/.ssh/dreamhost -p "$PORT" -o StrictHostKeyChecking=yes \
-            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" 'bash -s' <<'REMOTE'
+          # everything else happens server-side in a single session
+          for i in 1 2 3; do
+            $SSHCMD "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" 'bash -s' <<'REMOTE' && break
+          set -e
           cd ~/thosewhoplay.com
+          # archive the outgoing index before the homepage replaces it
+          [ -f index.html ] && cp index.html "archive-index-$(date +%Y%m%d-%H%M%S).html" || true
+          cp twp-homepage.html index.html
+          rm -rf assets/assets projects/projects research/research
           if ! grep -q "TWP html no-cache" .htaccess 2>/dev/null; then
             cat >> .htaccess <<'HT'
 
@@ -133,11 +111,12 @@ jobs:
             </FilesMatch>
           </IfModule>
           HT
-            echo "added html no-cache block"
-          else
-            echo "html no-cache block already present"
           fi
+          ls -la index.html assets/css/twp.css
           REMOTE
+            echo "ssh attempt $i failed; backing off $((i*20))s"
+            sleep $((i*20))
+          done
 
       - name: Verify the live homepage (fix DirectoryIndex if WordPress still wins)
         env:

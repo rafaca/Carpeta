@@ -7,8 +7,10 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: deploy-staging
-  cancel-in-progress: true
+  # shared with production: Dreamhost resets connections when both
+  # deploys run at once. Queue, never cancel (a half-run deploy is worse).
+  group: dreamhost-deploy
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -82,50 +84,34 @@ jobs:
             ./out/ \
             "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:$DREAMHOST_DEPLOY_PATH"
 
-      - name: Mirror mockups to dev.thosewhoplay.com (basic-auth site)
+      - name: Mirror the site to dev.thosewhoplay.com (one rsync, one ssh)
         env:
           DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
           DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
           DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
         run: |
           set -euo pipefail
-          shopt -s nullglob
           PORT="${DREAMHOST_SSH_PORT:-22}"
-          # the whole static site: every page at the public root plus the
-          # asset tree and the per-section page directories
-          files=(public/*.html)
-          echo "Mirroring pages to dev.thosewhoplay.com: ${files[*]}"
-          scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
-            "${files[@]}" \
-            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/"
-          # rsync with trailing slashes updates directories in place;
-          # scp -r nested them (assets/assets) on re-deploys
-          for d in assets projects research; do
-            if [ -d "public/$d" ]; then
-              rsync -az \
-                -e "ssh -i ~/.ssh/dreamhost -p $PORT -o StrictHostKeyChecking=yes" \
-                "public/$d/" \
-                "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/$d/"
-            fi
+          SSHCMD="ssh -i ~/.ssh/dreamhost -p $PORT -o StrictHostKeyChecking=yes"
+          # one transfer instead of scp + three rsyncs: Dreamhost resets
+          # connections when this workflow and production overlap
+          for i in 1 2 3; do
+            rsync -az --timeout=120 -e "$SSHCMD" \
+              public/ "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/" && break
+            echo "rsync attempt $i failed; backing off $((i*20))s"
+            sleep $((i*20))
           done
-          ssh -i ~/.ssh/dreamhost -p "$PORT" -o StrictHostKeyChecking=yes \
-            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" \
-            'rm -rf ~/dev.thosewhoplay.com/assets/assets ~/dev.thosewhoplay.com/projects/projects ~/dev.thosewhoplay.com/research/research'
-
-      - name: Publish twp-homepage.html as the dev index (approved 2026-07-11)
-        env:
-          DREAMHOST_SSH_HOST: ${{ secrets.DREAMHOST_SSH_HOST }}
-          DREAMHOST_SSH_USER: ${{ secrets.DREAMHOST_SSH_USER }}
-          DREAMHOST_SSH_PORT: ${{ secrets.DREAMHOST_SSH_PORT }}
-        run: |
-          set -euo pipefail
-          [ -f public/twp-homepage.html ] || { echo "No twp-homepage.html; skipping"; exit 0; }
-          PORT="${DREAMHOST_SSH_PORT:-22}"
-          # the pre-twp original stays recoverable at archive/index-pre-twp-*
-          scp -i ~/.ssh/dreamhost -P "$PORT" -o StrictHostKeyChecking=yes \
-            public/twp-homepage.html \
-            "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST:~/dev.thosewhoplay.com/index.html"
-          echo "dev.thosewhoplay.com/ now serves the new site"
+          for i in 1 2 3; do
+            $SSHCMD "$DREAMHOST_SSH_USER@$DREAMHOST_SSH_HOST" 'bash -s' <<'REMOTE' && break
+          set -e
+          cd ~/dev.thosewhoplay.com
+          cp twp-homepage.html index.html
+          rm -rf assets/assets projects/projects research/research
+          ls *.html | head -20
+          REMOTE
+            echo "ssh attempt $i failed; backing off $((i*20))s"
+            sleep $((i*20))
+          done
 
       - name: Verify the deployed files landed
         env:
