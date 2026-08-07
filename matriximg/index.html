@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+  <script>document.documentElement.setAttribute("data-theme", (function(){try{return localStorage.getItem("freqz-theme")||"dark"}catch(e){return "dark"}})());</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Reactions — Collections / Frequencies</title>
+  <link rel="canonical" href="https://freqz.lol/matriximg/">
+  <link rel="alternate" type="application/rss+xml" title="Frequencies &#8212; Daily Digest" href="https://freqz.lol/feed.xml">
+  <!-- Open Graph / iMessage rich preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Frequencies">
+  <meta property="og:title" content="Frequencies &#8212; rate the collections">
+  <meta property="og:description" content="Hover or tap and hold to react &#8212; place fashion collections on the matrix.">
+  <meta property="og:url" content="https://freqz.lol/matriximg/">
+  <meta property="og:image" content="https://freqz.lol/og-image.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:video" content="https://freqz.lol/og-video.mp4">
+  <meta property="og:video:secure_url" content="https://freqz.lol/og-video.mp4">
+  <meta property="og:video:type" content="video/mp4">
+  <meta property="og:video:width" content="1200">
+  <meta property="og:video:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://freqz.lol/og-image.png">
+  <meta name="twitter:title" content="Frequencies &#8212; rate the collections">
+  <meta name="twitter:description" content="Hover or tap and hold to react &#8212; place fashion collections on the matrix.">
+
+  <link rel="stylesheet" href="https://use.typekit.net/hlb5ghe.css">
+  <link rel="stylesheet" href="/styles.css?v=20260717-1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css">
+  <style>
+    /* ================================================================
+       matriximg — the /matrix/ "Quadrant" reactions deck, re-cut for
+       fashion collections: every card is one look, a square image
+       centred inside the graph, rated on Hate It/Love It x Boring/Bold.
+
+       Card (381.5 × 382):
+         grid box   350×350 @ (24, 22)   — blue mesh, hidden by default
+         inner box  314×314 @ (42, 40)   — 1px #010693 border
+         headline   x 59 (17px inside box), y 72.5 (32.5px below box top)
+         count      x 41, y 360 — #3c19ad, below the box
+         axes       #0e1db9, centred on the grid edges
+         puck       12px #ff5900 core + 10px #0a1230 outside ring
+
+       The card stays NAVY in both states — the grid is blue-on-navy.
+       Fonts (Typekit): firelli-variable / questa-sans / panel.
+       ================================================================ */
+
+    :root {
+      --q2-orange: #ff5900;
+      --accent: #FF5900;   /* AA on the dark bg (6.0) */
+      --link-red: #fc3b2c; /* AA on the dark bg (5.2) */
+      --bg: #0B1020;
+      --frame-rest: #0d2969;
+      --grid-fine: #0d2969;  --grid-fine-o: 0.52;
+      --grid-acc: #405be0;   --grid-acc-o: 0.7;
+      --axis: #405be0;
+      --headline: #fff;
+      --dek: #fafaf7;
+      --copy-hover: #1D3682;
+      --count: #A594FF;   /* lighter violet — >=7:1 on all bg tints (matches the site-wide AA pass) */
+      --pct: #5871FF;
+      --count-tag: #7D66FF;
+      --axis-label: #1D3682;
+      --bracket: #1D3682;
+      --frame-line: #1D3682;
+      --link-purple: #5B45A5;
+      --pct-corner: #fff;   /* corner percentages read white on dark */
+      --font-num: "code-saver", ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+      --prog-off: rgba(64, 91, 224, 0.55);
+      --prog-on: #e4e9ff;
+      --meta: #e4e9ff;
+      --nav: #e4e9ff;
+      --cap: #fff;
+      --source: #fff;
+      --link-hover: #FEF189;
+      --btn-bg: #08112D;
+      --btn-fg: #3C19AD;
+      --btn-fg-hover: #4a67ff;
+      --tag: #fff;
+    }
+    [data-theme="light"] {
+      --bg: #ecf7fe;
+      --accent: #C24300;   /* AA on the light bg (4.7) */
+      --link-red: #D3220F; /* AA on the light bg (4.8) */
+      --frame-rest: #95a4c0;
+      --grid-fine: #95a5c1;  --grid-fine-o: 0.52;
+      --grid-acc: #95a4c0;   --grid-acc-o: 1;
+      --axis: #152865;
+      --headline: #1d1f20;
+      --dek: #1d1f20;
+      --copy-hover: #8A91A6;
+      --count: #3C19AD;
+      --bracket: #95A5C1;
+      --frame-line: #95A5C1;
+      --pct-corner: #4056E8;   /* white vanishes on the pale bg — stay blue */
+      --pct: #4056E8;
+      --count-tag: #4056E8;
+      --axis-label: #1042FF;
+      --prog-off: rgba(64, 91, 224, 0.45);
+      --prog-on: #152865;
+      --meta: #6a6f73;
+      --nav: #152865;
+      --cap: #1d1f20;
+      --source: #6a6f73;
+      --link-hover: #111d5d;
+      --btn-bg: #ffffff;
+      --btn-fg: #5066f6;
+      --btn-fg-hover: #111d5d;
+      --tag: #000;
+    }
+    /* theme switch — fixed top-right, same place on every page */
+    .q2-theme {
+      position: fixed; top: calc(16px + env(safe-area-inset-top, 0px)); left: calc(16px + env(safe-area-inset-left, 0px)); z-index: 20;
+      background: none; border: 0; padding: 6px;
+      color: var(--nav); font-size: 20px; line-height: 1; cursor: pointer;
+      opacity: 0.8; transition: opacity 0.25s ease, color 0.25s ease;
+    }
+    .q2-theme:hover { opacity: 1; }
+
+    /* page fade-in */
+    .q2-app { animation: q2-fadein 0.7s ease both; }
+    @keyframes q2-fadein { from { opacity: 0; } to { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { .q2-app { animation: none; } }
+
+    /* the field breathes: each story tints --bg toward its quadrant
+       colour, so the slow background fade cues that the deck moved */
+    html { background: var(--bg); transition: background 1.2s ease; }
+    body { background: var(--bg); color: var(--headline); margin: 0; transition: background 1.2s ease; -webkit-font-smoothing: antialiased; }
+
+    .q2-app {
+      /* 360px reserved above/below the square keeps the source line fully
+         visible under the graph — 320 left it clipped on short windows */
+      /* full browser width with 5px side margins (was 92%), still capped
+         by height room and the 460px ceiling */
+      --postw: min(calc(100% - 10px), calc(100vh - 360px), calc(100dvh - 360px), 460px);
+      position: relative;
+      max-width: 480px; margin: 0 auto; background: var(--bg);
+      transition: background 1.2s ease;
+      height: 100vh; height: 100dvh;
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    /* prev / next story arrows */
+    /* bottom pager: prev arrow · progress dashes · next arrow.
+       Arrows are thin chevrons at the same stroke weight as the dashes. */
+    .q2-pagerow {
+      /* floats centred in the band between the source line and the
+         window bottom, tracking the window-centred graph */
+      position: fixed; left: 50%; z-index: 10;
+      top: calc(75vh + var(--postw) / 4);
+      top: calc(75dvh + var(--postw) / 4);
+      transform: translate(-50%, -50%);
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      width: var(--postw); margin: 0;
+      padding: 0; box-sizing: border-box;
+    }
+    .q2-pagenav {
+      flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+      background: none; border: 0; padding: 4px; margin: 0;
+      color: var(--nav); line-height: 0; cursor: pointer;
+      transition: color 0.2s ease, opacity 0.2s ease;
+    }
+    .q2-pagenav:hover { color: var(--prog-on); }
+    .q2-pagenav[disabled] { opacity: 0.2; cursor: default; }
+    @media (hover: none) and (pointer: coarse) {
+      /* pagination rides 100px higher on phones */
+      .q2-below { margin-top: 5px; }
+      /* phones reserve less vertical room so the square can reach the
+         full window width (5px margins) */
+      .q2-app { --postw: min(calc(100% - 10px), calc(100vh - 310px), calc(100dvh - 310px), 460px); }
+    }
+
+    /* looks progress — 123 cards are too many for story dashes, so one
+       thin track fills with the deck position, next to a numeric counter */
+    .q2-progress {
+      position: relative; flex: 1 1 auto; height: 2px; border-radius: 1px;
+      background: var(--prog-off); overflow: hidden;
+    }
+    .q2-progress i {
+      position: absolute; inset: 0; display: block; border-radius: inherit;
+      background: var(--prog-on);
+      transform: scaleX(0); transform-origin: left center;
+      transition: transform 0.3s ease;
+    }
+    .q2-counter {
+      flex: 0 0 auto;
+      font-family: var(--font-num), var(--font-body, "questa-sans"), monospace;
+      font-size: 10px; letter-spacing: 0.08em; color: var(--nav);
+    }
+
+    /* ---- Utility strip: one row the width of the matrix — logo on the
+       left, date on the right ---- */
+    /* header lockup — logo centred with the date underneath */
+    .q2-strip {
+      padding-top: 20px; width: var(--postw); margin: 0 auto;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 6px; flex: 0 0 auto;
+    }
+    .q2-issue {
+      font-family: var(--font-body, "questa-sans"), system-ui, sans-serif;
+      font-weight: 400; font-size: 15px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--axis-label);
+      margin: 0;
+    }
+    .q2-wordmark {
+      display: block; width: 138px; height: 39px;
+      background-color: #1042FF;
+      -webkit-mask-image: url('/frequencies-mark.svg'); mask-image: url('/frequencies-mark.svg');
+      -webkit-mask-size: contain; mask-size: contain;
+      -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+      -webkit-mask-position: center; mask-position: center;
+    }
+
+    /* how-to line — grows to fill the space above the chart and centres
+       itself in it; the matching .q2-tapspace below the card keeps the
+       chart from being pushed to the bottom */
+    .q2-taphint {
+      /* centred in the band between the header lockup and the graph top */
+      position: fixed; left: 0; right: 0;
+      max-width: none;   /* global p{max-width:700px} would pin the fixed box to the left edge */
+      top: calc(90px + env(safe-area-inset-top, 0px));
+      height: calc((100vh - var(--postw)) / 2 - 90px);
+      height: calc((100dvh - var(--postw)) / 2 - 90px);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0;
+      font-family: var(--font-body, "questa-sans"), system-ui, sans-serif;
+      font-weight: 400; font-size: 12px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--link-red);
+      text-align: center;
+      transition: opacity 0.35s ease;
+    }
+    .q2-tapspace { display: none; }
+    /* gone for the rest of the visit after the first tap on any graph
+       (the flex region stays, so nothing shifts) */
+    .q2-hinted .q2-taphint { opacity: 0; }
+    .q2-card.reacted .q2-taphint { visibility: hidden; }
+
+    /* ---- Stories: cards stacked in place, crossfade between them ---- */
+    .q2-stack {
+      position: relative;
+      flex: 1 1 auto; min-height: 0;
+      overflow: hidden;
+    }
+    .q2-stack::-webkit-scrollbar { display: none; }
+
+    .q2-card { cursor: pointer; }
+    .q2-card.reacted { cursor: default; }   /* the vote is final */
+    .q2-card {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 12px;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity 0.45s ease, visibility 0s linear 0.45s;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none; user-select: none;
+    }
+    .q2-card.active {
+      opacity: 1; visibility: visible; pointer-events: auto;
+      transition: opacity 0.45s ease;
+    }
+
+    /* The scene — the graph square, pinned to the exact centre of the
+       browser window (both axes) on every viewport. An inline-size
+       container so the copy can scale with the card (cqw). */
+    .q2-scene {
+      position: fixed;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      width: var(--postw);
+      height: var(--postw);
+      container-type: inline-size;
+    }
+    .q2-plate {
+      position: absolute; inset: 0;
+      touch-action: pan-y;   /* JS owns horizontal — tap to vote, swipe to change story */
+      outline: none;
+    }
+    .q2-plate:focus-visible { outline: 2px solid var(--q2-blue); outline-offset: 3px; }
+
+    /* Corner brackets — always visible; the only frame in the rest state.
+       Thick arms 12.35% of each side, per the Figma GRAPH component. */
+    svg.q2-brax {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      display: block; z-index: 2; pointer-events: none;
+    }
+    svg.q2-brax path { fill: none; stroke: var(--bracket); }
+
+    /* The look — every collection image is a square centred inside the
+       graph frame; the mesh (z2) and the crowd dots (z3) draw over it */
+    .q2-look {
+      width: 100%; aspect-ratio: 1 / 1; height: auto;
+      flex: 0 0 auto;
+      align-self: center;
+      overflow: hidden;
+      position: relative; background: #000;
+    }
+    .q2-look img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: filter 0.35s ease, opacity 0.35s ease;
+    }
+    /* navy duotone overlay for the dark-mode hover state: #001B70 recolours the
+       grayscale image (via `color` blend) over black — a blue tint, not grey */
+    .q2-look::after {
+      content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: #001B70; mix-blend-mode: color;
+      opacity: 0; transition: opacity 0.35s ease;
+    }
+    /* hover/hold: light mode drops the image to B/W multiply; dark mode gets
+       the navy duotone (#001B70 over black) instead of grey */
+    .q2-card.on .q2-look img {
+      filter: grayscale(1);
+      mix-blend-mode: multiply;
+      opacity: 0.5;
+    }
+    :root:not([data-theme="light"]) .q2-card.on .q2-look img {
+      mix-blend-mode: normal;
+      opacity: 1;
+    }
+    :root:not([data-theme="light"]) .q2-card.on .q2-look::after { opacity: 0.85; }
+    /* light mode hover: a soft gray-blue (#8A91A6) duotone over white — the
+       image dims to 60% and the overlay recolours it, not a hard B/W multiply */
+    [data-theme="light"] .q2-look { background: #fff; }
+    [data-theme="light"] .q2-card.on .q2-look img { mix-blend-mode: normal; opacity: 0.6; }
+    [data-theme="light"] .q2-card.on .q2-look::after { background: #8A91A6; opacity: 0.49; }
+    /* once voted the look stays on the board, dimmed right down so the
+       crowd dots read over it — the :root-scoped rule outranks the .on
+       hover rules above, so hovering after the vote keeps the dim */
+    .q2-card.reacted .q2-look img { filter: grayscale(1); opacity: 0.22; }
+    :root:not([data-theme="light"]) .q2-card.reacted .q2-look img {
+      mix-blend-mode: normal; opacity: 0.22;
+    }
+    :root:not([data-theme="light"]) .q2-card.reacted .q2-look::after { opacity: 0.85; }
+    [data-theme="light"] .q2-card.reacted .q2-look img { mix-blend-mode: normal; opacity: 0.3; }
+    [data-theme="light"] .q2-card.reacted .q2-look::after { background: #8A91A6; opacity: 0.49; }
+
+    /* Blue mesh — hidden by default, shown on hover/reaction */
+    svg.q2-grid .g-fine { stroke: var(--grid-fine); stroke-opacity: var(--grid-fine-o); }
+    svg.q2-grid .g-frame { stroke: var(--frame-line); }
+    svg.q2-grid {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      display: block; z-index: 2;
+      opacity: 0; transition: opacity 0.35s ease;
+    }
+    .q2-card.on svg.q2-grid, .q2-card.reacted svg.q2-grid { opacity: 1; }
+
+    /* Results cloud — crowd reactions, revealed once you've rated */
+    canvas.q2-field {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      z-index: 3; opacity: 0; transition: opacity 0.7s;
+      pointer-events: none;
+    }
+    .q2-card.reacted canvas.q2-field { opacity: 1; }
+
+    /* Quadrant percentages — corners of the chart, revealed with the results */
+    .q2-pct {
+      position: absolute; z-index: 5;
+      font-family: var(--font-num), var(--font-body, "questa-sans"), monospace;
+      font-weight: 700; font-size: 9px; letter-spacing: 0.05em; line-height: 1;
+      color: var(--pct-corner, var(--pct));
+      /* rounded outline: a ring of hard shadows dilates the glyphs with a disk,
+         so joins stay curvy (text-stroke would miter-spike on sharp corners) */
+      text-shadow: 2px 0px 0 var(--bg), 1.8px 0.8px 0 var(--bg), 1.4px 1.4px 0 var(--bg), 0.8px 1.8px 0 var(--bg), 0px 2px 0 var(--bg), -0.8px 1.8px 0 var(--bg), -1.4px 1.4px 0 var(--bg), -1.8px 0.8px 0 var(--bg), -2px 0px 0 var(--bg), -1.8px -0.8px 0 var(--bg), -1.4px -1.4px 0 var(--bg), -0.8px -1.8px 0 var(--bg), 0px -2px 0 var(--bg), 0.8px -1.8px 0 var(--bg), 1.4px -1.4px 0 var(--bg), 1.8px -0.8px 0 var(--bg);
+      opacity: 0; transition: opacity 0.6s 0.2s;
+      pointer-events: none;
+    }
+    .q2-card.reacted .q2-pct { opacity: 1; }
+    /* equal visual gap to both frame lines: the frame sits 2.857% in,
+       the number 8px further on each axis (line-height 1 keeps it true) */
+    .q2-pct-tl { top: calc(2.857% + 8px);    left: calc(2.857% + 8px); }
+    .q2-pct-tr { top: calc(2.857% + 8px);    right: calc(2.857% + 8px); }
+    .q2-pct-bl { bottom: calc(2.857% + 8px); left: calc(2.857% + 8px); }
+    .q2-pct-br { bottom: calc(2.857% + 8px); right: calc(2.857% + 8px); }
+
+    /* Axis labels — Questa Black, centred on the grid edges; deep navy at
+       rest, white when the grid is revealed (dark mode only) */
+    .q2-axis {
+      position: absolute; z-index: 5;
+      font-family: var(--font-body, "questa-sans"), system-ui, sans-serif;
+      font-weight: 900; font-size: 11px; letter-spacing: 0.218em;
+      text-indent: 0.218em;            /* offset trailing letter-space so the word centres true */
+      text-transform: uppercase; color: var(--axis-label, var(--axis));
+      white-space: nowrap; pointer-events: none; line-height: 1;
+      /* opaque plate behind the word — a clean rectangular gap in the
+         frame and grid, fully non-translucent (per the Figma component) */
+      background: var(--bg); padding: 2px 5px;
+      opacity: 1;   /* fully opaque — any dimming would ghost the plate */
+      transition: color 0.35s ease, background 1.2s ease;
+    }
+    :root:not([data-theme="light"]) .q2-card.on .q2-axis,
+    :root:not([data-theme="light"]) .q2-card.reacted .q2-axis { color: #fff; }
+    /* light mode: quiet bracket gray at rest, electric blue on reveal */
+    [data-theme="light"] .q2-axis { color: #95A5C1; }
+    [data-theme="light"] .q2-card.on .q2-axis,
+    [data-theme="light"] .q2-card.reacted .q2-axis { color: #1042FF; }
+    /* floated clear of the mesh, 8px outside each edge */
+    .q2-axis-t { top: 2.857%;             left: 50%; transform: translate(-50%, -50%); }
+    .q2-axis-b { top: 97.143%;            left: 50%; transform: translate(-50%, -50%); }
+    .q2-axis-l { left: 2.857%;            top: 50%; transform: translate(-50%, -50%) rotate(-90deg); }
+    .q2-axis-r { left: 97.143%;           top: 50%; transform: translate(-50%, -50%) rotate(-90deg); }
+
+    /* Puck — 12px orange core, 10px navy outside ring (32px total).
+       The ring melts into the navy card; it reads over photos. */
+    .q2-puck {
+      position: absolute; box-sizing: border-box;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--q2-orange);
+      border: 5px solid var(--bg);
+      z-index: 6; transform: translate(-50%, -50%) scale(0); pointer-events: none;
+    }
+    /* headline beside the vote dot once resolved — opinions-board treatment */
+    .q2-puck-tag {
+      position: absolute; z-index: 6;
+      transform: translate(24px, -50%);
+      max-width: 40%;
+      font-family: var(--font-body, "questa-sans"), system-ui, sans-serif;
+      font-weight: 600; font-size: 11px; line-height: 1.25;
+      color: var(--tag); text-align: left;
+      text-shadow: 0 0 2px var(--bg), 0 0 3px var(--bg), 0 0 4px var(--bg), 0 0 5px var(--bg), 0 0 6px var(--bg), 0 0 7px var(--bg), 0 0 8px var(--bg), 0 0 8px var(--bg), 0 0 8px var(--bg), 0 0 8px var(--bg);
+      opacity: 0; transition: opacity 0.4s ease 0.2s;
+      pointer-events: none;
+    }
+    .q2-puck-tag.flip { transform: translate(calc(-100% - 24px), -50%); text-align: right; }
+    .q2-card.reacted .q2-puck-tag { opacity: 1; }
+    .q2-puck.show { animation: q2-pop 0.4s cubic-bezier(0.2, 1.6, 0.4, 1) forwards; }
+    .q2-puck.drag { transform: translate(-50%, -50%) scale(1); }   /* live under the finger */
+    .q2-hoverdot {
+      position: absolute; left: 0; top: 0; z-index: 7;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #fc3b2c; transform: translate(-50%, -50%);
+      box-shadow: 0 0 6px 2px rgba(252, 59, 44, 0.65), 0 0 14px 5px rgba(252, 59, 44, 0.35);
+      opacity: 0; transition: opacity 0.15s ease; pointer-events: none;
+    }
+    .q2-hoverdot.show { opacity: 1; }
+    /* live feeling word pinned to the centre of the graph while
+       navigating — the feelings wheel laid over the quadrant: position
+       picks the family, distance from centre the intensity */
+    .q2-feel {
+      position: absolute; left: 50%; top: 50%; z-index: 8; pointer-events: none;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-body, "questa-sans"), system-ui, sans-serif;
+      font-weight: 700; font-size: 11px; letter-spacing: 0.13em; text-indent: 0.13em;
+      text-transform: uppercase; color: var(--link-red); white-space: nowrap;
+      /* background-coloured outside stroke clears the grid around the
+         letters (same knockout as the axis labels) */
+      /* rounded outline: a ring of hard shadows dilates the glyphs with a disk,
+         so joins stay curvy (text-stroke would miter-spike on sharp corners) */
+      text-shadow: 3px 0px 0 var(--bg), 2.8px 1.1px 0 var(--bg), 2.1px 2.1px 0 var(--bg), 1.1px 2.8px 0 var(--bg), 0px 3px 0 var(--bg), -1.1px 2.8px 0 var(--bg), -2.1px 2.1px 0 var(--bg), -2.8px 1.1px 0 var(--bg), -3px 0px 0 var(--bg), -2.8px -1.1px 0 var(--bg), -2.1px -2.1px 0 var(--bg), -1.1px -2.8px 0 var(--bg), 0px -3px 0 var(--bg), 1.1px -2.8px 0 var(--bg), 2.1px -2.1px 0 var(--bg), 2.8px -1.1px 0 var(--bg);
+      opacity: 0; transition: opacity 0.2s ease;
+    }
+    .q2-feel.show { opacity: 1; }
+    @keyframes q2-pop { to { transform: translate(-50%, -50%) scale(1); } }
+
+    /* Story copy — spans the square between the frame lines; the
+       headline block floats in the upper space and the reactions count
+       centres itself between the lead-in and the lower edge */
+    .q2-copy {
+      position: absolute;
+      /* 24px padding on all sides of the graph square — the look fills
+         the rest (the scene is square, so the area stays square) */
+      left: 24px; right: 24px;
+      top: 24px; bottom: 24px;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center;
+      /* under the mesh (z2) and dot field (z3) — the grid draws over the
+         photo and copy on hover */
+      z-index: 1; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    /* hover/hold shows the graph with the copy at full opacity in deep
+       blue, sitting into the mesh; photo cards hide the copy */
+    .q2-card.on .q2-copy { opacity: 1; }
+    .q2-card.on .q2-headline, .q2-card.on .q2-dek { color: var(--copy-hover); }
+    [data-theme="light"] .q2-card.on .q2-headline, [data-theme="light"] .q2-card.on .q2-dek { color: #8A91A6; }
+    /* once voted the look stays visible (dimmed above) under the results */
+    .q2-card.reacted .q2-copy { opacity: 1; }
+    /* copy scales with the card square (cqw = 1% of scene width) so small
+       windows get proportionally smaller text; capped at the full-size 23/16.
+       The px declarations first are the fallback where cqw is unsupported. */
+    .q2-headline {
+      font-family: var(--font-display, "firelli-variable"), Georgia, serif;
+      font-weight: 600; line-height: 1.45; letter-spacing: -0.015em;
+      font-size: 23px; font-size: clamp(13px, 5cqw, 23px);
+      color: var(--headline); margin: 0;
+      width: 100%;
+    }
+    .q2-dek {
+      font-family: var(--font-body, "questa-sans"), system-ui, sans-serif;
+      font-weight: 300; line-height: 1.54;
+      font-size: 16px; font-size: clamp(12px, calc(3.2cqw + 2px), 16px);
+      color: var(--dek); margin: 0;
+      width: 100%;
+      margin-bottom: auto;   /* the count centres in the space below */
+    }
+    /* phones: lead-in 3pt bigger, headline 2pt bigger */
+    @media (hover: none) and (pointer: coarse) {
+      .q2-headline { font-size: 25px; font-size: clamp(15px, calc(5cqw + 2px), 25px); }
+      .q2-dek { font-size: 19px; font-size: clamp(15px, calc(3.2cqw + 5px), 19px); }
+    }
+
+    /* Below-the-graph strip — caption (photo story) + source, all states.
+       Sized to the grid frame (94.286% of the scene, the 10/350 viewBox
+       inset) so the source line left-aligns with the graph's border. */
+    .q2-below {
+      /* rides just under the fixed graph square */
+      position: fixed; left: 50%; transform: translateX(-50%);
+      top: calc(50% + var(--postw) / 2 + 10px);
+      width: calc(var(--postw) * 0.94286);
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      pointer-events: none;
+    }
+    .q2-below .q2-cap-text {
+      font-family: var(--font-body, "questa-sans"), system-ui, sans-serif;
+      font-weight: 400; font-size: 12px; line-height: 1.4; color: var(--cap);
+      margin: 0 0 6px;
+    }
+    .q2-source {
+      font-family: var(--font-body, "questa-sans"), system-ui, sans-serif;
+      font-weight: 500; font-size: 11px; letter-spacing: 0.13em;
+      text-transform: uppercase; color: var(--source);
+      margin: 0;
+    }
+    .q2-source a {
+      color: var(--link-purple, #5B45A5); text-decoration: underline; text-underline-offset: 2px;
+      pointer-events: auto;
+    }
+    .q2-source a:hover { color: var(--link-hover); }
+
+    /* Reaction count — Code Saver, in the below-the-graph strip right
+       under the caption */
+    .q2-count {
+      font-family: var(--font-num), var(--font-body, "questa-sans"), monospace;
+      font-weight: 400; letter-spacing: 0.108em;
+      font-size: 13px; font-size: clamp(11px, 2.8cqw, 13px);
+      text-transform: uppercase; color: var(--count);
+      margin: 0 0 6px; text-align: left;
+    }
+
+    /* ---- Footer — single line per the design ---- */
+    .q2-footer { flex: 0 0 auto; padding: 12px 16px 44px; text-align: center; }
+    .q2-footer a {
+      display: inline-block;
+      font-family: var(--font-display, "firelli-variable"), Georgia, serif;
+      font-weight: 700; font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase;
+      color: var(--btn-fg); text-decoration: none;
+      background: var(--btn-bg);
+      border: 0; border-radius: 999px;
+      padding: 12px 15px;
+      transition: color 0.25s ease, background 0.25s ease;
+    }
+    .q2-footer a:hover { color: var(--btn-fg-hover); }
+
+    /* floating footer menu — one pill, matches the button */
+    .q2-fabmenu {
+      position: fixed; left: 50%; bottom: calc(44px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+      z-index: 30;
+      display: none;   /* hidden on desktop — the pill's only link left */
+      flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 9px;
+      width: max-content; max-width: calc(100vw - 14px);
+      background: var(--btn-bg); border: 1px solid var(--headline);
+      border-radius: 999px; padding: 11px 15px;
+    }
+    .q2-fabmenu a {
+      font-family: var(--font-body, "questa-sans"), system-ui, sans-serif;
+      font-weight: 400; font-size: 11px; letter-spacing: 0.01em; text-transform: uppercase;
+      color: var(--headline); text-decoration: none; white-space: nowrap;
+      transition: opacity 0.25s ease;
+    }
+    .q2-fabmenu a:hover { color: var(--link-red); }
+    .q2-fabmenu-sep { color: var(--headline); opacity: 0.35; font-size: 13px; }
+
+    /* hamburger — mobile only; opens the section nav as a top-right dropdown */
+    .q2-burger { display: none; }
+    @media (hover: none) and (pointer: coarse) {
+      .q2-burger {
+        display: flex; align-items: center; justify-content: center;
+        position: fixed; z-index: 40;
+        top: calc(14px + env(safe-area-inset-top, 0px));
+        right: calc(14px + env(safe-area-inset-right, 0px));
+        width: 40px; height: 40px; padding: 0;
+        background: var(--btn-bg); border: 1px solid var(--headline); border-radius: 999px;
+        color: var(--headline); font-size: 20px; line-height: 1; cursor: pointer;
+      }
+      .q2-fabmenu {
+        display: flex;
+        left: auto; bottom: auto;
+        top: calc(62px + env(safe-area-inset-top, 0px));
+        right: calc(14px + env(safe-area-inset-right, 0px));
+        transform: translateY(-8px); flex-wrap: nowrap; flex-direction: column;
+        align-items: flex-end; gap: 14px; width: max-content; max-width: calc(100vw - 28px);
+        border-radius: 18px; padding: 16px 18px;
+        opacity: 0; pointer-events: none; transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+      .q2-fabmenu.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+      .q2-fabmenu-sep { display: none; }
+      .q2-fabmenu a { font-size: 13px; }
+      .q2-fabmenu .q2-theme { position: static; padding: 0; font-size: 18px; opacity: 1; }
+      /* the centred lockup clears the corner hamburger on its own */
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .q2-grid, .q2-copy, .q2-count, .q2-card { transition: none !important; }
+      .q2-puck.show { animation: none; transform: translate(-50%,-50%) scale(1); }
+    }
+  </style>
+
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f9af22a2cb614e0dbf81c694a6b57025"}'></script>
+  <!-- End Cloudflare Web Analytics -->
+</head>
+<body>
+
+<div class="q2-app">
+
+  <button type="button" class="q2-theme" id="theme-toggle" aria-label="Switch theme"><i class="ri-sun-line"></i></button>
+
+  <div class="q2-strip">
+    <a href="/" class="q2-wordmark" aria-label="Frequencies &#8212; home"></a>
+  </div>
+
+  <div class="q2-stack"></div>
+
+  <div class="q2-pagerow">
+    <button type="button" class="q2-pagenav" id="nav-prev" aria-label="Previous look">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M11.5 3.5 6 9l5.5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="q2-progress" id="progress" aria-hidden="true"><i id="prog-fill"></i></div>
+    <span class="q2-counter" id="prog-count" aria-hidden="true"></span>
+    <button type="button" class="q2-pagenav" id="nav-next" aria-label="Next look">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M6.5 3.5 12 9l-5.5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+</div>
+
+<button type="button" class="q2-burger" id="burger" aria-label="Menu" aria-expanded="false"><i class="ri-menu-line"></i></button>
+<nav class="q2-fabmenu" aria-label="Sections">
+</nav>
+<script>
+  (function () {
+    var burger = document.getElementById('burger'), menu = document.querySelector('.q2-fabmenu');
+    if (!burger || !menu) return;
+    function set(open) {
+      menu.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      burger.innerHTML = open ? '<i class="ri-close-line"></i>' : '<i class="ri-menu-line"></i>';
+    }
+    burger.addEventListener('click', function (e) { e.stopPropagation(); set(!menu.classList.contains('open')); });
+    /* on touch layouts the sun/moon lives inside the menu */
+    var tb = document.getElementById('theme-toggle');
+    if (tb && window.matchMedia && matchMedia('(hover: none) and (pointer: coarse)').matches) menu.insertBefore(tb, menu.firstChild);
+    menu.addEventListener('click', function () { set(false); });
+    document.addEventListener('click', function (e) {
+      if (menu.classList.contains('open') && !menu.contains(e.target) && e.target !== burger) set(false);
+    });
+  })();
+</script>
+
+<script>document.write('<scr' + 'ipt src="/matriximg/images.js?d=' + new Date().toISOString().slice(0, 10) + '"></scr' + 'ipt>');</script>
+<script>
+(function () {
+  'use strict';
+
+  /* ---- build the slides from /matriximg/images.js ---- */
+  var DATA = window.FREQZ_IMG || { issue: '', date: '', looks: [] };
+  var stackEl = document.querySelector('.q2-stack');
+  DATA.looks.forEach(function (lk) {
+    var art = document.createElement('article');
+    art.className = 'q2-card';
+    art.setAttribute('data-story-id', lk.id);
+    art.setAttribute('data-mood-polar', lk.polar);
+    art.setAttribute('data-mood-v', lk.v);
+    art.setAttribute('data-mood-e', lk.e);
+    art.setAttribute('data-count', lk.count);
+    art.setAttribute('data-photo', lk.photo);
+    /* images hydrate lazily — src lands when the card is on deck (see
+       show()) so 123 remote images don't download on page load */
+    art.innerHTML =
+      '<p class="q2-taphint" aria-hidden="true">hover or tap and hold to react</p>' +
+      '<div class="q2-scene">' +
+        '<div class="q2-plate" tabindex="0" role="button" aria-label="React to: ' + lk.title.replace(/"/g, '&quot;') + '"></div>' +
+        '<div class="q2-copy">' +
+          '<div class="q2-look"><img data-src="' + lk.photo + '" alt="' + lk.title.replace(/"/g, '&quot;') + '"></div>' +
+          '<h2 class="q2-headline" hidden>' + lk.title + '</h2>' +
+        '</div>' +
+      '</div>' +
+      '<div class="q2-below">' +
+        '<p class="q2-cap-text">' + lk.title + '</p>' +
+        '<p class="q2-count">' + lk.count.toLocaleString() + ' reactions</p>' +
+        '<p class="q2-source"><a href="' + lk.photo + '" target="_blank" rel="noopener">' + lk.source + '</a></p>' +
+      '</div>' +
+      '<div class="q2-tapspace" aria-hidden="true"></div>';
+    stackEl.appendChild(art);
+  });
+
+
+  /* Blue mesh — clean closed square, all lines span exactly 10→340
+     (no stubs past the boundary); fine #0d2969 @7.67, major #0d2969
+     every 5th cell. */
+  /* the fashion-reaction vocabulary laid over the graph — coordinates
+     are [word, valence, energy]: valence 0 -> 1 reads Hate It -> Love It
+     across, energy 0 -> 1 reads Bold -> Boring down. The word shown is
+     simply the nearest reaction to where you are. */
+  var FEEL_MAP = [
+    /* love it + bold — the showstopper corner */
+    ['Iconic', 0.92, 0.10], ['Showstopper', 0.96, 0.06], ['Breathtaking', 0.96, 0.14],
+    ['Fierce', 0.84, 0.12], ['Electric', 0.78, 0.08], ['Serving', 0.90, 0.16],
+    ['Main Character', 0.86, 0.06], ['Obsessed', 0.94, 0.20], ['Stunning', 0.88, 0.24],
+    ['Daring', 0.72, 0.14], ['Avant-Garde', 0.66, 0.08], ['Editorial', 0.74, 0.22],
+    ['Statement', 0.80, 0.20], ['Fresh', 0.70, 0.28], ['Striking', 0.82, 0.30],
+    ['Playful', 0.72, 0.32], ['Vibrant', 0.76, 0.30], ['Cool', 0.68, 0.38],
+    ['Sharp', 0.74, 0.40], ['Sculptural', 0.64, 0.22], ['Futuristic', 0.60, 0.18],
+    ['Masterpiece', 0.97, 0.26], ['Perfection', 0.98, 0.34],
+    /* love it + calm — quiet luxury territory */
+    ['Covetable', 0.86, 0.36], ['Luxurious', 0.88, 0.44], ['Exquisite', 0.92, 0.50],
+    ['Grail', 0.96, 0.44], ['Polished', 0.78, 0.48], ['Chic', 0.82, 0.52],
+    ['Flattering', 0.72, 0.48], ['Clean', 0.70, 0.56], ['Effortless', 0.76, 0.58],
+    ['Divine', 0.94, 0.60], ['Elegant', 0.86, 0.62], ['Refined', 0.80, 0.64],
+    ['Wearable', 0.68, 0.66], ['Tailored', 0.76, 0.68], ['Timeless', 0.90, 0.70],
+    ['Tasteful', 0.72, 0.70], ['Quiet Luxury', 0.84, 0.74], ['Classic', 0.78, 0.78],
+    ['Soft', 0.66, 0.78], ['Heirloom', 0.88, 0.82], ['Graceful', 0.84, 0.80],
+    ['Dreamy', 0.74, 0.84], ['Delicate', 0.68, 0.84], ['Serene', 0.80, 0.88],
+    ['Sublime', 0.92, 0.90], ['Minimal', 0.62, 0.74], ['Understated', 0.64, 0.86],
+    /* the centre — undecided, intrigued, mid */
+    ['Wild', 0.50, 0.06], ['Unhinged', 0.44, 0.06], ['Unexpected', 0.54, 0.14],
+    ['Startling', 0.46, 0.12], ['Puzzling', 0.44, 0.20], ['Confusing', 0.42, 0.26],
+    ['Intriguing', 0.58, 0.26], ['Curious', 0.52, 0.30], ['Interesting', 0.56, 0.36],
+    ['Almost', 0.48, 0.42], ['Unsure', 0.44, 0.48], ['Torn', 0.42, 0.44],
+    ['Conflicted', 0.40, 0.50], ['Fine', 0.52, 0.56], ['Mid', 0.46, 0.58],
+    ['Okay', 0.50, 0.62], ['Safe', 0.54, 0.66], ['Meh', 0.46, 0.68],
+    ['Whatever', 0.52, 0.72], ['Seen It', 0.42, 0.62], ['Derivative', 0.38, 0.56],
+    ['Muted', 0.56, 0.82], ['Gentle', 0.58, 0.92], ['Sleepy', 0.48, 0.90],
+    ['Vanilla', 0.44, 0.82], ['Invisible', 0.40, 0.88],
+    /* hate it + bold — the costume-party corner */
+    ['Absurd', 0.30, 0.08], ['Too Much', 0.26, 0.06], ['Loud', 0.28, 0.12],
+    ['Chaotic', 0.20, 0.10], ['Costume', 0.18, 0.14], ['Try-Hard', 0.24, 0.18],
+    ['Cringe', 0.16, 0.20], ['Gaudy', 0.14, 0.22], ['Garish', 0.08, 0.12],
+    ['Offensive', 0.04, 0.08], ['Tacky', 0.10, 0.18], ['Gimmicky', 0.28, 0.24],
+    ['Overworked', 0.22, 0.28], ['Messy', 0.16, 0.30], ['Clashing', 0.12, 0.26],
+    ['Eyesore', 0.05, 0.28], ['Impractical', 0.32, 0.28], ['Overstyled', 0.24, 0.34],
+    ['Desperate', 0.18, 0.36], ['Unwearable', 0.26, 0.40], ['Harsh', 0.20, 0.44],
+    ['Atrocious', 0.02, 0.16], ['Vile', 0.03, 0.30], ['Hideous', 0.04, 0.42],
+    /* hate it + calm — the beige wasteland */
+    ['Cheap', 0.14, 0.44], ['Shapeless', 0.20, 0.50], ['Sad', 0.12, 0.54],
+    ['Tragic', 0.06, 0.52], ['Uninspired', 0.24, 0.54], ['Stale', 0.18, 0.58],
+    ['Frumpy', 0.14, 0.62], ['Flat', 0.30, 0.62], ['Dated', 0.22, 0.66],
+    ['Drab', 0.10, 0.70], ['Forgettable', 0.20, 0.72], ['Tired', 0.26, 0.74],
+    ['Basic', 0.36, 0.76], ['Dull', 0.16, 0.78], ['Boring', 0.30, 0.80],
+    ['Lifeless', 0.12, 0.84], ['Snooze', 0.24, 0.86], ['Beige', 0.34, 0.88],
+    ['Bleak', 0.08, 0.90], ['Depressing', 0.05, 0.82], ['Comatose', 0.15, 0.94],
+    ['Wallpaper', 0.30, 0.94], ['Unforgivable', 0.02, 0.64],
+    /* the far-left edge, top to bottom */
+    ['Awkward', 0.34, 0.38], ['Clunky', 0.28, 0.34], ['Off', 0.32, 0.46]
+  ];
+  function feelingAt(x, y) {
+    var best = '', bd = 1e9, i, dx, dy, d;
+    for (i = 0; i < FEEL_MAP.length; i++) {
+      dx = x - FEEL_MAP[i][1]; dy = y - FEEL_MAP[i][2];
+      d = dx * dx + dy * dy;
+      if (d < bd) { bd = d; best = FEEL_MAP[i][0]; }
+    }
+    return best;
+  }
+
+  function gridSVG() {
+    var s = '<svg class="q2-grid" viewBox="0 0 350 350" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">';
+    var VE = ' vector-effect="non-scaling-stroke"';
+    /* 40 fine cells, a heavier line every 5th, the centre cross heavier
+       still — all one colour — and the thin 2px frame, per the Figma
+       GRAPH component */
+    var FINE = ' class="g-fine" stroke-width="0.47"' + VE;
+    var MID  = ' class="g-fine" stroke-width="0.94"' + VE;
+    var AXIS = ' class="g-fine" stroke-width="1.41"' + VE;
+    var N = 40, STEP = 330 / N, k, p, w;
+    for (k = 1; k < N; k++) {
+      if (k === N / 2) continue;
+      w = (k % 5 === 0) ? MID : FINE;
+      p = (10 + STEP * k).toFixed(2);
+      s += '<line x1="' + p + '" y1="10" x2="' + p + '" y2="340"' + w + '/>';
+      s += '<line x1="10" y1="' + p + '" x2="340" y2="' + p + '"' + w + '/>';
+    }
+    s += '<line x1="175" y1="10" x2="175" y2="340"' + AXIS + '/>';
+    s += '<line x1="10" y1="175" x2="340" y2="175"' + AXIS + '/>';
+    s += '<rect x="10" y="10" width="330" height="330" fill="none" class="g-frame" stroke-width="2"' + VE + '/>';
+    return s + '</svg>';
+  }
+
+  /* Corner brackets — the permanent frame: four thick L-shaped arms on
+     the same square as the grid border, arms 12.35% of the side */
+  function bracketSVG() {
+    var VE = ' vector-effect="non-scaling-stroke"';
+    var A = 41;   /* arm length on the 330 side */
+    var s = '<svg class="q2-brax" viewBox="0 0 350 350" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">';
+    s += '<path d="M ' + (10 + A) + ' 10 L 10 10 L 10 ' + (10 + A) + '" stroke-width="5"' + VE + '/>';
+    s += '<path d="M ' + (340 - A) + ' 10 L 340 10 L 340 ' + (10 + A) + '" stroke-width="5"' + VE + '/>';
+    s += '<path d="M ' + (10 + A) + ' 340 L 10 340 L 10 ' + (340 - A) + '" stroke-width="5"' + VE + '/>';
+    s += '<path d="M ' + (340 - A) + ' 340 L 340 340 L 340 ' + (340 - A) + '" stroke-width="5"' + VE + '/>';
+    return s + '</svg>';
+  }
+
+  /* Deterministic crowd — same generator as /matrix/ */
+  function mulberry32(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = s + 0x6D2B79F5 | 0;
+      var t = Math.imul(s ^ s >>> 15, 1 | s);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function strHash(str) {
+    var h = 0x811c9dc5;
+    for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+    return h;
+  }
+  function crowd(seed, v, e, polar) {
+    var rng = mulberry32(strHash(seed + ':crowd'));
+    var n = Math.floor(rng() * 80) + 150;
+    var pts = [];
+    for (var i = 0; i < n; i++) {
+      var a = rng() * Math.PI * 2;
+      var r = Math.pow(rng(), 0.5) * 0.9;
+      var px = v + r * Math.cos(a) * polar;
+      var py = e + r * Math.sin(a) * polar;
+      if (px > 0.98) px = 1.96 - px; else if (px < 0.02) px = 0.04 - px;
+      if (py > 0.98) py = 1.96 - py; else if (py < 0.02) py = 0.04 - py;
+      pts.push([Math.max(0.02, Math.min(0.98, px)), Math.max(0.02, Math.min(0.98, py))]);
+    }
+    return pts;
+  }
+  /* Quadrant palette, brightened for the navy field */
+  var QC = { tl: [252, 90, 77], tr: [242, 166, 59], bl: [106, 160, 255], br: [53, 201, 176] };
+  function blendColor(x, y) {
+    var L = function (a, b, t) { return a + (b - a) * t; };
+    var top = [0,1,2].map(function (i) { return L(QC.tl[i], QC.tr[i], x); });
+    var bot = [0,1,2].map(function (i) { return L(QC.bl[i], QC.br[i], x); });
+    return [0,1,2].map(function (i) { return Math.round(L(top[i], bot[i], y)); });
+  }
+
+  function initCard(card) {
+    var plate = card.querySelector('.q2-plate');
+    var photo = card.dataset.photo;
+    var storyId = card.dataset.storyId;
+    var v = parseFloat(card.dataset.moodV || '0.5');
+    var e = parseFloat(card.dataset.moodE || '0.5');
+    var polar = parseFloat(card.dataset.moodPolar || '0.5');
+
+    plate.innerHTML =
+      bracketSVG() +
+      gridSVG() +
+      '<canvas class="q2-field" aria-hidden="true"></canvas>' +
+      '<span class="q2-pct q2-pct-tl" data-q="tl"></span>' +
+      '<span class="q2-pct q2-pct-tr" data-q="tr"></span>' +
+      '<span class="q2-pct q2-pct-bl" data-q="bl"></span>' +
+      '<span class="q2-pct q2-pct-br" data-q="br"></span>' +
+      '<span class="q2-axis q2-axis-t">Bold</span>' +
+      '<span class="q2-axis q2-axis-b">Boring</span>' +
+      '<span class="q2-axis q2-axis-l">Hate It</span>' +
+      '<span class="q2-axis q2-axis-r">Love It</span>' +
+      '<span class="q2-puck" aria-hidden="true"></span>' +
+      '<span class="q2-hoverdot" aria-hidden="true"></span>' +
+      '<span class="q2-feel" aria-hidden="true"></span>';
+    var lookImg = card.querySelector('.q2-look img');
+    if (lookImg) lookImg.onerror = function () {
+      var bn = card.querySelector('.q2-look');
+      if (bn) bn.parentNode.removeChild(bn);
+    };
+
+    var puck = plate.querySelector('.q2-puck');
+    var canvas = plate.querySelector('.q2-field');
+    var reacted = false;
+
+    /* a small red glow that tracks the cursor while hovering to react,
+       with the live feeling word for that spot beside it */
+    var hoverDot = plate.querySelector('.q2-hoverdot');
+    var feelEl = plate.querySelector('.q2-feel');
+    function setFeel(cx, cy) {
+      feelEl.textContent = feelingAt(cx, cy);
+      feelEl.classList.add('show');
+    }
+    function hideFeel() { feelEl.classList.remove('show'); }
+    plate.addEventListener('pointermove', function (ev) {
+      if (ev.pointerType !== 'mouse' || reacted) { hoverDot.classList.remove('show'); hideFeel(); return; }
+      var rect = plate.getBoundingClientRect();
+      hoverDot.style.left = (ev.clientX - rect.left) + 'px';
+      hoverDot.style.top = (ev.clientY - rect.top) + 'px';
+      hoverDot.classList.add('show');
+      setFeel((ev.clientX - rect.left) / rect.width, (ev.clientY - rect.top) / rect.height);
+    });
+    plate.addEventListener('pointerleave', function () { hoverDot.classList.remove('show'); hideFeel(); });
+
+    function drawField(ux, uy) {
+      var pts = crowd(storyId, v, e, polar);
+      if (ux !== null) pts.push([ux, uy]);
+      var dpr = window.devicePixelRatio || 1;
+      var w = plate.offsetWidth, h = plate.offsetHeight;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      var ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      /* map unit coords into the grid frame (rect 10..340 of the 350
+         viewBox), padded a step in from the border, so every dot sits
+         clearly inside the graph */
+      var F0 = 10 / 350, FS = 330 / 350, PAD = 0.03;
+      /* four-colour palette from the design swatch, hashed per dot */
+      var DOT_COLORS = ['rgba(106,38,181,0.85)', 'rgba(70,90,216,0.85)',
+                        'rgba(143,28,216,0.85)', 'rgba(12,37,215,0.85)'];
+      pts.forEach(function (pt, i) {
+        var mx = F0 + (PAD + pt[0] * (1 - 2 * PAD)) * FS;
+        var my = F0 + (PAD + pt[1] * (1 - 2 * PAD)) * FS;
+        ctx.fillStyle = DOT_COLORS[(Math.imul(i + 1, 2654435761) >>> 0) % 4];
+        ctx.beginPath();
+        ctx.arc(mx * w, my * h, 1.2, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      var qs = { tl: 0, tr: 0, bl: 0, br: 0 };
+      pts.forEach(function (pt) {
+        var qx = pt[0] >= 0.5 ? 'r' : 'l';
+        var qy = pt[1] <  0.5 ? 't' : 'b';
+        qs[qy + qx]++;
+      });
+      var total = pts.length || 1;
+      Object.keys(qs).forEach(function (q) {
+        var el = plate.querySelector('.q2-pct-' + q);
+        if (!el) return;
+        el.textContent = Math.round(qs[q] / total * 100) + '%';
+      });
+    }
+
+    function getCoords(evt) {
+      var rect = plate.getBoundingClientRect();
+      var cx = (evt.clientX - rect.left) / rect.width;
+      var cy = (evt.clientY - rect.top)  / rect.height;
+      return [Math.max(0.03, Math.min(0.97, cx)), Math.max(0.03, Math.min(0.97, cy))];
+    }
+
+    function place(px, py, silent) {
+      if (reacted) return;                              /* one vote per story */
+      puck.style.left = (px * 100) + '%';
+      puck.style.top  = (py * 100) + '%';
+      puck.classList.remove('show');
+      void puck.offsetWidth;
+      puck.classList.add('show');
+      drawField(px, py);
+      var tagEl = plate.querySelector('.q2-puck-tag');
+      if (!tagEl) {
+        tagEl = document.createElement('span');
+        tagEl.className = 'q2-puck-tag';
+        plate.appendChild(tagEl);
+      }
+      var hEl = card.querySelector('.q2-headline');
+      tagEl.textContent = hEl ? hEl.textContent : '';
+      tagEl.style.left = (px * 100) + '%';
+      tagEl.style.top  = (py * 100) + '%';
+      tagEl.classList.toggle('flip', px > 0.55);
+      card.classList.add('reacted');
+      reacted = true;
+      hideFeel();
+      hoverDot.classList.remove('show');
+      try {
+        var all = JSON.parse(localStorage.getItem('freqz-matriximg-votes') || '{}');
+        all[storyId] = [px, py];
+        localStorage.setItem('freqz-matriximg-votes', JSON.stringify(all));
+      } catch (e) {}
+      if (!silent) startAuto();   /* fresh vote — story-style auto-advance */
+    }
+
+    /* Desktop hover previews the grid; click places the puck.
+       Touch: a tap flips and places in one gesture. */
+    card.addEventListener('pointerenter', function (ev) { if (ev.pointerType === 'mouse') card.classList.add('on'); });
+    card.addEventListener('pointerleave', function (ev) { if (ev.pointerType === 'mouse') card.classList.remove('on'); });
+
+    /* Touch: press-and-hold reveals the graph AND the dot under the
+       finger; dragging draws it through the chart, release commits the
+       vote where it lands. A quick tap still places immediately;
+       dragging without holding scrolls as normal. */
+    var pStart = null, holdTimer = null, holdActive = false, holdPid = null;
+    function movePuckTo(ev) {
+      var c = getCoords(ev);
+      puck.style.left = (c[0] * 100) + '%';
+      puck.style.top  = (c[1] * 100) + '%';
+      return c;
+    }
+    plate.addEventListener('contextmenu', function (ev) { ev.preventDefault(); });
+    plate.addEventListener('pointerdown', function (ev) {
+      pStart = { x: ev.clientX, y: ev.clientY, ex: ev.clientX, ey: ev.clientY, t: Date.now() };
+      holdActive = false;
+      if (ev.pointerType !== 'mouse') {
+        holdPid = ev.pointerId;
+        clearTimeout(holdTimer);
+        holdTimer = setTimeout(function () {
+          holdActive = true;
+          card.classList.add('on');
+          if (!reacted) {
+            var hc = movePuckTo({ clientX: pStart.ex, clientY: pStart.ey });
+            setFeel(hc[0], hc[1]);
+            puck.classList.add('drag');
+          }
+          try { plate.setPointerCapture(holdPid); } catch (e) {}
+        }, 260);
+      }
+    });
+    plate.addEventListener('touchmove', function (ev) {
+      if (holdActive) ev.preventDefault();              /* no page scroll while drawing */
+    }, { passive: false });
+    plate.addEventListener('pointermove', function (ev) {
+      if (holdActive) {
+        /* once the hold is live you are voting — the drag is never
+           reinterpreted as a story swipe, whatever direction it takes */
+        if (!reacted) {                                 /* the dot follows the finger */
+          var fc = movePuckTo(ev);
+          setFeel(fc[0], fc[1]);
+        }
+        return;
+      }
+      if (!pStart) return;
+      pStart.ex = ev.clientX; pStart.ey = ev.clientY;
+      var dx = ev.clientX - pStart.x, dy = ev.clientY - pStart.y;
+      if (Math.sqrt(dx * dx + dy * dy) > 10) clearTimeout(holdTimer);  /* scrolling */
+    });
+    plate.addEventListener('pointerup', function (ev) {
+      clearTimeout(holdTimer);
+      if (!pStart) return;
+      var dx = ev.clientX - pStart.x, dy = ev.clientY - pStart.y;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      var dt = Date.now() - (pStart.t || 0);
+      pStart = null;
+      var c = getCoords(ev);
+      if (holdActive) {
+        puck.classList.remove('drag');
+        if (!reacted) place(c[0], c[1]);                /* release commits the drawn spot */
+        card.classList.remove('on');                    /* close the preview → results show */
+        holdActive = false;
+        return;
+      }
+      /* touch: a story swipe must be a real flick — fast, clearly
+         horizontal, and a decent distance — so a sloppy tap or a slow
+         drag on the graph never changes the story by accident */
+      if (ev.pointerType !== 'mouse' && dt < 350 && Math.abs(dx) > 60 && Math.abs(dx) > 1.5 * Math.abs(dy)) {
+        nav(dx < 0 ? 1 : -1);
+        card.classList.remove('on');
+        return;
+      }
+      if (dist > 10) return;                            /* drag/scroll, not a tap */
+      place(c[0], c[1]);
+      if (ev.pointerType !== 'mouse') card.classList.remove('on');
+    });
+    plate.addEventListener('pointercancel', function () {
+      clearTimeout(holdTimer);
+      pStart = null;
+      puck.classList.remove('drag');
+      hideFeel();
+      if (holdActive && !reacted) card.classList.remove('on');
+      holdActive = false;
+    });
+
+    var kx = 0.5, ky = 0.5;
+    plate.addEventListener('keydown', function (ev) {
+      if (reacted) return;              /* vote is final — let keys bubble */
+      var step = 0.1;
+      if (ev.key === 'ArrowLeft')  { kx = Math.max(0.03, kx - step); ev.preventDefault(); }
+      if (ev.key === 'ArrowRight') { kx = Math.min(0.97, kx + step); ev.preventDefault(); }
+      if (ev.key === 'ArrowUp')    { ky = Math.max(0.03, ky - step); ev.preventDefault(); }
+      if (ev.key === 'ArrowDown')  { ky = Math.min(0.97, ky + step); ev.preventDefault(); }
+      if (ev.key === 'Enter' || ev.key === ' ') { place(kx, ky); ev.preventDefault(); }
+      if (ev.key === 'Escape') { card.classList.remove('on'); }
+      if (ev.key === 'Tab') { card.classList.remove('on'); }
+    });
+
+    /* a vote is final — restore it across reloads (no auto-advance).
+       TESTING: restore is off so a reload allows voting again on every
+       story; flip REVOTE_TESTING to false to restore one-vote-per-story. */
+    var REVOTE_TESTING = true;
+    try {
+      if (!REVOTE_TESTING) {
+        var saved = JSON.parse(localStorage.getItem('freqz-matriximg-votes') || '{}')[storyId];
+        if (saved) place(saved[0], saved[1], true);
+      }
+    } catch (e) {}
+
+    /* deep-linked results view — everyone's dots without casting a vote;
+       the story's headline labels the crowd at its centre */
+    card.showResults = function () {
+      if (reacted) return;                    /* a real vote already shows it */
+      reacted = true;
+      card.classList.add('reacted');
+      hideFeel();
+      drawField(null, null);
+      var tagEl = plate.querySelector('.q2-puck-tag');
+      if (!tagEl) {
+        tagEl = document.createElement('span');
+        tagEl.className = 'q2-puck-tag';
+        plate.appendChild(tagEl);
+      }
+      var hEl = card.querySelector('.q2-headline');
+      tagEl.textContent = hEl ? hEl.textContent : '';
+      tagEl.style.left = (v * 100) + '%';
+      tagEl.style.top  = (e * 100) + '%';
+      tagEl.classList.toggle('flip', v > 0.55);
+    };
+  }
+
+  var themeBtn = document.getElementById('theme-toggle');
+  function syncThemeIcon() {
+    var light = document.documentElement.getAttribute('data-theme') === 'light';
+    themeBtn.innerHTML = light ? '<i class="ri-moon-line"></i>' : '<i class="ri-sun-line"></i>';
+  }
+  themeBtn.addEventListener('click', function () {
+    var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('freqz-theme', next); } catch (e) {}
+    syncThemeIcon();
+    if (typeof tintBg === 'function') tintBg();   /* re-derive for the new theme */
+  });
+  syncThemeIcon();
+
+  document.querySelectorAll('.q2-card').forEach(initCard);
+
+  /* looks progress — one thin track that fills with the deck position */
+  var track = document.querySelector('.q2-stack');
+  var cards = Array.prototype.slice.call(track.querySelectorAll('.q2-card'));
+  var progFill = document.getElementById('prog-fill');
+  var progCount = document.getElementById('prog-count');
+  var navPrev = document.getElementById('nav-prev');
+  var navNext = document.getElementById('nav-next');
+  var idx = 0;
+  function syncProgress() {
+    if (progFill) progFill.style.transform = 'scaleX(' + ((idx + 1) / (cards.length || 1)) + ')';
+    if (progCount) progCount.textContent = (idx + 1) + ' / ' + cards.length;
+    navPrev.disabled = idx <= 0;
+    /* the deck loops — the last "next" carries back to the first look */
+    navNext.disabled = false;
+    navNext.setAttribute('aria-label', idx >= cards.length - 1 ? 'Back to the first look' : 'Next look');
+  }
+  /* Instagram-style rhythm: every look holds for 3s and the deck moves
+     on by itself, looping at the end. Holding a graph — or hovering it
+     with a mouse — pauses the clock; releasing resumes the remaining
+     time. A fresh vote restarts the 3s so the results get a full beat. */
+  var AUTO_MS = 3000;
+  var autoTimer = null, autoDeadline = 0, autoRemain = 0, autoPaused = false;
+  var autoOff = false;   /* arriving via a #look= deep link turns the rhythm off */
+  function clearAuto() {
+    clearTimeout(autoTimer); autoTimer = null; autoPaused = false;
+  }
+  function startAuto(ms) {
+    if (autoOff) { clearAuto(); return; }
+    ms = ms || AUTO_MS;
+    clearAuto();
+    autoRemain = ms;
+    autoDeadline = Date.now() + ms;
+    autoTimer = setTimeout(function () { nav(1); }, ms);
+  }
+  function pauseAuto() {
+    if (autoTimer === null || autoPaused) return;
+    autoPaused = true;
+    autoRemain = Math.max(200, autoDeadline - Date.now());
+    clearTimeout(autoTimer); autoTimer = null;
+  }
+  function resumeAuto() {
+    if (!autoPaused) return;
+    autoPaused = false;
+    autoDeadline = Date.now() + autoRemain;
+    autoTimer = setTimeout(function () { nav(1); }, autoRemain);
+  }
+  /* the background cycles through the tint swatches — one per story,
+     so moving through the deck reads as the room slowly changing mood */
+  var BG_TINTS = ['#0B1020', '#171026', '#0A1029', '#0F1523', '#10123E', '#0E1626'];
+  function tintBg() {
+    var c = cards[idx];
+    if (!c) return;
+    var light = document.documentElement.getAttribute('data-theme') === 'light';
+    if (!light) {
+      document.documentElement.style.setProperty('--bg', BG_TINTS[idx % BG_TINTS.length]);
+      return;
+    }
+    /* light theme: gentle computed lean toward the story's quadrant */
+    var base = [236, 247, 254];
+    var q = blendColor(parseFloat(c.dataset.moodV || '0.5'), parseFloat(c.dataset.moodE || '0.5'));
+    var m = [0, 1, 2].map(function (i) { return Math.round(base[i] + (q[i] - base[i]) * 0.06); });
+    document.documentElement.style.setProperty('--bg', 'rgb(' + m.join(',') + ')');
+  }
+  /* lazy image hydration — a card's <img> gets its src only when the
+     deck is about to reach it, so 123 remote images never download in
+     one burst on page load */
+  function hydrate(k) {
+    var c = cards[k];
+    if (!c) return;
+    var im = c.querySelector('.q2-look img[data-src]');
+    if (im) { im.src = im.getAttribute('data-src'); im.removeAttribute('data-src'); }
+  }
+  /* crossfade to look i — cards are stacked, no horizontal slide */
+  function show(i) {
+    i = Math.max(0, Math.min(cards.length - 1, i));
+    idx = i;
+    cards.forEach(function (c, k) { c.classList.toggle('active', k === i); });
+    [i - 1, i, i + 1, i + 2].forEach(hydrate);
+    syncProgress();
+    tintBg();
+    startAuto(AUTO_MS);
+  }
+  function nav(dir) {
+    if (dir > 0 && idx >= cards.length - 1) { show(0); return; }
+    show(idx + dir);
+  }
+  navPrev.addEventListener('click', function () { nav(-1); });
+  navNext.addEventListener('click', function () { nav(1); });
+
+  /* tap-and-hold (any pointer) or mouse hover pauses the story timer */
+  track.addEventListener('pointerdown', function (ev) {
+    if (ev.target.closest && ev.target.closest('.q2-plate')) pauseAuto();
+  });
+  document.addEventListener('pointerup', resumeAuto);
+  document.addEventListener('pointercancel', resumeAuto);
+  cards.forEach(function (c) {
+    c.addEventListener('pointerenter', function (ev) { if (ev.pointerType === 'mouse') pauseAuto(); });
+    c.addEventListener('pointerleave', function (ev) { if (ev.pointerType === 'mouse') resumeAuto(); });
+  });
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) pauseAuto(); else resumeAuto();
+  });
+
+  /* the how-to hint leaves after the first tap on any graph */
+  track.addEventListener('pointerdown', function hintOnce(ev) {
+    if (!ev.target.closest || !ev.target.closest('.q2-plate')) return;
+    document.body.classList.add('q2-hinted');
+    track.removeEventListener('pointerdown', hintOnce);
+  });
+
+  window.addEventListener('resize', syncProgress);
+
+  /* deep link: /matriximg/#look=<id> opens that look's chart in the
+     general results view — everyone's dots */
+  function openFromHash() {
+    var m = location.hash.match(/^#look=(.+)$/);
+    if (!m) return false;
+    /* coming from the opinions board to read one story — no auto-cycling */
+    autoOff = true;
+    clearAuto();
+    var id = decodeURIComponent(m[1]);
+    for (var k = 0; k < cards.length; k++) {
+      if (cards[k].dataset.storyId === id) {
+        show(k);
+        if (cards[k].showResults) cards[k].showResults();
+        return true;
+      }
+    }
+    return false;
+  }
+  window.addEventListener('hashchange', openFromHash);
+  if (!openFromHash()) show(0);
+
+  /* arrow keys page through the looks */
+  document.addEventListener('keydown', function (ev) {
+    var t = ev.target;
+    var isPlate = t && t.classList && t.classList.contains('q2-plate');
+    if (t !== document.body && !isPlate) return;
+    if (isPlate) {
+      var c = t.closest('.q2-card');
+      if (!c || !c.classList.contains('reacted')) return;  /* still voting by keyboard */
+    }
+    if (ev.key === 'ArrowRight') { nav(1);  ev.preventDefault(); }
+    if (ev.key === 'ArrowLeft')  { nav(-1); ev.preventDefault(); }
+  });
+})();
+</script>
+
+<script src="/share.js?v=20260717-1" defer></script>
+<script src="/wordmark.js?v=20260717-1" defer></script>
+
+</body>
+</html>
