@@ -61,7 +61,7 @@
       --headline: #fff;
       --dek: #fafaf7;
       --copy-hover: #1D3682;
-      --count: #7D66FF;   /* lighter violet so the count reads on navy */
+      --count: #A594FF;   /* lighter violet — >=7:1 on all bg tints (matches the site-wide AA pass) */
       --pct: #5871FF;
       --count-tag: #7D66FF;
       --axis-label: #1D3682;
@@ -220,6 +220,7 @@
     .q2-taphint {
       /* centred in the band between the header lockup and the graph top */
       position: fixed; left: 0; right: 0;
+      max-width: none;   /* global p{max-width:700px} would pin the fixed box to the left edge */
       top: calc(90px + env(safe-area-inset-top, 0px));
       height: calc((100vh - var(--postw)) / 2 - 90px);
       height: calc((100dvh - var(--postw)) / 2 - 90px);
@@ -291,8 +292,8 @@
     /* The look — every collection image is a square centred inside the
        graph frame; the mesh (z2) and the crowd dots (z3) draw over it */
     .q2-look {
-      width: 260px; width: clamp(150px, 62cqw, 300px);
-      max-width: 100%; aspect-ratio: 1 / 1; height: auto;
+      width: 100%; aspect-ratio: 1 / 1; height: auto;
+      flex: 0 0 auto;
       align-self: center;
       overflow: hidden;
       position: relative; background: #000;
@@ -458,10 +459,12 @@
        centres itself between the lead-in and the lower edge */
     .q2-copy {
       position: absolute;
-      left: 12.35%; right: 12.35%;
-      top: 2.857%; bottom: 2.857%;
+      /* 24px padding on all sides of the graph square — the look fills
+         the rest (the scene is square, so the area stays square) */
+      left: 24px; right: 24px;
+      top: 24px; bottom: 24px;
       display: flex; flex-direction: column; align-items: center;
-      gap: 10px;
+      justify-content: center;
       /* under the mesh (z2) and dot field (z3) — the grid draws over the
          photo and copy on hover */
       z-index: 1; pointer-events: none;
@@ -492,8 +495,6 @@
       width: 100%;
       margin-bottom: auto;   /* the count centres in the space below */
     }
-    /* balancing spacer above the headline block */
-    .q2-copy::before { content: ""; margin-top: auto; }
     /* phones: lead-in 3pt bigger, headline 2pt bigger */
     @media (hover: none) and (pointer: coarse) {
       .q2-headline { font-size: 25px; font-size: clamp(15px, calc(5cqw + 2px), 25px); }
@@ -529,17 +530,15 @@
     }
     .q2-source a:hover { color: var(--link-hover); }
 
-    /* Reaction count — Code Saver, centred under the dek, no bullet */
+    /* Reaction count — Code Saver, in the below-the-graph strip right
+       under the caption */
     .q2-count {
       font-family: var(--font-num), var(--font-body, "questa-sans"), monospace;
       font-weight: 400; letter-spacing: 0.108em;
       font-size: 13px; font-size: clamp(11px, 2.8cqw, 13px);
       text-transform: uppercase; color: var(--count);
-      margin: 0 0 auto; text-align: center;   /* auto bottom margin centres it */
+      margin: 0 0 6px; text-align: left;
     }
-    /* on hover the count fades with the rest of the copy in both themes */
-    .q2-card.on .q2-count { color: var(--copy-hover); }
-    .q2-card.reacted .q2-count { color: #8A91A6; }
 
     /* ---- Footer — single line per the design ---- */
     .q2-footer { flex: 0 0 auto; padding: 12px 16px 44px; text-align: center; }
@@ -621,7 +620,6 @@
 
   <div class="q2-strip">
     <a href="/" class="q2-wordmark" aria-label="Frequencies &#8212; home"></a>
-    <p class="q2-issue">Issue 78 &middot; July 24, 2026</p>
   </div>
 
   <div class="q2-stack"></div>
@@ -669,14 +667,6 @@
 
   /* ---- build the slides from /matriximg/images.js ---- */
   var DATA = window.FREQZ_IMG || { issue: '', date: '', looks: [] };
-  /* the daily job writes prose dates ("July 31, 2026") — show YYYYMMDD */
-  function ymdDate(str) {
-    var d = new Date(str);
-    if (isNaN(d.getTime())) return str;
-    return String(d.getFullYear()) +
-      ('0' + (d.getMonth() + 1)).slice(-2) +
-      ('0' + d.getDate()).slice(-2);
-  }
   var stackEl = document.querySelector('.q2-stack');
   DATA.looks.forEach(function (lk) {
     var art = document.createElement('article');
@@ -696,18 +686,16 @@
         '<div class="q2-copy">' +
           '<div class="q2-look"><img data-src="' + lk.photo + '" alt="' + lk.title.replace(/"/g, '&quot;') + '"></div>' +
           '<h2 class="q2-headline" hidden>' + lk.title + '</h2>' +
-          '<p class="q2-count">' + lk.count.toLocaleString() + ' reactions</p>' +
         '</div>' +
       '</div>' +
       '<div class="q2-below">' +
         '<p class="q2-cap-text">' + lk.title + '</p>' +
+        '<p class="q2-count">' + lk.count.toLocaleString() + ' reactions</p>' +
         '<p class="q2-source"><a href="' + lk.photo + '" target="_blank" rel="noopener">' + lk.source + '</a></p>' +
       '</div>' +
       '<div class="q2-tapspace" aria-hidden="true"></div>';
     stackEl.appendChild(art);
   });
-  var issueEl = document.querySelector('.q2-issue');
-  if (issueEl) issueEl.textContent = ymdDate(DATA.date);
 
 
   /* Blue mesh — clean closed square, all lines span exactly 10→340
