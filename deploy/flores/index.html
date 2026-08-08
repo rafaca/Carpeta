@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Flores de Otro Mundo</title>
+<meta name="description" content="Flores de otro mundo." />
+<style>
+  :root { --paper: #FAF8EF; }
+  @media (prefers-color-scheme: dark) { :root { --paper: #100F09; } }
+  html, body { margin: 0; padding: 0; background: var(--paper); }
+  .stage { position: fixed; inset: 0; }
+  canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage"><canvas id="c"></canvas></div>
+<script>
+(() => {
+  "use strict";
+
+  const TAU = Math.PI * 2;
+  const canvas = document.getElementById("c");
+  const stage = document.getElementById("stage");
+  const ctx = canvas.getContext("2d");
+
+  /* ------------------------------------------------------------------ *
+   * The construction, straight off the wireframe:
+   *
+   * Every petal — outer lobe and inner spike alike — is the same primitive:
+   * the convex hull of the hub circle (radius w0, at the centre) and a tip
+   * circle (radius w1 at distance dt). Its flanks are the two external
+   * tangents of that pair, which is where the wireframe's long chords come
+   * from, and its tip is the far arc.
+   *
+   *   OUTER  = union of N such teardrops, tips normalised to r = 1.
+   *   INNER  = union of N smaller ones, cut back out of the body.
+   *
+   * A petal's size is its tip circle scaled about the shared hub, so petals
+   * can differ freely while all still radiating from one point — and since
+   * the hub is common, neighbours always overlap and the outline never
+   * breaks apart.
+   *
+   * Each union is a polynomial smooth-minimum over the petals' exact signed
+   * distance fields, so where two petals meet the outline carries a genuine
+   * constant-radius fillet — the curvy joint of the reference — instead of
+   * the proportional bulge a polar blend would leave.
+   *
+   * Everything is normalised so an unpulsed petal tip lands at r = 1.
+   * ------------------------------------------------------------------ */
+
+  const P = {
+    petals: 8,
+    width: 0.30,  // petal tip cap radius, as a fraction of its reach
+    hub: 0.60,    // the body disc the petals rise out of
+    vary: 0.30,   // spread of per-petal sizes
+    join: 0.14,   // fillet radius between outer petals
+    joinIn: 0.06, // fillet radius between inner spikes
+    core: 0.74,   // how far the star tips reach, as a fraction of r = 1
+    spike: 0.25,  // tip cap radius as a fraction of that reach
+    pulse: 0.18,
+    speed: 1,
+    view: "trio",
+    guides: false,
+    seed: 3,
+    hue: "#F2E84E",
+  };
+
+  const HUB = 0.6;        // spike hub radius, as a fraction of its tip cap
+  const PETAL_HUB = 0.10; // the hub every outer petal is tangent to
+
+  const PLATES = [
+    { id: "squared", squircle: 4.2, boxBody: true, coreMul: 0.62, spikeMul: 0.62, seedOff: 0 },
+    { id: "roundA",  squircle: 0,   coreMul: 1.0,  spikeMul: 1.0,  seedOff: 31 },
+    { id: "roundB",  squircle: 0,   coreMul: 0.94, spikeMul: 1.02, seedOff: 62 },
+  ];
+
+  const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
+
+  function superR(theta, exp) {
+    const c = Math.abs(Math.cos(theta));
+    const s = Math.abs(Math.sin(theta));
+    return Math.pow(Math.pow(c, exp) + Math.pow(s, exp), -1 / exp);
+  }
+
+  // Deterministic per-petal size, so a given seed always draws the same bloom.
+  function hash01(k, seed) {
+    const x = Math.sin((k + 1) * 12.9898 + seed * 78.233) * 43758.5453;
+    return x - Math.floor(x);
+  }
+
+  function build(plate, t) {
+    const n = Math.max(3, Math.round(P.petals));
+    const seed = P.seed + plate.seedOff;
+
+    // outer teardrop: tip cap w1, seated so the tip lands at r = 1
+    const oW1 = P.width;
+    const oW0 = Math.min(PETAL_HUB, oW1 * 0.9);
+
+    const reach = P.core * plate.coreMul;
+    const w1 = reach * P.spike * plate.spikeMul;
+
+    /* Every petal runs its own clock: a base size from the seed, then a
+       sine at its own rate and phase. Nothing is shared, so neighbours
+       drift freely in and out of step — no flower-wide breathing. The
+       (1 + amp) normaliser pins the largest possible tip to r = 1, which
+       is what holds the flower's overall size fixed. */
+    const petals = [];
+    for (let k = 0; k < n; k++) {
+      const base = 1 - hash01(k, seed) * 0.6 * P.vary;
+      const rate = (0.7 + 0.7 * hash01(k, seed + 7)) * 1.15 * P.speed;
+      const ph = hash01(k, seed + 13) * TAU;
+      const ibase = 1 - hash01(k, seed + 23) * 0.6 * P.vary;
+      const irate = (0.7 + 0.7 * hash01(k, seed + 37)) * 1.15 * P.speed;
+      const iph = hash01(k, seed + 41) * TAU;
+      petals.push({ base, rate, ph, ibase, irate, iph });
+    }
+
+    return {
+      n, cn: n, petals,
+      k: P.join,
+      ki: P.joinIn,
+      amp: P.pulse,
+      exp: plate.squircle,
+      od: 1 - oW1, oW1, oW0, body: P.hub, boxBody: !!plate.boxBody,
+      dt: reach - w1, w1, w0: w1 * HUB,
+    };
+  }
+
+  // Per-petal scale: seeded base × its own sine, normalised so the biggest
+  // possible petal tip lands exactly on r = 1.
+  function petalScale(g, k, t) {
+    const p = g.petals[k];
+    const loc = g.exp ? superR((k * TAU) / g.n, g.exp) : 1;
+    return (p.base * (1 + g.amp * Math.sin(t * p.rate + p.ph)) / (1 + g.amp)) * loc;
+  }
+
+  // The spike under petal k: its own independent clock, but capped at the
+  // petal's current scale — an inner petal can never outgrow its outer.
+  function spikeScale(g, k, t) {
+    const p = g.petals[k];
+    const raw = p.ibase * (1 + g.amp * Math.sin(t * p.irate + p.iph)) / (1 + g.amp);
+    return Math.min(raw, petalScale(g, k, t));
+  }
+
+  /* ---------- one petal, as an exact signed distance field ---------- */
+
+  /* Reduced to the petal's own frame there are only three features: the hub
+     arc behind the shoulders, the straight tangent flank down the side, and
+     the tip arc out front. Their Voronoi regions tile the plane, so this is
+     the exact signed distance — which is what lets the union below carry a
+     true constant-radius fillet. */
+  /* The body the petals rise out of: a disc, or — for the squared plate —
+     a rounded square, which is what gives that plate its straight edges
+     while the petals still bump out along them. */
+  function makeBody(radius, box) {
+    if (!box) return { angle: 0, ux: 1, uy: 0, L: 0, w0: radius, w1: radius, dc: 0, dr: radius };
+    return { box: true, h: radius * 0.72, r: radius * 0.30 };
+  }
+
+  function makePetal(angle, L, w0, w1) {
+    const ux = Math.cos(angle), uy = Math.sin(angle);
+    const base = { angle, ux, uy, L, w0, w1 };
+    if (L + w1 <= w0 + 1e-9) return { ...base, dc: 0, dr: w0 };   // hub swallows the tip
+    if (w1 >= L + w0 - 1e-9) return { ...base, dc: L, dr: w1 };   // tip swallows the hub
+
+    const tt = Math.acos(clamp((w0 - w1) / L, -1, 1));
+    const nx = Math.cos(tt), ny = Math.sin(tt);
+    const t0x = w0 * nx, t0y = w0 * ny;
+    const t1x = L + w1 * nx, t1y = w1 * ny;
+    const len = Math.hypot(t1x - t0x, t1y - t0y);
+    return {
+      ...base, nx, ny, t0x, t0y, len,
+      ex: (t1x - t0x) / len, ey: (t1y - t0y) / len,
+    };
+  }
+
+  function petalSdf(pt, px, py) {
+    if (pt.box) {
+      const qx = Math.abs(px) - pt.h, qy = Math.abs(py) - pt.h;
+      return Math.hypot(Math.max(qx, 0), Math.max(qy, 0)) +
+             Math.min(Math.max(qx, qy), 0) - pt.r;
+    }
+    const x = px * pt.ux + py * pt.uy;
+    const y = Math.abs(py * pt.ux - px * pt.uy);
+    if (pt.dr !== undefined) return Math.hypot(x - pt.dc, y) - pt.dr;
+    const s = (x - pt.t0x) * pt.ex + (y - pt.t0y) * pt.ey;
+    if (s <= 0) return Math.hypot(x, y) - pt.w0;             // hub arc
+    if (s >= pt.len) return Math.hypot(x - pt.L, y) - pt.w1; // tip arc
+    return x * pt.nx + y * pt.ny - pt.w0;                    // tangent flank
+  }
+
+  // Polar radius of a lone petal — the hard union, used to bracket the solve.
+  function petalRay(pt, theta) {
+    if (pt.box) {
+      // the inscribed square's exit — inside the rounded body, so a safe floor
+      const c = Math.abs(Math.cos(theta)), sn = Math.abs(Math.sin(theta));
+      return pt.h / Math.max(c, sn, 1e-6);
+    }
+    const delta = wrap(theta - pt.angle);
+    const L = pt.L, w0 = pt.w0, w1 = pt.w1;
+    if (L <= Math.abs(w1 - w0) + 1e-9) return Math.max(w0, L + w1);
+    const tt = Math.acos(clamp((w0 - w1) / L, -1, 1));
+    if (Math.abs(delta) >= tt) return w0;
+
+    let r = Infinity;
+    const s = L * Math.sin(delta);
+    const disc = w1 * w1 - s * s;
+    if (disc > 0) {
+      const hit = L * Math.cos(delta) + Math.sqrt(disc);
+      if (hit > 0) r = hit;
+    }
+    for (const sign of [1, -1]) {
+      const c = Math.cos(delta - sign * tt);
+      if (c > 1e-6) r = Math.min(r, w0 / c);
+    }
+    return Number.isFinite(r) ? r : w0;
+  }
+
+  const wrap = (a) => {
+    let x = a % TAU;
+    if (x > Math.PI) x -= TAU;
+    if (x < -Math.PI) x += TAU;
+    return x;
+  };
+
+  /* ---------- smooth union ---------- */
+
+  function petalsOf(g, t, inner) {
+    const count = inner ? g.cn : g.n;
+    const out = [];
+    // The body the outer petals rise out of. It sets the floor of every
+    // valley, so the fillet has a surface to curve down onto.
+    if (!inner && g.body > 0) out.push(makeBody(g.body, g.boxBody));
+    for (let k = 0; k < count; k++) {
+      if (inner) {
+        const s = spikeScale(g, k, t);
+        out.push(makePetal((k * TAU) / g.cn, g.dt * s, g.w0, g.w1 * s));
+      } else {
+        const s = petalScale(g, k, t);
+        out.push(makePetal((k * TAU) / g.n, g.od * s, g.oW0, g.oW1 * s));
+      }
+    }
+    return out;
+  }
+
+  /* Rounded union. Where two petals meet this inserts a circular arc of
+     radius exactly k, tangent to both — the same thing a corner-rounding
+     tool does to a boolean union, and the reason the joint reads as a true
+     curve. Away from a join it leaves the outline untouched, which a
+     polynomial smooth-minimum does not. */
+  function fieldAt(petals, px, py, k) {
+    let d = petalSdf(petals[0], px, py);
+    for (let i = 1; i < petals.length; i++) {
+      const e = petalSdf(petals[i], px, py);
+      const ux = Math.max(k - d, 0), uy = Math.max(k - e, 0);
+      d = Math.max(k, d < e ? d : e) - Math.hypot(ux, uy);
+    }
+    return d;
+  }
+
+  /* Every petal contains the hub, so the union is star-shaped about the
+     centre and each outline point is a single root along a ray. The hard
+     union bounds that root from below and the fillet can only push outward,
+     which gives a tight bracket to bisect. */
+  function solveRay(petals, theta, k) {
+    let lo = 0;
+    for (let i = 0; i < petals.length; i++) {
+      const v = petalRay(petals[i], theta);
+      if (v > lo) lo = v;
+    }
+    if (k < 1e-4) return lo;
+
+    const cx = Math.cos(theta), cy = Math.sin(theta);
+    let hi = lo + k;
+    const step = Math.max(k, 0.05);
+    for (let i = 0; i < 12 && fieldAt(petals, hi * cx, hi * cy, k) < 0; i++) {
+      lo = hi;
+      hi += step;
+    }
+    for (let i = 0; i < 10; i++) {
+      const mid = 0.5 * (lo + hi);
+      if (fieldAt(petals, mid * cx, mid * cy, k) < 0) lo = mid;
+      else hi = mid;
+    }
+    return 0.5 * (lo + hi);
+  }
+
+  // Analytic worst case, so the pulse reads as growth instead of being
+  // normalised away by a per-frame refit.
+  /* A constant. Petal tips are normalised to at most r = 1, so nothing here
+     tracks the animation — which is exactly what keeps the flower the same
+     size on screen while its petals move. */
+  function extentOf(g) {
+    const corner = g.exp ? Math.pow(2, 1 / g.exp) : 1;
+    const bodyReach = g.boxBody ? g.body * (0.72 * Math.SQRT2 + 0.30) : g.body;
+    return Math.max(corner, bodyReach) + g.k * 0.45;
+  }
+
+  /* ---------- drawing ---------- */
+
+  function tracePolar(path, cx, cy, S, steps, fn) {
+    for (let i = 0; i <= steps; i++) {
+      const th = (i / steps) * TAU;
+      const r = fn(th) * S;
+      const x = cx + r * Math.cos(th);
+      const y = cy + r * Math.sin(th);
+      if (i === 0) path.moveTo(x, y);
+      else path.lineTo(x, y);
+    }
+    path.closePath();
+  }
+
+  function drawPlate(cx, cy, radius, plate, t) {
+    const g = build(plate, t);
+    const S = (radius * 0.98) / extentOf(g);
+
+    const steps = Math.round(clamp(radius * 2.0, 340, 1000));
+
+    const outer = petalsOf(g, t, false);
+    const path = new Path2D();
+    tracePolar(path, cx, cy, S, steps, (th) => solveRay(outer, th, g.k));
+    if (g.w1 > 0.0008) {
+      const inner = petalsOf(g, t, true);
+      tracePolar(path, cx, cy, S, steps, (th) => solveRay(inner, th, g.ki));
+    }
+    ctx.fillStyle = P.hue;
+    ctx.fill(path, "evenodd");
+
+    if (P.guides) drawWireframe(cx, cy, S, g, t);
+  }
+
+  // Convex hull of two circles, as a stroked outline for the overlay.
+  function capsuleOutline(path, x0, y0, r0, x1, y1, r1) {
+    const dx = x1 - x0, dy = y1 - y0;
+    const L = Math.hypot(dx, dy);
+    if (L < 1e-6 || L <= Math.abs(r1 - r0)) return;
+    const phi = Math.atan2(dy, dx);
+    const tt = Math.acos(clamp((r0 - r1) / L, -1, 1));
+    path.moveTo(x1 + r1 * Math.cos(phi - tt), y1 + r1 * Math.sin(phi - tt));
+    path.arc(x1, y1, r1, phi - tt, phi + tt, false);
+    path.arc(x0, y0, r0, phi + tt, phi - tt + TAU, false);
+    path.closePath();
+  }
+
+  // One teardrop: its outline, plus the two external tangents run out to the
+  // bounding circle — the long chords that cross the reference wireframe.
+  function drawTeardrop(cx, cy, a, L, w0, w1, R) {
+    const px = cx + L * Math.cos(a), py = cy + L * Math.sin(a);
+
+    const cap = new Path2D();
+    capsuleOutline(cap, cx, cy, w0, px, py, w1);
+    ctx.stroke(cap);
+
+    if (L <= Math.abs(w1 - w0)) return;
+    const tt = Math.acos(clamp((w0 - w1) / L, -1, 1));
+    for (const sign of [1, -1]) {
+      const ang = a + sign * tt;
+      const t0x = cx + w0 * Math.cos(ang), t0y = cy + w0 * Math.sin(ang);
+      const t1x = px + w1 * Math.cos(ang), t1y = py + w1 * Math.sin(ang);
+      const len = Math.hypot(t1x - t0x, t1y - t0y) || 1;
+      const nx = (t1x - t0x) / len, ny = (t1y - t0y) / len;
+      const ox = t0x - cx, oy = t0y - cy;
+      const b = ox * nx + oy * ny;
+      const disc = b * b - (ox * ox + oy * oy - R * R);
+      if (disc <= 0) continue;
+      const rt = Math.sqrt(disc);
+      ctx.beginPath();
+      ctx.moveTo(t0x + nx * (-b - rt), t0y + ny * (-b - rt));
+      ctx.lineTo(t0x + nx * (-b + rt), t0y + ny * (-b + rt));
+      ctx.stroke();
+    }
+  }
+
+  function drawWireframe(cx, cy, S, g, t) {
+    const ink = getComputedStyle(document.documentElement)
+      .getPropertyValue("--ink").trim() || "#17170F";
+    const R = extentOf(g) * S;
+
+    ctx.save();
+    ctx.strokeStyle = ink;
+    ctx.fillStyle = ink;
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 0.8;
+
+    for (let k = 0; k < g.n; k++) {
+      const s = petalScale(g, k, t);
+      drawTeardrop(cx, cy, (k * TAU) / g.n,
+        g.od * s * S, g.oW0 * S, g.oW1 * s * S, R);
+    }
+
+    if (g.w1 > 0.0008) {
+      for (let k = 0; k < g.cn; k++) {
+        const s = spikeScale(g, k, t);
+        drawTeardrop(cx, cy, (k * TAU) / g.cn,
+          g.dt * s * S, g.w0 * S, g.w1 * s * S, R);
+      }
+    }
+
+    // the body the petals rise out of
+    if (g.body > 0) {
+      ctx.beginPath();
+      if (g.boxBody) {
+        const h = g.body * 0.72 * S, r = g.body * 0.30 * S;
+        ctx.roundRect(cx - h - r, cy - h - r, 2 * (h + r), 2 * (h + r), r * 2);
+      } else {
+        ctx.arc(cx, cy, g.body * S, 0, TAU);
+      }
+      ctx.stroke();
+    }
+
+    // the hub every petal is tangent to, and the centre mark
+    ctx.beginPath();
+    ctx.arc(cx, cy, g.oW0 * S, 0, TAU);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 1.6, 0, TAU);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  /* ---------- layout ---------- */
+
+  let W = 0, H = 0;
+
+  function layout() {
+    const plate = PLATES[P.plate === "squared" ? 0 : P.plate === "roundB" ? 2 : 1];
+    return [{ plate, cx: W / 2, cy: H / 2, r: (Math.min(W, H) / 2) * 0.97 }];
+  }
+
+  /* ---------- loop ---------- */
+
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let playing = !reduced.matches;
+  let clock = 0;
+  let last = null;
+  let dirty = true;
+
+  function frame(now) {
+    if (last === null) last = now;
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    if (playing) { clock += dt; dirty = true; }
+
+    if (dirty) {
+      ctx.clearRect(0, 0, W, H);
+      for (const cell of layout()) drawPlate(cell.cx, cell.cy, cell.r, cell.plate, clock);
+      dirty = playing;
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function resize() {
+    const rect = stage.getBoundingClientRect();
+    const dpr = Math.min(2.5, window.devicePixelRatio || 1);
+    W = Math.max(1, Math.round(rect.width));
+    H = Math.max(1, Math.round(rect.height));
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    dirty = true;
+  }
+
+  new ResizeObserver(resize).observe(stage);
+  resize();
+  requestAnimationFrame(frame);
+
+
+  /* ---------- embed config: ?petals=8&color=F2E84E&plate=roundA&speed=1&pulse=0.18 ---------- */
+  const q = new URLSearchParams(location.search);
+  const num = (key, target) => {
+    const v = parseFloat(q.get(key));
+    if (Number.isFinite(v)) P[target || key] = v;
+  };
+  num("petals"); num("width"); num("body", "hub"); num("vary");
+  num("join"); num("joinin", "joinIn"); num("core"); num("spike");
+  num("pulse"); num("speed"); num("seed");
+  if (q.get("color")) P.hue = "#" + q.get("color").replace(/^#/, "");
+  if (q.get("plate")) P.plate = q.get("plate");
+})();
+</script>
+</body>
+</html>
