@@ -1,0 +1,50 @@
+name: Deploy flores homepage
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, claude/animated-flower-graphic-ra1i5h]
+    paths:
+      - "deploy/flores/**"
+      - ".github/workflows/deploy-flores.yml"
+
+concurrency:
+  group: deploy-flores
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install sshpass
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
+
+      - name: Deploy to DreamHost
+        env:
+          SSHPASS: ${{ secrets.DREAMHOST_SSH_PASSWORD }}
+          HOST: floresdeotromundo.com
+          USER: rafacastello
+          DOCROOT: floresdeotromundo.com
+        run: |
+          if [ -z "$SSHPASS" ]; then
+            echo "::error::Secret DREAMHOST_SSH_PASSWORD is not set. Add it under Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          SSH="sshpass -e ssh -o StrictHostKeyChecking=accept-new $USER@$HOST"
+
+          # one-time dated backup of whatever is currently live
+          $SSH "cd ~/$DOCROOT 2>/dev/null && ls -A | grep -q . && \
+            tar czf ~/flores-backup-\$(date +%Y%m%d-%H%M).tar.gz -C ~ $DOCROOT || true"
+
+          # sideline WordPress entry points so index.html becomes the homepage
+          $SSH "cd ~/$DOCROOT 2>/dev/null && \
+            for f in index.php .htaccess; do [ -e \$f ] && mv \$f \$f.pre-flores; done || true"
+
+          sshpass -e scp -o StrictHostKeyChecking=accept-new \
+            deploy/flores/index.html "$USER@$HOST:~/$DOCROOT/"
+
+          # verify what the server now returns
+          $SSH "curl -s -o /dev/null -w 'local check: HTTP %{http_code}\n' http://localhost/index.html -H 'Host: floresdeotromundo.com' || true"
+          echo "Deployed deploy/flores/index.html to $HOST/$DOCROOT"

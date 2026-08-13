@@ -3,344 +3,18 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Bloom Study — Animated Petal Geometry</title>
-<meta name="description" content="An animated eight-petal bloom: fixed footprint, independent petal clocks, exact rounded-union fillets." />
-<style>*{box-sizing:border-box}html,body{margin:0;padding:0}</style>
-
+<title>Flores de Otro Mundo</title>
+<meta name="description" content="Flores de otro mundo." />
 <style>
-  :root {
-    --paper: #FAF8EF;
-    --ink: #17170F;
-    --dim: #79776A;
-    --rule: #DEDBCB;
-    --panel: #F3F0E2;
-    --guide: #E3372B;
-    --bloom: #F2E84E;
-
-    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-    --sans: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --paper: #100F09;
-      --ink: #F2F0E3;
-      --dim: #8B8878;
-      --rule: #2C2A1E;
-      --panel: #191710;
-      --guide: #FF5B4D;
-    }
-  }
-  :root[data-theme="dark"] {
-    --paper: #100F09;
-    --ink: #F2F0E3;
-    --dim: #8B8878;
-    --rule: #2C2A1E;
-    --panel: #191710;
-    --guide: #FF5B4D;
-  }
-  :root[data-theme="light"] {
-    --paper: #FAF8EF;
-    --ink: #17170F;
-    --dim: #79776A;
-    --rule: #DEDBCB;
-    --panel: #F3F0E2;
-    --guide: #E3372B;
-  }
-
-  * { box-sizing: border-box; }
-
-  body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--sans);
-    -webkit-font-smoothing: antialiased;
-  }
-
-  .sheet {
-    min-height: 100svh;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-  }
-
-  /* ---------- masthead ---------- */
-
-  .masthead {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.5rem 1.5rem;
-    padding: 1.1rem clamp(1rem, 3vw, 2.25rem) 0.9rem;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .masthead h1 {
-    margin: 0;
-    font-size: clamp(1.4rem, 3.4vw, 2.1rem);
-    font-weight: 800;
-    letter-spacing: -0.035em;
-    text-transform: uppercase;
-    line-height: 0.9;
-  }
-
-  .masthead h1 em {
-    font-style: normal;
-    color: var(--bloom);
-    -webkit-text-stroke: 0.6px var(--ink);
-  }
-
-  .spec {
-    margin: 0;
-    font-family: var(--mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-    color: var(--dim);
-  }
-
-  .spec b { color: var(--ink); font-weight: 400; font-variant-numeric: tabular-nums; }
-
-  .masthead .spec { margin-inline-start: auto; text-align: right; }
-
-  /* ---------- stage ---------- */
-
-  .stage {
-    position: relative;
-    min-height: 58svh;
-  }
-
-  canvas {
-    position: absolute;
-    inset: 0;
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-
-  /* ---------- controls ---------- */
-
-  .rail {
-    border-top: 1px solid var(--rule);
-    background: var(--panel);
-  }
-
-  .rail-inner {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
-    gap: 0.85rem clamp(1rem, 2.5vw, 2rem);
-    padding: 1rem clamp(1rem, 3vw, 2.25rem) 1.15rem;
-  }
-
-  .field { display: grid; gap: 0.35rem; align-content: start; }
-
-  .field > .row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 0.5rem;
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-    color: var(--dim);
-  }
-
-  .field output {
-    color: var(--ink);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.04em;
-  }
-
-  input[type="range"] {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: 1rem;
-    margin: 0;
-    background: transparent;
-    accent-color: var(--bloom);
-    cursor: ew-resize;
-  }
-
-  input[type="range"]::-webkit-slider-runnable-track { height: 1px; background: var(--rule); }
-  input[type="range"]::-moz-range-track { height: 1px; background: var(--rule); }
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 13px; height: 13px; margin-top: -6px;
-    border-radius: 50%;
-    background: var(--bloom);
-    border: 1px solid var(--ink);
-  }
-  input[type="range"]::-moz-range-thumb {
-    width: 13px; height: 13px;
-    border: 1px solid var(--ink);
-    border-radius: 50%;
-    background: var(--bloom);
-  }
-
-  .seg {
-    display: flex;
-    border: 1px solid var(--rule);
-    background: var(--paper);
-  }
-
-  .seg button {
-    flex: 1;
-    appearance: none;
-    border: 0;
-    border-inline-start: 1px solid var(--rule);
-    background: transparent;
-    color: var(--dim);
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.45rem 0.35rem;
-    cursor: pointer;
-  }
-
-  .seg button:first-child { border-inline-start: 0; }
-  .seg button:hover { color: var(--ink); }
-  .seg button[aria-pressed="true"] { background: var(--bloom); color: #17170F; }
-
-  .toggles { display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem; }
-
-  .chip {
-    appearance: none;
-    border: 1px solid var(--rule);
-    background: var(--paper);
-    color: var(--dim);
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.45rem 0.7rem;
-    cursor: pointer;
-  }
-
-  .chip:hover { color: var(--ink); }
-  .chip[aria-pressed="true"] { border-color: var(--ink); color: var(--ink); }
-
-  .swatch {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    border: 1px solid var(--rule);
-    background: var(--paper);
-    padding: 0.25rem 0.3rem 0.25rem 0.55rem;
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--dim);
-  }
-
-  input[type="color"] {
-    inline-size: 26px;
-    block-size: 22px;
-    padding: 0;
-    border: 1px solid var(--rule);
-    background: none;
-    cursor: pointer;
-  }
-
-  :where(button, input, a):focus-visible {
-    outline: 2px solid var(--guide);
-    outline-offset: 2px;
-  }
-
-  @media (max-width: 640px) {
-    .masthead .spec { margin-inline-start: 0; text-align: left; }
-  }
+  :root { --paper: #FAF8EF; }
+  @media (prefers-color-scheme: dark) { :root { --paper: #100F09; } }
+  html, body { margin: 0; padding: 0; background: var(--paper); }
+  .stage { position: fixed; inset: 0; }
+  canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
 </style>
-
-<div class="sheet">
-  <header class="masthead">
-    <h1>Bloom&nbsp;Study&nbsp;<em>01</em></h1>
-    <p class="spec">
-      <b id="specPetals">8</b> petals over <b id="specSpikes">8</b> cut-out spikes,
-      all joined at the centre · each petal pulses on its own clock
-    </p>
-  </header>
-
-  <div class="stage" id="stage">
-    <canvas id="c"></canvas>
-  </div>
-
-  <div class="rail">
-    <div class="rail-inner">
-
-      <div class="field">
-        <div class="row"><label for="petals">Petals</label><output id="outPetals">8</output></div>
-        <input id="petals" type="range" min="5" max="14" step="1" value="8" />
-      </div>
-
-      <div class="field">
-        <div class="row"><label for="width">Petal width</label><output id="outWidth">0.30</output></div>
-        <input id="width" type="range" min="0.08" max="0.50" step="0.01" value="0.30" />
-      </div>
-
-      <div class="field">
-        <div class="row"><label for="hub">Body</label><output id="outHub">0.600</output></div>
-        <input id="hub" type="range" min="0.10" max="0.90" step="0.005" value="0.60" />
-      </div>
-
-      <div class="field">
-        <div class="row"><label for="vary">Size variation</label><output id="outVary">0.30</output></div>
-        <input id="vary" type="range" min="0" max="1" step="0.01" value="0.30" />
-      </div>
-
-      <div class="field">
-        <div class="row"><label for="join">Join outer</label><output id="outJoin">0.140</output></div>
-        <input id="join" type="range" min="0" max="0.30" step="0.005" value="0.14" />
-      </div>
-
-      <div class="field">
-        <div class="row"><label for="joinIn">Join inner</label><output id="outJoinIn">0.060</output></div>
-        <input id="joinIn" type="range" min="0" max="0.30" step="0.005" value="0.06" />
-      </div>
-
-      <div class="field">
-        <div class="row"><label for="core">Star reach</label><output id="outCore">0.74</output></div>
-        <input id="core" type="range" min="0" max="0.95" step="0.01" value="0.74" />
-      </div>
-
-      <div class="field">
-        <div class="row"><label for="spike">Spike width</label><output id="outSpike">0.25</output></div>
-        <input id="spike" type="range" min="0.10" max="0.60" step="0.01" value="0.25" />
-      </div>
-
-      <div class="field">
-        <div class="row"><label for="pulse">Pulse depth</label><output id="outPulse">0.18</output></div>
-        <input id="pulse" type="range" min="0" max="0.50" step="0.01" value="0.18" />
-      </div>
-
-      <div class="field">
-        <div class="row"><label for="speed">Speed</label><output id="outSpeed">1.00×</output></div>
-        <input id="speed" type="range" min="0" max="3" step="0.05" value="1" />
-      </div>
-
-      <div class="field" style="grid-column: 1 / -1;">
-        <div class="row"><span>Sheet</span></div>
-        <div class="toggles">
-          <div class="seg" id="viewSeg" role="group" aria-label="Layout" style="max-width: 220px;">
-            <button type="button" data-view="trio" aria-pressed="true">Trio</button>
-            <button type="button" data-view="single" aria-pressed="false">Single</button>
-          </div>
-          <button type="button" class="chip" id="guidesBtn" aria-pressed="false">Wireframe</button>
-          <button type="button" class="chip" id="shuffleBtn">Reshuffle sizes</button>
-          <button type="button" class="chip" id="playBtn" aria-pressed="true">Pause</button>
-          <label class="swatch">Ink
-            <input type="color" id="hue" value="#F2E84E" aria-label="Bloom colour" />
-          </label>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
+</head>
+<body>
+<div class="stage" id="stage"><canvas id="c"></canvas></div>
 <script>
 (() => {
   "use strict";
@@ -750,22 +424,8 @@
   let W = 0, H = 0;
 
   function layout() {
-    if (P.view === "single") {
-      return [{ plate: PLATES[1], cx: W / 2, cy: H / 2, r: (Math.min(W, H) / 2) * 0.94 }];
-    }
-    // The reference sheet: squared plate top-left, two round plates below.
-    if (W > H * 1.05) {
-      const cw = W / 2, ch = H / 2;
-      const r = (Math.min(cw, ch) / 2) * 0.97;
-      return [
-        { plate: PLATES[0], cx: cw * 0.5, cy: ch * 0.5, r },
-        { plate: PLATES[1], cx: cw * 0.5, cy: ch * 1.5, r },
-        { plate: PLATES[2], cx: cw * 1.5, cy: ch * 1.5, r },
-      ];
-    }
-    const ch = H / 3;
-    const r = Math.min(W / 2, ch / 2) * 0.9;
-    return PLATES.map((plate, i) => ({ plate, cx: W / 2, cy: ch * (i + 0.5), r }));
+    const plate = PLATES[P.plate === "squared" ? 0 : P.plate === "roundB" ? 2 : 1];
+    return [{ plate, cx: W / 2, cy: H / 2, r: (Math.min(W, H) / 2) * 0.97 }];
   }
 
   /* ---------- loop ---------- */
@@ -805,87 +465,19 @@
   resize();
   requestAnimationFrame(frame);
 
-  /* ---------- wiring ---------- */
 
-  const $ = (id) => document.getElementById(id);
-  const fmt2 = (v) => Number(v).toFixed(2);
-
-  const SLIDERS = [
-    ["petals", "outPetals", (v) => String(Math.round(v))],
-    ["width", "outWidth", fmt2],
-    ["hub", "outHub", (v) => Number(v).toFixed(3)],
-    ["vary", "outVary", fmt2],
-    ["join", "outJoin", (v) => Number(v).toFixed(3)],
-    ["joinIn", "outJoinIn", (v) => Number(v).toFixed(3)],
-    ["core", "outCore", fmt2],
-    ["spike", "outSpike", fmt2],
-    ["pulse", "outPulse", fmt2],
-    ["speed", "outSpeed", (v) => Number(v).toFixed(2) + "×"],
-  ];
-
-  for (const [key, out, fmt] of SLIDERS) {
-    const el = $(key);
-    el.addEventListener("input", () => {
-      P[key] = parseFloat(el.value);
-      $(out).textContent = fmt(el.value);
-      if (key === "petals") {
-        const n = String(Math.round(P.petals));
-        $("specPetals").textContent = n;
-        $("specSpikes").textContent = n;
-      }
-      dirty = true;
-    });
-  }
-
-  function segment(id, key, after) {
-    $(id).addEventListener("click", (e) => {
-      const btn = e.target.closest("button");
-      if (!btn) return;
-      for (const b of e.currentTarget.querySelectorAll("button")) {
-        b.setAttribute("aria-pressed", String(b === btn));
-      }
-      P[key] = btn.dataset[key];
-      if (after) after();
-      dirty = true;
-    });
-  }
-
-  segment("viewSeg", "view");
-
-  $("guidesBtn").addEventListener("click", (e) => {
-    P.guides = !P.guides;
-    e.currentTarget.setAttribute("aria-pressed", String(P.guides));
-    dirty = true;
-  });
-
-  $("shuffleBtn").addEventListener("click", () => {
-    P.seed = (P.seed + 1) % 997;
-    dirty = true;
-  });
-
-  const playBtn = $("playBtn");
-  function syncPlay() {
-    playBtn.textContent = playing ? "Pause" : "Play";
-    playBtn.setAttribute("aria-pressed", String(playing));
-  }
-  playBtn.addEventListener("click", () => {
-    playing = !playing;
-    last = null;
-    dirty = true;
-    syncPlay();
-  });
-  syncPlay();
-
-  $("hue").addEventListener("input", (e) => {
-    P.hue = e.target.value;
-    document.documentElement.style.setProperty("--bloom", P.hue);
-    dirty = true;
-  });
-
-  new MutationObserver(() => { dirty = true; })
-    .observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  /* ---------- embed config: ?petals=8&color=F2E84E&plate=roundA&speed=1&pulse=0.18 ---------- */
+  const q = new URLSearchParams(location.search);
+  const num = (key, target) => {
+    const v = parseFloat(q.get(key));
+    if (Number.isFinite(v)) P[target || key] = v;
+  };
+  num("petals"); num("width"); num("body", "hub"); num("vary");
+  num("join"); num("joinin", "joinIn"); num("core"); num("spike");
+  num("pulse"); num("speed"); num("seed");
+  if (q.get("color")) P.hue = "#" + q.get("color").replace(/^#/, "");
+  if (q.get("plate")) P.plate = q.get("plate");
 })();
 </script>
-
 </body>
 </html>
