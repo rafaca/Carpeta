@@ -1,0 +1,12 @@
+{
+  "name": "RCCOM Type + Capture Assets",
+  "id": "rccom-type-capture-assets",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": ["https://www.rafacastello.com"],
+    "reasoning": "Fills the capture's image placeholder frames from the live site assets they were captured from."
+  }
+}
