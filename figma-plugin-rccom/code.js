@@ -24,6 +24,22 @@ const DO_TYPE = true;
 const DO_IMAGES = true;
 
 /*
+ * FAMILY_ONLY swaps the typeface and leaves every number alone — size, line
+ * height, tracking, case stay exactly as the file has them.
+ *
+ * It defaults to true because the RCCOM styles have been tuned by hand since
+ * this was written (Display/XL to 55, Display/M to 26, Body/Base to Firelli
+ * Variable 24, where type.css says Questa Sans 15). Those are somebody's
+ * decisions, not drift, and a plugin shouldn't quietly overwrite them to
+ * match a stylesheet.
+ *
+ * Set it to false to also push the type.css scale — the sizes in STYLES
+ * below, which are the desktop end of each clamp(). A style this plugin
+ * creates fresh always gets the full spec; there is nothing to preserve.
+ */
+const FAMILY_ONLY = true;
+
+/*
  * Source of truth: assets/type.css.
  *
  *   --firelli  firelli-variable   titles, wght 100
@@ -129,14 +145,23 @@ async function installedStyles(family) {
     .map((f) => f.fontName.style);
 }
 
-// First installed weight from the spec's preference list, or null.
+// First installed weight from the spec's preference list.
+// Returns { fontName } or { reason } — never a silent substitution.
 async function resolveFont(spec) {
   const available = await installedStyles(spec.family);
-  if (!available.length) return null;
-  for (const style of spec.styles) {
-    if (available.indexOf(style) !== -1) return { family: spec.family, style };
+  if (!available.length) {
+    return { reason: `family "${spec.family}" is not installed` };
   }
-  return { family: spec.family, style: available[0] };
+  for (const style of spec.styles) {
+    if (available.indexOf(style) !== -1) {
+      return { fontName: { family: spec.family, style } };
+    }
+  }
+  // Falling back to whatever weight sorted first would have landed a label on
+  // Black Italic and reported it as a success. Say so instead.
+  return {
+    reason: `"${spec.family}" has none of ${spec.styles.join(', ')} — installed: ${available.join(', ')}`,
+  };
 }
 
 async function applyType() {
@@ -147,11 +172,12 @@ async function applyType() {
   const created = [], updated = [], failed = [];
 
   for (const spec of STYLES) {
-    const fontName = await resolveFont(spec);
-    if (!fontName) {
-      failed.push(`${spec.name} — family "${spec.family}" is not installed`);
+    const resolved = await resolveFont(spec);
+    if (resolved.reason) {
+      failed.push(`${spec.name} — ${resolved.reason}`);
       continue;
     }
+    const fontName = resolved.fontName;
     try {
       await figma.loadFontAsync(fontName);
     } catch (e) {
@@ -174,15 +200,27 @@ async function applyType() {
       }
     }
 
+    const was = isNew
+      ? null
+      : `${style.fontName.family} ${style.fontName.style} ${style.fontSize}`;
+
     try {
       style.fontName = fontName;
-      style.fontSize = spec.size;
-      style.lineHeight = { unit: 'PIXELS', value: spec.lineHeight };
-      style.letterSpacing = { unit: 'PIXELS', value: spec.letterSpacing };
-      style.textCase = spec.textCase || 'ORIGINAL';
+      // A style this plugin creates has nothing worth preserving, so it always
+      // gets the full spec; an existing one keeps its numbers under FAMILY_ONLY.
+      if (isNew || !FAMILY_ONLY) {
+        style.fontSize = spec.size;
+        style.lineHeight = { unit: 'PIXELS', value: spec.lineHeight };
+        style.letterSpacing = { unit: 'PIXELS', value: spec.letterSpacing };
+        style.textCase = spec.textCase || 'ORIGINAL';
+      }
       style.description = spec.description;
-      const line = `${spec.name}  ${fontName.family} ${fontName.style}  ${spec.size}/${spec.lineHeight}/${spec.letterSpacing}${spec.textCase ? ' ' + spec.textCase : ''}`;
-      (isNew ? created : updated).push(line);
+
+      const now = `${fontName.family} ${fontName.style} ${style.fontSize}`;
+      const kept = isNew || !FAMILY_ONLY ? '' : '   (metrics kept)';
+      (isNew ? created : updated).push(
+        isNew ? `${spec.name}  ${now}` : `${spec.name}  ${was}  ->  ${now}${kept}`
+      );
     } catch (e) {
       failed.push(`${spec.name} — ${e.message}`);
     }

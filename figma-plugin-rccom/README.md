@@ -38,7 +38,19 @@ on the live site. Sizes are the desktop (max) end of each `clamp()` — what the
 
 † Created by this plugin — not in the file yet.
 \* Each row lists fallback weights in `STYLES`; the first installed one wins,
-so a missing `SemiBold` lands on `Bold` rather than failing.
+so a missing `SemiBold` lands on `Bold`. If **none** of a row's weights are
+installed the style is reported as failed and left untouched — it never falls
+back to whatever weight happens to sort first.
+
+**By default only the family changes.** `FAMILY_ONLY` (top of `code.js`) is
+`true`, so an existing style keeps its own size, line height, tracking and
+case; the sizes above apply only to the two styles the plugin creates. This is
+deliberate: the RCCOM styles have been tuned by hand since this was written
+(`Display/XL` at 55, `Display/M` at 26, `Body/Base` at Firelli Variable 24
+where type.css says Questa Sans 15). Those are decisions, not drift. Set
+`FAMILY_ONLY = false` to push the full type.css scale as well. Either way the
+console prints each style as `was -> becomes`, so you can see what moved
+before trusting it.
 
 The three families the file was already carrying map like this:
 
@@ -68,6 +80,8 @@ re-running the plugin is how you refresh a capture after the site changes.
 Top of `code.js`:
 
 - `DO_TYPE` / `DO_IMAGES` — run either half on its own.
+- `FAMILY_ONLY` — `true` (default) swaps the typeface and leaves every number
+  alone; `false` also pushes the type.css scale. See the note above the table.
 - `SITE_ORIGIN` — point the image fill at a staging host instead.
 - `STYLES` — add, remove or retune a style. Existing styles are rewritten in
   place (keeping every node already linked to them); missing ones are created.
